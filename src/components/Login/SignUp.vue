@@ -171,7 +171,7 @@ export default {
 
     onFileSelected(event) {
       // console.log(event);
-      return this.selectedAvatar = event;
+      this.selectedAvatar = event;
       // console.log(this.selectedAvatar)
     },
     // onFileSelected2(event) {
@@ -190,8 +190,8 @@ export default {
           email: this.email,
           role: this.rolSelected,
           password: this.pswConfirm,
-          // imageName: this.selectedAvatar,
-          imageName: "Solo tiene String",
+          imageName: this.selectedAvatar,
+          // imageName: "Solo tiene String",
           creationDate: new Date(),
           modificationDate: new Date(),
         };

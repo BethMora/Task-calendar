@@ -9,6 +9,7 @@ export default {
   strict: true,
   state: {
     users: [],
+    isLogin: false,
     loginStatus: {},
     userLog: {},
 
@@ -21,6 +22,10 @@ export default {
   },
 
   getters: {
+    isLogin(state) {
+      return state.isLogin;
+    },
+
     message(state) {
       return state.message;
     },
@@ -83,6 +88,10 @@ export default {
   },
 
   mutations: {
+    setIsLogin(state, value) {
+      state.isLogin = value;
+    },
+
     setApiUsers(state, users) {
       state.users = users;
     },
@@ -220,13 +229,14 @@ export default {
       context.commit("setUserId", userExist);
     },
 
-  // *******************************************
+    // *******************************************
     checkInAPI(context, obj) {
       console.log("Vamos a guardar el siguente usuario");
       console.log(obj);
+      console.log("__________________________");
       try {
         axios
-          .post("http://localhost:300s0/api/user/register", obj)
+          .post("http://localhost:3000/api/user/register", obj)
           .then((response) => {
             console.log(response);
             console.log(response.status);
@@ -237,12 +247,11 @@ export default {
             };
             context.commit("setCheckIn", obj);
             context.commit("setMesagge", message);
-            
           });
       } catch (error) {
         console.error(error);
-        console.log("Hubo un error el siguiente")
-        alert(error)
+        console.log("Hubo un error el siguiente");
+        alert(error);
         const message = {
           msg: error,
           color: "danger",
@@ -253,25 +262,53 @@ export default {
       // this.$router.push(-1);
     },
 
+    validateToken(commit, userLogin) {
+      // creatingUsers
+      console.log(commit.state.creatingUsers)
+      if (localStorage.getItem("token") === userLogin) {
+        commit.setIsLogin(true)
+      }else{
+        commit.setIsLogin(false)
+      }
+    },
+
     loginUserAPI(context, obj) {
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: "JWT fefege...",
+      };
+
       try {
         axios
-          .post("http://localhost:3000/api/user/login", {
-            email: obj.username,
-            password: obj.psw,
-          })
+          .post(
+            "http://localhost:3000/api/user/login",
+            {
+              email: obj.username,
+              password: obj.psw,
+            },
+            { headers: headers }
+          )
           .then((response) => {
-            console.log(response);
-            console.log(response.config.data);
-            const message = {
-              msg: "User logged in",
-              color: "danger",
-              status: response.data.message,
-            };
-            context.commit("setMesagge", message);
-            
+            if (response.status === 200) {
+              // console.log(response);
+              // console.log(response.config.data); //email y psw
+              localStorage.setItem("token", response.data.token);
+              const message = {
+                msg: response,
+                color: "success",
+                status: response.data.message,
+              };
+              context.commit("setMesagge", message);
+              // context.commit("setCheckIn", obj);
+            } else {
+              const message = {
+                msg: response,
+                color: "danger",
+                status: response.data.message,
+              };
+              context.commit("setMesagge", message);
+            }
           });
-        // context.commit("setCheckIn", obj);
       } catch (error) {
         console.error(error);
         const message = {
@@ -293,9 +330,9 @@ export default {
       // }
     },
 
-    editUserAPI(){
-      console.log("Editando user en API")
-    }
+    editUserAPI() {
+      console.log("Editando user en API");
+    },
 
     // agregarTDCStore(context, obj) {
     //   const id = obj.id;

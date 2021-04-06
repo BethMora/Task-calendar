@@ -7,6 +7,7 @@ import Dashboard from "../views/Dashboard.vue";
 import ListUsers from "../views/ListUsers.vue";
 import Calendar from "../components/Calendar.vue";
 import CreateTask from "../components/Tasks/CreateTask";
+// import { Store } from "vuex";
 
 Vue.use(VueRouter);
 
@@ -14,50 +15,58 @@ const routes = [
   {
     path: "/",
     name: "Index",
-    component: Index
+    component: Index,
   },
   {
     path: "/login",
     name: "Login",
     component: Login,
-    children : [
+    children: [
       {
         path: "/register",
         name: "Register",
-        component: SignUp
+        component: SignUp,
       },
-    ]
+    ],
   },
-  {
-    path: "*",
-    redirect: "/"
-  },
+  // {
+  //   path: "*",
+  //   redirect: "/",
+  // },
+
   {
     path: "/users",
     name: "ListUsers",
-    component: ListUsers
+    component: ListUsers,
+    // meta: {
+    //   requiresAuth: true,
+    // },
   },
+
   {
     path: "/calendar",
     name: "Calendar",
-    component: Calendar
+    component: Calendar,
+    meta: {
+      requiresAuth: true,
+    },
   },
   {
     path: "/createTask",
     name: "createTask",
-    component: CreateTask
+    component: CreateTask,
   },
   {
     path: "/dashboardAll",
     name: "DashboardAll",
     component: Dashboard,
-    children : [
+    children: [
       {
         path: "/dashboard/:id",
         name: "dashboard",
-        component: Dashboard
+        component: Dashboard,
       },
-    ]
+    ],
   },
   // {
   //   path: "/register",
@@ -84,7 +93,31 @@ const routes = [
 
 const router = new VueRouter({
   mode: "history",
-  routes  
+  linkActiveClass: "active",
+  routes,
+});
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some((route) => route.meta.requiresAuth)) {
+    // if(!Store.state.loginStatus.status){
+    // console.log(localStorage.getItem("token"))
+    if (localStorage.getItem("token") === null) {
+      console.log("token vacio");
+      if (to.name === "Login") {
+        next({ name: "Index" });
+      } else {
+        next({ name: "Login" });
+      }
+      // next("/login");
+    } else {
+      console.log("existe token");
+      // next();
+    }
+  } else {
+    next();
+  }
+  // if (to.name !== 'Login' && !isAuthenticated) next({ name: 'Login' })
+  // else next()
 });
 
 export default router;

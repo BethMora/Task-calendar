@@ -23,14 +23,14 @@
       <v-divider class="mb-2"></v-divider>
       <v-list nav dense>
         <v-list-item-group
-          v-model="group"
+          
           active-class="accent--text text--accent-4"
         >
           <v-list-item
             v-for="(item, index) in itemsNavigation"
             :key="index"
             :class="item.color"
-            :to="item.url"
+            @click="sendUrl(item.url)"
             class="my-2"
           >
             <v-list-item-icon>
@@ -67,32 +67,27 @@ export default {
   props: ["drawer", "changeValue"],
   data() {
     return {
-      group: null,
+      // group: null,
       itemsNavigation: [
         { name: "Create task", ico: "mdi-folder-plus", color: "success", url:"/createTask" },
-        { name: "List Users", ico: "mdi-account-details", color: "info" },
+        { name: "List Users", ico: "mdi-account-details", color: "info", url:"/"},
         { name: "List Tasks", ico: "mdi-calendar-check", color: "info", url:"/calendar"  },
-        { name: "Report", ico: "mdi-file-chart", color: "secondary" },
-        { name: "Logo Out", ico: "mdi-exit-run", color: "light" },
+        { name: "Report", ico: "mdi-file-chart", color: "secondary", url:"/" },
+        { name: "Logo Out", ico: "mdi-exit-run", color: "light", url:"/" },
       ],
     };
   },
-
-  watch: {
-    group() {
-      // this.drawer = false;
-
-      // return false
-      // console.log(this.drawer)
-
-      console.log("Hola");
-    },
-  },
-
+ 
   methods: {
     changeVal() {
       this.changeValue(false);
     },
+    sendUrl(url){
+      if(this.$route.path != url){
+        this.$router.push(url)
+        this.changeVal()
+      }
+    }
   },
 };
 </script>

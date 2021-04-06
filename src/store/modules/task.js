@@ -22,7 +22,7 @@ export default {
       addNewTask(context, task) {
         task.id = context.state.counter;
         context.commit("setTask", task);
-        this.router.push("/calendar")
+        // this.$router.push('/calendar')
       },
   
     },

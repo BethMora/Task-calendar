@@ -8,7 +8,7 @@
       elevation="2"
       colored-border
       icon="mdi-information-variant"
-      v-if="message.msg.length > 0"
+      v-if="message.msg.length > 0 && message != 'undefined'"
       @click="resetMessage"
     >
       {{ message.status }} -- {{ message.msg }}
@@ -20,7 +20,6 @@
         componentSelected == 'SignUp'
           ? (widthConten = 600)
           : (widthConten = 374)
-
       "
       :max-width="widthConten"
     >
@@ -64,16 +63,16 @@
         <v-alert outlined>
           <div class="text-center  d-flex justify-center">
             New here?
-            <v-tab  @click="componentSelected = 'SignUp'" class="accent--text">
+            <v-tab @click="componentSelected = 'SignUp'" class="accent--text">
               Create an account.
             </v-tab>
           </div>
 
           <div class="text-center  d-flex justify-center mt-3">
             I have an account !
-            <v-tab   @click="componentSelected = 'SignIn'" class="primary--text">
+            <v-tab @click="componentSelected = 'SignIn'" class="primary--text">
               Sign in.
-            </v-tab  >
+            </v-tab>
           </div>
         </v-alert>
       </v-card-subtitle>
