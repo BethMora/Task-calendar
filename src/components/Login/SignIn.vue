@@ -1,27 +1,58 @@
 <template>
-  <Access>
-    <v-form ref="form" v-model="valid" lazy-validation>
-      <!-- <template v-slot:nameUser> </template> -->
-      <!-- <template v-slot:userName> </template>
-      <template v-slot:password> </template>
-      <template v-slot:submit> </template> -->
-      
-      
-      <!-- <slot name="userName"></slot> -->
-      <!-- <slot name="password"></slot> -->
-      <!-- <slot name="submit"></slot> -->
-    </v-form>
-  </Access>
+  <v-form ref="form" v-model="valid" lazy-validation>
+    <v-text-field
+      v-model="userName"
+      :counter="4"
+      :rules="[rules.required, rules.min]"
+      label="User Name"
+      required
+    ></v-text-field>
+
+    <v-text-field
+      v-model="psw"
+      :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+      :rules="[rules.required, rules.min]"
+      :type="show1 ? 'text' : 'password'"
+      name="input-10-1"
+      label="Password"
+      hint="At least 6 characters"
+      counter
+      @click:append="show1 = !show1"
+    ></v-text-field>
+
+    <v-btn
+      class="secondary black--text mt-3"
+      block
+      @click="login"
+      :disabled="!valid"
+    >
+      Submit
+    </v-btn>
+
+    <v-alert
+      v-model="isValidLogin"
+      dismissible
+      color="error"
+      border="left"
+      elevation="2"
+      colored-border
+      icon="mdi-account-alert"
+      class="mt-6"
+    >
+      <span v-if="loginStatus.username == '-1'" class="row ml-1">
+        <strong> Incorrect user </strong>
+      </span>
+      <span v-if="loginStatus.psw == '-1'" class="row ml-1">
+        <strong> Incorrect password</strong>
+      </span>
+    </v-alert>
+  </v-form>
 </template>
 
 <script>
-import Access from "@/components/Login/Access.vue";
-
+import { mapGetters, mapActions } from "vuex";
 export default {
   name: "SignIn",
-  components:{
-      Access
-  },
   data() {
     return {
       valid: true,
@@ -41,39 +72,67 @@ export default {
 
       rules: {
         required: (value) => !!value || "Required.",
-        min: (v) => v.length >= 6 || "Min 6 characters",
+        min: (v) => v.length >= 4 || "Min 4 characters",
         valid: (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
       },
+
+      isValidLogin: false,
     };
   },
 
-  
+  async created() {
+    try {
+      this.bringUserAPI();
+    } catch (error) {
+      console.error(error);
+    }
+  },
+
+  computed: {
+    ...mapGetters(["allUsers", "loginStatus", "isLogin"]),
+  },
+
+  watch: {
+    loginStatus() {
+      if (this.loginStatus.status === false) {
+        this.isValidLogin = true;
+      } else {
+        console.log("entro")
+        console.log(this.isLogin)
+        this.validateToken()
+        console.log("Luego de la validacion")
+        console.log(this.isLogin)
+        if(this.isLogin === true){
+          this.isValidLogin = false;
+          this.$router.push({ name: "dashboard", params: { id: this.userName } });
+        }
+      }
+      // console.log(this.loginStatus.status)
+      // val || this.msgError();
+    },
+  },
 
   methods: {
-    // login() {
-    //   console.log("Logueado user");
-    //   // let user = {
-    //   //     name: this.name,
-    //   //     username: this.psw
-    //   // };
-    //   let post = {
-    //     userId: 1,
-    //     id: 0,
-    //     title:
-    //       "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
-    //     body:
-    //       "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto",
-    //   };
+    ...mapActions(["bringUserAPI", "loginUser", "loginUserAPI", "validateToken"]),
+    // ...mapActions([ "loginUser"]),
+    validate() {
+      return this.$refs.form.validate();
+    },
 
-    //   axios.post(url, post).then((data) => {
-    //     console.log(data);
-    //     //   if (data.status === "ok"){
-    //     //       console.log("Todo correcto")
-    //     //   }else{
+    reset() {
+      return this.$refs.form.reset();
+    },
 
-    //     //   }
-    //   });
-    // },
+    login() {
+      // console.log(this.validate())
+      const user = {
+        username: this.userName,
+        psw: this.psw,
+      };
+      // this.reset();
+      // this.loginUser(user);
+      this.loginUserAPI(user);
+    },
   },
 };
 </script>

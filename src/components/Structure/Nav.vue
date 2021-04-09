@@ -13,14 +13,18 @@
           />
         </router-link>
       </template>
-      <template v-else >
-        <div style="border-right: 1px solid white; text-shadow: blue 0.1em 0.1em 0.2em" class="d-flex pr-3">
-        <v-icon medium class="mr-2" color="info">
-          mdi-allergy
-        </v-icon>
+      <template v-else>
+        <div
+          style="border-right: 1px solid white; text-shadow: blue 0.1em 0.1em 0.2em"
+          class="d-flex pr-3"
+        >
+          <v-icon medium class="mr-2" color="info">
+            mdi-allergy
+          </v-icon>
 
-        
-        <v-toolbar-title class="info--text"> {{ this.$route.params.id }} </v-toolbar-title>
+          <v-toolbar-title class="info--text">
+            {{ this.$route.params.id }}
+          </v-toolbar-title>
         </div>
       </template>
 
@@ -41,11 +45,13 @@
 
       <v-tooltip bottom>
         <template v-slot:activator="{ on, attrs }">
-          <v-btn v-bind="attrs" v-on="on" icon :to="url">
-            <v-icon v-model="isLogin">
-              <template v-if="!isLogin"> mdi-account-circle </template>
-              <template v-else> mdi-logout </template>
-            </v-icon>
+          <v-btn v-bind="attrs" v-on="on" icon>
+            <template v-if="!isLogin">
+              <v-icon v-model="isLogin" @click="goLogin"> mdi-account-circle </v-icon>
+            </template>
+            <template v-else >
+              <v-icon v-model="isLogin" @click="logoOut"> mdi-logout </v-icon>
+            </template>
           </v-btn>
         </template>
         <span v-if="!isLogin">Click to login</span>
@@ -74,7 +80,7 @@
 
 <script>
 import Navigation from "@/components/Structure/Navigation";
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "Nav",
@@ -86,13 +92,13 @@ export default {
     return {
       bandDrawer: false,
       languages: [{ text: "English" }, { text: "Spanish" }],
-      isLogin: false,
-      url: "/login",
+      // isLogin: false,
+      // url: "/login",
     };
   },
 
   computed: {
-    ...mapGetters(["loginStatus"]),
+    ...mapGetters(["isLogin"]),
     drawer: {
       get: function() {
         return this.bandDrawer;
@@ -105,24 +111,42 @@ export default {
   },
 
   watch: {
-    loginStatus() {
-      if (this.loginStatus.status === true) {
-        this.url = "/";
-        this.isLogin = true;
-      } else {
-        this.url = "/login";
-        this.isLogin = false;
-      }
+    isLogin() {
+      console.log(`
+      
+      Bandera de login
+      `);
+      console.log(this.isLogin);
     },
+    // loginStatus() {
+    //   if (this.loginStatus.status === true) {
+    //     this.url = "/";
+    //     this.isLogin = true;
+    //   } else {
+    //     this.url = "/login";
+    //     this.isLogin = false;
+    //   }
+    // },
   },
 
   methods: {
+    ...mapActions(["logoOutUser"]),
+
     changeValue(value) {
       this.bandDrawer = value;
     },
 
     openNavigation() {
       this.bandDrawer = true;
+    },
+
+    goLogin(){
+      if(this.$route.path != "/login"){
+        this.$router.push('/login')
+      }
+    },
+    logoOut() {
+      this.logoOutUser()
     },
   },
 };

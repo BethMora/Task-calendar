@@ -11,7 +11,30 @@ export default new Vuex.Store({
     login,
     task
   },
-  state: {},
-  mutations: {},
+  state: {
+    message: {
+      msg: "",
+      color: "",
+      status: "",
+    },
+  },
+  getters:{
+    message(state) {
+      return state.message;
+    }
+  },
+  mutations: {
+    setMesagge(state, msg) {
+      state.message = msg;
+    },
+    
+    resetMessage(state) {
+      state.message = {
+        msg: "",
+        color: "",
+        status: "",
+      }
+    }
+  },
   actions: {},
 });

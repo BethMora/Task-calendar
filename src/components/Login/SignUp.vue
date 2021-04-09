@@ -190,13 +190,14 @@ export default {
           email: this.email,
           role: this.rolSelected,
           password: this.pswConfirm,
-          imageName: this.selectedAvatar,
-          // imageName: "Solo tiene String",
+          // imageName: this.selectedAvatar,
+          imageName: "Solo tiene String",
           creationDate: new Date(),
           modificationDate: new Date(),
         };
         // console.log(newUser)
         this.checkInAPI(newUser);
+        this.$router.push("/login");
         // this.$refs.form.reset();
       }
     },

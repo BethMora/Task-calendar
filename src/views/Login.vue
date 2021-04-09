@@ -8,21 +8,13 @@
       elevation="2"
       colored-border
       icon="mdi-information-variant"
-      v-if="message.msg.length > 0 && message != 'undefined'"
+      v-if="message.msg.length > 0"
       @click="resetMessage"
     >
       {{ message.status }} -- {{ message.msg }}
     </v-alert>
-    <v-card
-      :loading="loading"
-      class="mx-auto my-12"
-      v-if="
-        componentSelected == 'SignUp'
-          ? (widthConten = 600)
-          : (widthConten = 374)
-      "
-      :max-width="widthConten"
-    >
+
+    <v-card :loading="loading" class="mx-auto my-12" :max-width="widthConten">
       <template slot="progress">
         <v-progress-linear
           color="deep-purple"
@@ -37,23 +29,13 @@
         </v-icon>
 
         <v-card-title>
-          <span
-            v-if="
-              componentSelected == 'SignUp'
-                ? (title = 'Sign Up ')
-                : (title = 'Sign In')
-            "
-          >
-            {{ title }}
-          </span>
+          <span> {{ title }} </span>
         </v-card-title>
       </v-col>
 
       <v-card-text style="margin-top: -30px">
         <v-container>
-          <!-- <keep-alive> -->
-          <component :is="componentSelected"> </component>
-          <!-- </keep-alive> -->
+          <router-view> </router-view>
         </v-container>
       </v-card-text>
 
@@ -63,16 +45,12 @@
         <v-alert outlined>
           <div class="text-center  d-flex justify-center">
             New here?
-            <v-tab @click="componentSelected = 'SignUp'" class="accent--text">
-              Create an account.
-            </v-tab>
+            <router-link to="/signUp" custom> Create an account. </router-link>
           </div>
 
           <div class="text-center  d-flex justify-center mt-3">
             I have an account !
-            <v-tab @click="componentSelected = 'SignIn'" class="primary--text">
-              Sign in.
-            </v-tab>
+            <router-link to="/login" custom> Sign in. </router-link>
           </div>
         </v-alert>
       </v-card-subtitle>
@@ -81,31 +59,29 @@
 </template>
 
 <script>
-// @ is an alias to /src
-// import Login from "@/components/Login.vue";
-// import PostList from "@/components/PostList.vue";
-import SignIn from "@/components/Login/SignIn.vue";
-import SignUp from "@/components/Login/SignUp.vue";
 import { mapGetters, mapMutations } from "vuex";
 export default {
   name: "Login",
-  components: {
-    // PostList
-    SignIn,
-    SignUp,
-  },
   data() {
     return {
-      title: "",
+      title: "Sign In",
       widthConten: 374,
       loading: false,
-      componentSelected: "SignIn",
-      // selection: 1,
     };
   },
 
+  beforeUpdate() {
+    if (this.$route.name === "SignIn") {
+      this.title = "Sign In";
+      this.widthConten = 374;
+    } else {
+      this.title = "Sign Up";
+      this.widthConten = 674;
+    }
+  },
+
   computed: {
-    ...mapGetters(["message"]),
+    ...mapGetters(["message", "loginStatus"]),
   },
 
   methods: {

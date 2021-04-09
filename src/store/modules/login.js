@@ -10,24 +10,19 @@ export default {
   state: {
     users: [],
     isLogin: false,
-    loginStatus: {},
+    loginStatus: {
+      username: "",
+      token: "",
+      status: false,
+    },
     userLog: {},
 
     creatingUsers: [],
-    message: {
-      msg: "",
-      color: "",
-      status: "",
-    },
   },
 
   getters: {
     isLogin(state) {
       return state.isLogin;
-    },
-
-    message(state) {
-      return state.message;
     },
 
     creatingUsers(state) {
@@ -109,18 +104,6 @@ export default {
 
     setCheckIn(state, newUser) {
       state.creatingUsers.push(newUser);
-    },
-
-    setMesagge(state, msg) {
-      state.message = msg;
-    },
-
-    resetMessage(state) {
-      state.message = {
-        msg: "",
-        color: "",
-        status: "",
-      };
     },
 
     // setArrayTDC(state, obj) {
@@ -262,13 +245,17 @@ export default {
       // this.$router.push(-1);
     },
 
-    validateToken(commit, userLogin) {
+    validateToken(context) {
       // creatingUsers
-      console.log(commit.state.creatingUsers)
-      if (localStorage.getItem("token") === userLogin) {
-        commit.setIsLogin(true)
-      }else{
-        commit.setIsLogin(false)
+      // console.log(commit.state.creatingUsers);
+      // console.log("Token local store")
+      // console.log(localStorage.getItem("token"));
+      // console.log("LoginStatus")
+      // console.log(context.getters.loginStatus.token);
+      if (localStorage.getItem("token") === context.getters.loginStatus.token) {
+        context.commit("setIsLogin", true);
+      } else {
+        context.commit("setIsLogin", false);
       }
     },
 
@@ -289,22 +276,29 @@ export default {
             { headers: headers }
           )
           .then((response) => {
+            console.log(response);
             if (response.status === 200) {
-              // console.log(response);
-              // console.log(response.config.data); //email y psw
+              // console.log("TRAIGO")
+              // console.log(response.data.user.email); //email y psw
               localStorage.setItem("token", response.data.token);
               const message = {
-                msg: response,
+                msg: response.data.message,
                 color: "success",
-                status: response.data.message,
+                status: response.status,
               };
               context.commit("setMesagge", message);
+              const userValidated = {
+                username: response.data.user.email,
+                token:  response.data.token,
+                status: true,
+              };
+              context.commit("setloginStatus", userValidated);
               // context.commit("setCheckIn", obj);
             } else {
               const message = {
-                msg: response,
-                color: "danger",
-                status: response.data.message,
+                msg: response.data.message,
+                color: "error",
+                status: response.status,
               };
               context.commit("setMesagge", message);
             }
@@ -318,35 +312,22 @@ export default {
         };
         context.commit("resetMessage", message);
       }
+    },
 
-      // try {
-      //   const response = axios.get(
-      //     "http://localhost:3000/api/user/register"
-      //   );
-      //   const data = response.data;
-      //   console.log(data);
-      // } catch (error) {
-      //   console.error(error);
-      // }
+    logoOutUser(context){
+      console.log("Va a salir el usuario con id")
+      context.commit("setIsLogin", false);
+      localStorage.removeItem("token")
+      const message = {
+        msg: "Gracias, has cerrado sesion",
+        color: "info",
+        status: "",
+      };
+      context.commit("resetMessage", message);
     },
 
     editUserAPI() {
       console.log("Editando user en API");
     },
-
-    // agregarTDCStore(context, obj) {
-    //   const id = obj.id;
-    //   const nombre = obj.nombre;
-    //   if (
-    //     context.getters.validarIdUnico(id) &&
-    //     context.getters.validarNombreUnico(nombre)
-    //   ) {
-    //     console.log("Si vamos a guardar");
-    //     context.commit("setArrayTDC", obj);
-    //   } else {
-    //     console.log("no vamos a guardar");
-    //     return 0; //el id no es unico asi que no se registra
-    //   }
-    // },
   },
 };

@@ -2,7 +2,7 @@
   <v-main>
     Hola Dashboard {{userLog.name}}
     Hola Dashboard {{user.name}}
-    {{ this.$route.params.id }}
+    id {{ this.$route.params.id }}
   </v-main>
 </template>
 

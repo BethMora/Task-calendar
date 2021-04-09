@@ -70,10 +70,10 @@ export default {
       // group: null,
       itemsNavigation: [
         { name: "Create task", ico: "mdi-folder-plus", color: "success", url:"/createTask" },
-        { name: "List Users", ico: "mdi-account-details", color: "info", url:"/"},
+        { name: "List Users", ico: "mdi-account-details", color: "info", url:"/users"},
         { name: "List Tasks", ico: "mdi-calendar-check", color: "info", url:"/calendar"  },
-        { name: "Report", ico: "mdi-file-chart", color: "secondary", url:"/" },
-        { name: "Logo Out", ico: "mdi-exit-run", color: "light", url:"/" },
+        { name: "Report", ico: "mdi-file-chart", color: "secondary", url:"/users" },
+        { name: "Logo Out", ico: "mdi-exit-run", color: "light", url:"/users" },
       ],
     };
   },

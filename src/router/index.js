@@ -2,11 +2,15 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import Index from "../views/Index.vue";
 import Login from "../views/Login.vue";
-import SignUp from "../components/Login/SignUp.vue";
+import SignIn from "@/components/Login/SignIn.vue";
+import SignUp from "@/components/Login/SignUp.vue";
 import Dashboard from "../views/Dashboard.vue";
 import ListUsers from "../views/ListUsers.vue";
 import Calendar from "../components/Calendar.vue";
 import CreateTask from "../components/Tasks/CreateTask";
+
+// import { Store } from "vuex";
+import store from "../store";
 // import { Store } from "vuex";
 
 Vue.use(VueRouter);
@@ -21,10 +25,16 @@ const routes = [
     path: "/login",
     name: "Login",
     component: Login,
+    meta: { requiresAuth: false },
     children: [
       {
-        path: "/register",
-        name: "Register",
+        path: "",
+        name: "SignIn",
+        component: SignIn,
+      },
+      {
+        path: "/signUp",
+        name: "SignUp",
         component: SignUp,
       },
     ],
@@ -68,27 +78,6 @@ const routes = [
       },
     ],
   },
-  // {
-  //   path: "/register",
-  //   name: "Register",
-  //   component: Login,
-  //   children : [
-  //     {
-  //       path: "/Register",
-  //       name: "Register",
-  //       component: SignUp
-  //     },
-  //   ]
-  // },
-  // {
-  //   path: "/about",
-  //   name: "About",
-  //   // route level code-splitting
-  //   // this generates a separate chunk (about.[hash].js) for this route
-  //   // which is lazy-loaded when the route is visited.
-  //   component: () =>
-  //     import(/* webpackChunkName: "about" */ "../views/About.vue")
-  // }
 ];
 
 const router = new VueRouter({
@@ -99,25 +88,21 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   if (to.matched.some((route) => route.meta.requiresAuth)) {
-    // if(!Store.state.loginStatus.status){
-    // console.log(localStorage.getItem("token"))
-    if (localStorage.getItem("token") === null) {
-      console.log("token vacio");
-      if (to.name === "Login") {
-        next({ name: "Index" });
-      } else {
-        next({ name: "Login" });
-      }
-      // next("/login");
+    console.log(store.getters.isLogin)
+    if (!store.getters.isLogin) {
+      next({ path: "/login" });
+      // if (to.name === "Login") {
+      //   next({ name: "Index" });
+      // } else {
+      //   next({ path: "/login" });
+      // }
     } else {
       console.log("existe token");
-      // next();
+      next();
     }
   } else {
     next();
   }
-  // if (to.name !== 'Login' && !isAuthenticated) next({ name: 'Login' })
-  // else next()
 });
 
 export default router;
