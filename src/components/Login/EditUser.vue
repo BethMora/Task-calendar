@@ -1,143 +1,64 @@
 <template>
-  <v-form ref="form" v-model="valid" lazy-validation @submit.prevent="EditUser">
-    <v-row>
-      <v-col cols="12" md="6">
-        <v-text-field
-          v-model="firstName"
-          :counter="30"
-          :rules="[rules.required, rules.min, rules.max]"
-          label="First name"
-          required
-        ></v-text-field>
-      </v-col>
+  <div>
+    <h3 class="my-2">
+      Editing user information
+    </h3>
+    <v-divider class="mb-4" />
 
-      <v-col cols="12" md="6">
-        <v-text-field
-          v-model="lastName"
-          :counter="30"
-          :rules="[rules.required, rules.min, rules.max]"
-          label="Last name"
-          required
-        ></v-text-field>
-      </v-col>
-    </v-row>
-
-    <v-text-field
-      v-model="email"
-      :rules="[rules.required, rules.validEmail]"
-      label="E-mail"
-      required
-    ></v-text-field>
-
-    <v-row>
-      <v-col cols="12" md="6">
-        <v-text-field
-          v-model="userName"
-          :counter="15"
-          :rules="[rules.required, rules.minUserName, rules.maxUserName]"
-          label="User Name"
-          required
-        ></v-text-field>
-      </v-col>
-
-      <v-col cols="12" md="6">
-        <v-select
-          :items="rol"
-          label="Rol"
-          v-model="rolSelected"
-          :rules="[rules.required]"
-        ></v-select>
-      </v-col>
-    </v-row>
-
-    <v-row>
-      <v-col cols="12" md="6">
-        <v-text-field
-          v-model="psw"
-          :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
-          :rules="[rules.required, rules.minPsw, rules.maxPsw]"
-          :type="show1 ? 'text' : 'password'"
-          label="Password"
-          hint="At least 4 characters"
-          :counter="20"
-          @click:append="show1 = !show1"
-        ></v-text-field>
-      </v-col>
-      <v-col cols="12" md="6">
-        <v-text-field
-          v-model="pswConfirm"
-          :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
-          :rules="[
-            rules.required,
-            rules.minPsw,
-            rules.maxPsw,
-            rules.pswConfirmEqual,
-          ]"
-          :type="show1 ? 'text' : 'password'"
-          label="Confirm Password"
-          hint="At least 4 characters"
-          :counter="20"
-          @click:append="show1 = !show1"
-        ></v-text-field>
-      </v-col>
-    </v-row>
-
-    <v-file-input
-      label="Profile picture"
-      accept="image/png, image/jpeg, image/bmp"
-      show-size
-      :rules="[rules.file, rules.required]"
-      prepend-icon="mdi-camera"
-    ></v-file-input>
-
-    <v-btn
-      class="secondary black--text mt-3"
-      block
-      type="submit"
-      :disabled="!valid"
+    <v-form
+      ref="form"
+      v-model="valid"
+      lazy-validation
+      enctype="multipart/form-data"
+      @submit.prevent="updateUser"
     >
-      SUBMIT
-    </v-btn>
-  </v-form>
+      <FormUser
+        :valid="valid"
+        :rol="rol"
+        :formDataRegister="formDataRegister"
+      />
+
+      <v-btn
+        class="secondary black--text mt-3"
+        block
+        type="submit"
+        :disabled="!valid"
+        @keypress.enter="updateUser"
+      >
+        SUBMIT
+      </v-btn>
+    </v-form>
+  </div>
 </template>
 
 <script>
+import FormUser from "@/components/Login/Forms/FormUser";
 import { mapGetters, mapActions } from "vuex";
 export default {
   name: "EditUser",
+  components: {
+    FormUser,
+  },
   data() {
     return {
       valid: true,
-      firstName: "",
-      lastName: "",
-      email: "",
-      userName: "",
       rol: ["ADMIN", "USER"],
-      rolSelected: "",
-      psw: "",
-      pswConfirm: "",
-      avatar: "",
-      show1: false,
-
-      rules: {
-        required: (v) => !!v || "Required.",
-        min: (v) => v.length >= 2 || "At least 2 characters",
-        max: (v) => v.length <= 30 || "Maximum 30 characters",
-        minUserName: (v) => v.length >= 2 || "At least 2 characters",
-        maxUserName: (v) => v.length <= 15 || "Maximum 15 characters",
-        minPsw: (v) => v.length >= 4 || "At least 4 characters",
-        maxPsw: (v) => v.length <= 20 || "Maximum 20 characters",
-        validEmail: (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
-        pswConfirmEqual: (v) =>
-          v === this.psw || "The password confirmation does not match",
-        file: (value) =>
-          !value || value.size < 2000000 || "Size should be less than 2 MB!",
-      },
+      formDataRegister: {},
     };
   },
 
   computed: {
-    ...mapGetters(["creatingUsers"]),
+    ...mapGetters(["creatingUser", "userLoggedOk"]),
+  },
+
+  beforeMount() {
+    this.formDataRegister = {
+      name: this.userLoggedOk.name,
+      lastName: this.userLoggedOk.lastName,
+      role: this.userLoggedOk.role,
+      userName: this.userLoggedOk.userName,
+      email: this.userLoggedOk.email,
+    };
   },
 
   methods: {
@@ -146,23 +67,19 @@ export default {
       return this.$refs.form.validate();
     },
 
-    EditUser() {
-      console.log("Vamos a editar al usuario");
+    // reset() {
+    //   this.$refs.form.reset();
+    // },
+
+    updateUser() {
       if (this.validate()) {
-        const newUser = {
-          name: this.firstName,
-          lastName: this.lastName,
-          userName: this.userName,
-          email: this.email,
-          role: this.rolSelected,
-          password: this.psw,
-          imageName: this.avatar,
-          creationDate: new Date(),
-          modificationDate: new Date(),
-        };
-        // console.log(newUser)
-        this.editUserAPI(newUser);
-        // this.$refs.form.reset();
+        this.formDataRegister._id = this.userLoggedOk._id;
+        this.formDataRegister.modificationDate = new Date();
+        this.editUserAPI(this.formDataRegister);
+        this.$router.push({
+          name: "dashboard",
+          params: { id: this.userLoggedOk.userName },
+        });
       }
     },
   },

@@ -1,5 +1,5 @@
 <template>
- <v-main>
+  <v-main>
     <!-- <PostList msg="Welcome to Your Vue.js App" /> -->
     <Landing msg="Welcome to Your Vue.js App" />
   </v-main>

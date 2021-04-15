@@ -1,35 +1,23 @@
 <template>
   <v-main>
-    Hola
     <Users />
-    <ul v-for="user in allUsers" :key="user.id">
-      <li>{{ user.name }}</li>
-    </ul>
   </v-main>
 </template>
 
 <script>
-import Users from "@/components/Login/SignIn.vue";
-import { mapGetters, mapActions } from "vuex";
+import Users from "@/components/Login/Users.vue";
+
 export default {
   name: "ListUsers",
   components: {
-    Users,
-  },
-  computed: {
-    ...mapGetters(["allUsers"]),
-  },
+    Users
+  }
+  // computed: {
+  //   ...mapGetters(["allUsers"]),
+  // },
 
-  methods: {
-    ...mapActions(["bringUserAPI"]),
-  },
-
-  async created() {
-    try {
-      this.bringUserAPI();
-    } catch (error) {
-      console.error(error);
-    }
-  },
+  // methods: {
+  //   ...mapActions(["bringUserAPI"]),
+  // },
 };
 </script>

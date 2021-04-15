@@ -150,31 +150,31 @@ export default {
       //   colorTask: "",
       // },
       rules: {
-        required: (v) => !!v || "Required",
-        min: (v) => (v && v.length >= 5) || "Must be at least 5 characters",
-        max: (v) =>
+        required: v => !!v || "Required",
+        min: v => (v && v.length >= 5) || "Must be at least 5 characters",
+        max: v =>
           (v && v.length <= 30) || "Must not be longer than 30 characters",
-        maxMsg: (v) =>
+        maxMsg: v =>
           (v && v.length <= 120) || "Must not be longer than 120 characters",
-        minDate: (v) =>
+        minDate: v =>
           v < this.task.dateStart ||
           "Esta fecha no puede ser menor a la fecha de inicio ",
-        minDateEnd: (v) =>
+        minDateEnd: v =>
           v <= this.task.dateEnd ||
           "La fecha de fin no puede ser menor a esta fecha ",
-        formatDate: (v) =>
+        formatDate: v =>
           /[0-9]{4}-[0-9]{2}-[0-9]{2}/.test(v) ||
           "El formato de fecha es invalida",
-        formatTime: (v) =>
-          /[0-9]{2}:[0-9]{2}/.test(v) || "El formato del tiempo es invalido",
-      },
+        formatTime: v =>
+          /[0-9]{2}:[0-9]{2}/.test(v) || "El formato del tiempo es invalido"
+      }
     };
   },
 
   watch: {
     task() {
       console.log("Hubo un cambio");
-    },
+    }
   },
 
   methods: {
@@ -185,7 +185,7 @@ export default {
       this.task.timeEnd = "";
       this.task.colorTask = "";
       return this.$refs.form.reset();
-    },
+    }
 
     // ...mapActions(["addNewTask"]),
     // sendTask() {
@@ -220,6 +220,6 @@ export default {
     //     this.$router.push("/calendar");
     //   }
     // },
-  },
+  }
 };
 </script>

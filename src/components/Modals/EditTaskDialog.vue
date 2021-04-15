@@ -122,15 +122,15 @@ export default {
       dateEnd: "",
       colorTask: "",
       rules: {
-        required: (v) => !!v || "Required",
-        min: (v) => (v && v.length >= 5) || "Must be at least 5 characters",
-        max: (v) =>
+        required: v => !!v || "Required",
+        min: v => (v && v.length >= 5) || "Must be at least 5 characters",
+        max: v =>
           (v && v.length <= 30) || "Must not be longer than 30 characters",
 
-        maxMsg: (v) =>
-          (v && v.length <= 120) || "Must not be longer than 120 characters",
+        maxMsg: v =>
+          (v && v.length <= 120) || "Must not be longer than 120 characters"
         // minHour: (v) => (this.dateStart === dateEnd && )
-      },
+      }
     };
   },
 
@@ -220,7 +220,7 @@ export default {
         description: this.descriptionTask,
         start: this.minDate,
         end: this.dateEnd,
-        color: this.colorTask,
+        color: this.colorTask
       };
 
       try {
@@ -234,7 +234,7 @@ export default {
       // console.log(this.valid);
       // console.log("Enviando formulario");
       // console.log(this.valid)
-    },
-  },
+    }
+  }
 };
 </script>

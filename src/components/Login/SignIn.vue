@@ -4,7 +4,7 @@
       v-model="userName"
       :counter="4"
       :rules="[rules.required, rules.min]"
-      label="User Name"
+      label="User Name or Email"
       required
     ></v-text-field>
 
@@ -23,8 +23,8 @@
     <v-btn
       class="secondary black--text mt-3"
       block
-      @click="login"
       :disabled="!valid"
+      @click.prevent="login"
     >
       Submit
     </v-btn>
@@ -39,12 +39,12 @@
       icon="mdi-account-alert"
       class="mt-6"
     >
-      <span v-if="loginStatus.username == '-1'" class="row ml-1">
+      <!-- <span v-if="loginStatus.username == '-1'" class="row ml-1">
         <strong> Incorrect user </strong>
       </span>
       <span v-if="loginStatus.psw == '-1'" class="row ml-1">
         <strong> Incorrect password</strong>
-      </span>
+      </span> -->
     </v-alert>
   </v-form>
 </template>
@@ -56,19 +56,9 @@ export default {
   data() {
     return {
       valid: true,
-      name: "",
-      email: "",
-      userName: "",
-      //   nameRules: [
-      //     (v) => !!v || "Name is required",
-      //     (v) => (v && v.length <= 10) || "Name must be less than 10 characters",
-      //   ],
       show1: false,
+      userName: "",
       psw: "",
-      //   emailRules: [
-      //     (v) => !!v || "E-mail is required",
-      //     (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
-      //   ],
 
       rules: {
         required: (value) => !!value || "Required.",
@@ -80,41 +70,61 @@ export default {
     };
   },
 
-  async created() {
-    try {
-      this.bringUserAPI();
-    } catch (error) {
-      console.error(error);
-    }
-  },
+  // async created() {
+  //   // try {
+  //   //   this.bringUserAPI();
+  //   // } catch (error) {
+  //   //   console.error(error);
+  //   // }
+  // },
 
   computed: {
-    ...mapGetters(["allUsers", "loginStatus", "isLogin"]),
+    // ...mapGetters(["allUsers", "loginStatus", "isLogin"]),
+    ...mapGetters(["userLoggedOk"]),
   },
 
   watch: {
-    loginStatus() {
-      if (this.loginStatus.status === false) {
-        this.isValidLogin = true;
-      } else {
-        console.log("entro")
-        console.log(this.isLogin)
-        this.validateToken()
-        console.log("Luego de la validacion")
-        console.log(this.isLogin)
-        if(this.isLogin === true){
-          this.isValidLogin = false;
-          this.$router.push({ name: "dashboard", params: { id: this.userName } });
-        }
+    //   usersLogin() {
+    //     if (this.loginStatus.status === false) {
+    //       this.isValidLogin = true;
+    //     } else {
+    //       console.log("entro");
+    //       console.log(this.isLogin);
+    //       this.validateToken();
+    //       console.log("Luego de la validacion");
+    //       console.log(this.isLogin);
+    //       if (this.isLogin === true) {
+    //         this.isValidLogin = false;
+    //         this.$router.push({
+    //           name: "dashboard",
+    //           params: { id: this.userName },
+    //         });
+    //       }
+    //     }
+    //     // console.log(this.loginStatus.status)
+    //   },
+
+    userLoggedOk() {
+      console.log("esta es la informacion para el dashboard");
+      console.log(this.userLoggedOk);
+
+      if (this.userLoggedOk.isLogin) {
+        this.$router.push({
+          name: "dashboard",
+          params: { id: this.userLoggedOk.userName },
+        });
       }
-      // console.log(this.loginStatus.status)
-      // val || this.msgError();
     },
   },
 
   methods: {
-    ...mapActions(["bringUserAPI", "loginUser", "loginUserAPI", "validateToken"]),
-    // ...mapActions([ "loginUser"]),
+    // ...mapActions([
+    //   "bringUserAPI",
+    //   "loginUser",
+    //   "loginUserAPI",
+    //   "validateToken",
+    // ]),
+    ...mapActions(["loginUserAPI", "validateToken"]),
     validate() {
       return this.$refs.form.validate();
     },
@@ -124,14 +134,15 @@ export default {
     },
 
     login() {
-      // console.log(this.validate())
-      const user = {
-        username: this.userName,
-        psw: this.psw,
-      };
-      // this.reset();
-      // this.loginUser(user);
-      this.loginUserAPI(user);
+      if (this.validate()) {
+        const user = {
+          username: this.userName,
+          psw: this.psw,
+        };
+        // this.reset();
+        // this.loginUser(user);
+        this.loginUserAPI(user);
+      }
     },
   },
 };

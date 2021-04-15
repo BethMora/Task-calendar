@@ -1,9 +1,10 @@
 <template>
   <v-app>
-    <Nav/>
+    <Nav />
     <!-- <Navigation/> -->
-    <router-view/>
+    <router-view />
     <Footer />
+    <Alert />
   </v-app>
 </template>
 
@@ -12,6 +13,7 @@
 import Nav from "@/components/Structure/Nav";
 // import Navigation from "@/components/Navigation";
 import Footer from "@/components/Structure/Footer";
+import Alert from "@/components/Modals/Alert";
 
 export default {
   name: "App",
@@ -21,14 +23,14 @@ export default {
     // Navigation,
     // Started,
     Footer,
+    Alert
   },
 
   data: () => ({
     //
-  }),
+  })
 };
 </script>
-
 
 <style>
 #app {

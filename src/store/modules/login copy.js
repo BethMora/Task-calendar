@@ -12,6 +12,7 @@ export default {
   strict: true,
   state: {
     users: [],
+    isLogin: false,
     loginStatus: {
       username: "",
       token: "",
@@ -20,55 +21,12 @@ export default {
     userLog: {},
 
     creatingUsers: [],
-
-    //datos de usuarios logueados
-    // isLogin: false,
-
-    usersLogin: [],
-    userLoggedOk: {},
   },
 
   getters: {
     isLogin(state) {
       return state.isLogin;
     },
-
-    usersLogin(state) {
-      return state.usersLogin;
-    },
-
-    newUserLoggedIn: (state) => (keyUnique) => {
-      const userLogged = state.usersLogin.find(
-        (user) => user._id === keyUnique
-      );
-
-      if (userLogged != undefined) {
-        if (userLogged.token === sessionStorage.getItem("token")) {
-          userLogged.isLogin = true;
-        } else {
-          userLogged.isLogin = false;
-        }
-      }
-      return userLogged;
-    },
-
-    userLoggedId: (state) => (id) => {
-      const userAccordingId = state.usersLogin.find((user) => user._id === id);
-      return userAccordingId;
-    },
-
-    userLoggedOk(state) {
-      return state.userLoggedOk;
-    },
-
-    // validarNombreUnico: state => nombre => {
-    //   for (let i of state.arrayTDC) {
-    //     if (i.nombre.toLowerCase().trim() === nombre.toLowerCase().trim()) {
-    //       return state.bandNombreUnico = false
-    //     }
-    //   }
-    //   return state.bandNombreUnico = true
-    // },
 
     creatingUsers(state) {
       return state.creatingUsers;
@@ -132,10 +90,6 @@ export default {
       state.isLogin = value;
     },
 
-    setUsersLogin(state, value) {
-      state.usersLogin.push(value);
-    },
-
     setApiUsers(state, users) {
       state.users = users;
     },
@@ -153,22 +107,6 @@ export default {
 
     setCheckIn(state, newUser) {
       state.creatingUsers.push(newUser);
-    },
-
-    setUserLoggedOk(state, user) {
-      // console.log(state.userLoggedOk);
-      state.userLoggedOk = user;
-      // console.log(state.userLoggedOk);
-    },
-
-    updateUserLoggedOk(state, user) {
-      for (const property in user) {
-        if (
-          Object.prototype.hasOwnProperty.call(state.userLoggedOk, property)
-        ) {
-          state.userLoggedOk[property] = user[property];
-        }
-      }
     },
 
     // setArrayTDC(state, obj) {
@@ -278,8 +216,6 @@ export default {
     },
 
     // *******************************************
-    // *******************************************
-
     async checkInAPI(context, obj) {
       let message = {};
       try {
@@ -293,7 +229,8 @@ export default {
           context.commit("setCheckIn", obj);
           // context.commit("setMesagge", message);
         } else {
-          alert("There was an error the following \n" + response);
+          console.log("Hubo un error");
+          console.log(response);
           message = {
             msg: response.data.error.message,
             color: "error",
@@ -301,6 +238,7 @@ export default {
           };
           // context.commit("setMesagge", message);
         }
+        // context.commit("setMesagge", message);
       } catch (error) {
         alert("There was an error the following \n" + error);
         message = {
@@ -314,54 +252,38 @@ export default {
       context.commit("changeSheet");
     },
 
-    // validateToken(context, keyUnique) {
-    //   console.log("Validando el token ");
-    //   // if (sessionStorage.getItem("token") === context.getters.loginStatus.token) {
-    //   const userExistLogged  = context.getters.newUserLoggedIn(keyUnique)
-    //   console.log(userExistLogged)
-    //   //   if(userExistLogged && userExistLogged.lenght>0){
-
-    //   //   }else{
-
-    //   //   }
-    //   // if (sessionStorage.getItem("token") === ) {
-    //   // context.commit("setIsLogin", true);
-    //   // } else {
-    //   //   context.commit("setIsLogin", false);
-    //   // }
-    // },
+    validateToken(context) {
+      if (localStorage.getItem("token") === context.getters.loginStatus.token) {
+        context.commit("setIsLogin", true);
+      } else {
+        context.commit("setIsLogin", false);
+      }
+    },
 
     async loginUserAPI(context, obj) {
-      console.log("Se qiere loguear el usuario")
-      console.log(obj)
       let message = {};
-      const email = obj.username;
-      const psw = encryptKey(obj.psw);
-      const dataLogin = {
-        email: email,
-        password: psw,
-      };
-      console.log("Se qiere loguear el usuario")
-      console.log(dataLogin.email)
-      console.log(dataLogin.password)
-      
       try {
+        const dataLogin = {
+          email: obj.username,
+          password: encryptKey(obj.username, obj.psw),
+        };
+        
         const response = await UserService.loginUser(dataLogin);
         if (response.status === 200) {
-          sessionStorage.setItem("token", response.data.token);
-          const newUserLogged = response.data.user;
-          newUserLogged.token = response.data.token;
-          const keyUnique = newUserLogged._id;
-          context.commit("setUsersLogin", newUserLogged);
-          if (context.getters.newUserLoggedIn(keyUnique) != null) {
-            context.commit(
-              "setUserLoggedOk",
-              context.getters.userLoggedId(keyUnique)
-            );
-          } else {
-            console.log("No esta logueado, esta es la lista de usuarios");
-            console.log(context.getters.usersLogin);
-          }
+          localStorage.setItem("token", response.data.token);
+          message = {
+            msg: response.data.message,
+            color: "success",
+            status: response.status,
+          };
+          context.commit("setMesagge", message);
+          const userValidated = {
+            username: response.data.user.email,
+            token: response.data.token,
+            status: true,
+          };
+          context.commit("setloginStatus", userValidated);
+          // context.commit("setCheckIn", obj);
         } else {
           message = {
             msg: response.data.message,
@@ -369,7 +291,6 @@ export default {
             status: response.status,
           };
           context.commit("setMesagge", message);
-          context.commit("changeSheet");
         }
       } catch (error) {
         alert("There was an error the following \n" + error);
@@ -378,87 +299,26 @@ export default {
           color: "danger",
           status: error,
         };
-        context.commit("setMesagge", message);
-        context.commit("changeSheet");
+        context.commit("resetMessage", message);
       }
+      context.commit("changeSheet");
     },
 
     logoOutUser(context) {
-      sessionStorage.removeItem("token");
-      context.commit("setUserLoggedOk", {});
-      // const message = {
-      //   msg: "Thank you, you have logged out",
-      //   color: "accent",
-      //   status: "",
-      // };
-      // context.commit("setMesagge", message);
-      // context.commit("changeSheet");
-    },
-
-    async editUserAPI(context, obj) {
-      let message = {};
-      try {
-        const response = await UserService.updateUser(obj);
-        if (response.status === 200) {
-          message = {
-            msg: response.data.message,
-            color: "success",
-            status: response.request.status,
-          };
-          // context.commit("setCheckIn", obj);
-          context.commit("updateUserLoggedOk", obj);
-        } else {
-          alert("There was an error the following \n" + response);
-          message = {
-            msg: response.data.error.message,
-            color: "error",
-            status: response.status,
-          };
-        }
-      } catch (error) {
-        alert("There was an error the following \n" + error);
-        message = {
-          msg: error,
-          color: "danger",
-          status: error,
-        };
-        // context.commit("setMesagge", message);
-      }
+      console.log("Va a salir el usuario con id");
+      context.commit("setIsLogin", false);
+      localStorage.removeItem("token");
+      const message = {
+        msg: "Thank you, you have logged out",
+        color: "accent",
+        status: "",
+      };
       context.commit("setMesagge", message);
       context.commit("changeSheet");
     },
 
-    async editImageProfileAPI(context, obj) {
-      let message = {};
-      try {
-        const response = await UserService.updateUser(obj);
-        if (response.status === 200) {
-          message = {
-            msg: response.data.message,
-            color: "success",
-            status: response.request.status,
-          };
-          // context.commit("setCheckIn", obj);
-          context.commit("updateUserLoggedOk", obj);
-        } else {
-          alert("There was an error the following \n" + response);
-          message = {
-            msg: response.data.error.message,
-            color: "error",
-            status: response.status,
-          };
-        }
-      } catch (error) {
-        alert("There was an error the following \n" + error);
-        message = {
-          msg: error,
-          color: "danger",
-          status: error,
-        };
-        // context.commit("setMesagge", message);
-      }
-      context.commit("setMesagge", message);
-      context.commit("changeSheet");
+    editUserAPI() {
+      console.log("Editando user en API");
     },
   },
 };

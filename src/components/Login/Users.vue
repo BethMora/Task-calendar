@@ -1,10 +1,6 @@
 <template>
   <v-card elevation="16" max-width="400" class="mx-auto">
-    <v-virtual-scroll
-      :items="items"
-      height="300"
-      item-height="64"
-    >
+    <v-virtual-scroll :items="items" height="300" item-height="64">
       <template v-slot:default="{ item }">
         <v-list-item :key="item">
           <v-list-item-action>
@@ -29,18 +25,30 @@
         <v-divider></v-divider>
       </template>
     </v-virtual-scroll>
+    <ul v-for="user in allUsers" :key="user.id">
+      <li>{{ user.name }}</li>
+    </ul>
   </v-card>
 </template>
 
 <script>
-
+// import { mapGetters, mapActions } from "vuex";
 import { mapGetters, mapActions } from "vuex";
-
 export default {
   name: "Users",
-  computed:{
-        ...mapGetters(["allUsers"]),
+  computed: {
+    ...mapGetters(["allUsers"])
+  },
 
-    },
+  methods: {
+    ...mapActions(["bringUserAPI"])
+  },
+  async created() {
+    try {
+      this.bringUserAPI();
+    } catch (error) {
+      console.error(error);
+    }
+  }
 };
 </script>

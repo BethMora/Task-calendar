@@ -74,7 +74,9 @@
             <v-card color="grey lighten-4" min-width="350px" flat>
               <v-toolbar :color="selectedEvent.color" dark>
                 <v-btn icon>
-                  <v-icon @click="editTask(selectedEvent.id)">mdi-pencil</v-icon>
+                  <v-icon @click="editTask(selectedEvent.id)"
+                    >mdi-pencil</v-icon
+                  >
                 </v-btn>
                 <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
                 <v-spacer></v-spacer>
@@ -108,10 +110,7 @@
       :emit="emit"
       :dateSelected="dateSelected"
     />
-    <EditTaskDialog
-      :dialogEditTask="dialogEditTask"
-      :emitEdit="emitEdit"
-    />
+    <EditTaskDialog :dialogEditTask="dialogEditTask" :emitEdit="emitEdit" />
   </v-main>
 </template>
 
@@ -124,7 +123,7 @@ export default {
   name: "Calendar",
   components: {
     AddTaskDialog,
-    EditTaskDialog,
+    EditTaskDialog
   },
 
   data: () => ({
@@ -140,7 +139,7 @@ export default {
       month: "Month",
       week: "Week",
       day: "Day",
-      "4day": "4 Days",
+      "4day": "4 Days"
     },
     selectedEvent: {},
     selectedElement: null,
@@ -170,7 +169,7 @@ export default {
     name: "",
     details: "",
     color: "",
-    currentlyEditing: null,
+    currentlyEditing: null
   }),
   mounted() {
     this.$refs.calendar.checkChange();
@@ -186,7 +185,7 @@ export default {
 
       set: function(value) {
         this.emit(value);
-      },
+      }
     },
 
     dialogEditTask: {
@@ -196,8 +195,8 @@ export default {
 
       set: function(value) {
         this.emitEdit(value);
-      },
-    },
+      }
+    }
   },
 
   methods: {
@@ -232,7 +231,7 @@ export default {
         this.dateSelected = {
           day: day,
           month: month,
-          year: year,
+          year: year
         };
 
         this.isTaskDialog = true;
@@ -325,14 +324,13 @@ export default {
         txt = "You pressed Cancel!";
         this.selectedOpen = false;
       }
-      console.log(txt)
+      console.log(txt);
     },
 
-    editTask(id){
-      console.log("edit task de id "+ id);
-      console.log(id)
+    editTask(id) {
+      console.log("edit task de id " + id);
+      console.log(id);
       this.isEditTaskDialog = true;
-
     }
   },
 
@@ -349,7 +347,7 @@ export default {
 
       // console.log(this.events);
       // this.updateRange();
-    },
+    }
 
     // events() {
     //   console.log("Soy TASKS");
@@ -358,6 +356,6 @@ export default {
     //   // this.showEvent();
     //   console.log(this.events);
     // },
-  },
+  }
 };
 </script>

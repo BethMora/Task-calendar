@@ -9,13 +9,13 @@
 <script>
 import { mapActions } from "vuex";
 import { formatDateToLocal } from "@/libs/dates";
-import FormCreateTask from "@/components/Tasks/FormCreateTask";
+import FormCreateTask from "@/components/Tasks/Forms/FormCreateTask";
 
 export default {
   name: "CreateTask",
   props: ["dialogAddTask", "emit", "dateSelected"],
   components: {
-    FormCreateTask,
+    FormCreateTask
   },
   data() {
     return {
@@ -27,8 +27,8 @@ export default {
         timeEnd: "",
         nameTask: "",
         descriptionTask: "",
-        colorTask: "",
-      },
+        colorTask: ""
+      }
     };
   },
 
@@ -68,13 +68,13 @@ export default {
             dateStart: this.task.dateStart,
             timeStart: this.task.timeStart,
             dateEnd: this.task.dateEnd,
-            timeEnd: this.task.timeEnd,
-          },
+            timeEnd: this.task.timeEnd
+          }
         };
         this.addNewTask(task);
         this.$router.push("/calendar");
       }
-    },
-  },
+    }
+  }
 };
 </script>

@@ -4,7 +4,6 @@
       <v-col v-for="card in cards" :key="card.title" :cols="card.flex">
         <v-hover>
           <template v-slot:default="{ hover }">
-
             <v-card class="my-5" :elevation="hover ? 24 : 6">
               <v-img
                 :src="card.src"
@@ -18,7 +17,7 @@
               <v-card-actions>
                 <v-spacer></v-spacer>
 
-                <v-btn icon >
+                <v-btn icon>
                   <v-icon color="primary">mdi-heart</v-icon>
                 </v-btn>
 
@@ -47,20 +46,20 @@ export default {
         {
           title: "Users",
           src: "https://cdn.vuetifyjs.com/images/cards/house.jpg",
-          flex: 12,
+          flex: 12
         },
         {
           title: "Tasks",
           src: "https://cdn.vuetifyjs.com/images/cards/road.jpg",
-          flex: 6,
+          flex: 6
         },
         {
           title: "Best airlines",
           src: "https://cdn.vuetifyjs.com/images/cards/plane.jpg",
-          flex: 6,
-        },
-      ],
+          flex: 6
+        }
+      ]
     };
-  },
+  }
 };
 </script>

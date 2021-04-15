@@ -29,8 +29,14 @@
 
       <v-card-text>
         <v-form ref="form" v-model="valid" lazy-validation @submit.prevent>
-          <FormCreateTask :task="task" :valid="valid" :sendTaskDial="sendTaskDial" 
-          :dialogAddTask="dialogAddTask" :emit="emit" :dateSelected="dateSelected"/>
+          <FormCreateTask
+            :task="task"
+            :valid="valid"
+            :sendTaskDial="sendTaskDial"
+            :dialogAddTask="dialogAddTask"
+            :emit="emit"
+            :dateSelected="dateSelected"
+          />
         </v-form>
       </v-card-text>
     </v-card>
@@ -40,13 +46,13 @@
 <script>
 import { mapActions } from "vuex";
 import { formatDateToLocal, toMonthNumber } from "@/libs/dates";
-import FormCreateTask from "@/components/Tasks/FormCreateTask";
+import FormCreateTask from "@/components/Tasks/Forms/FormCreateTask";
 
 export default {
   name: "AddTaskDialog",
-  props: ["dialogAddTask", "emit", "dateSelected","task", "valid", "sendTask"],
+  props: ["dialogAddTask", "emit", "dateSelected", "task", "valid", "sendTask"],
   components: {
-    FormCreateTask,
+    FormCreateTask
   },
   data() {
     return {
@@ -61,7 +67,7 @@ export default {
       //   colorTask: "",
       // },
       // startDateSent: "",
-      minDate: "",
+      minDate: ""
     };
   },
 
@@ -132,13 +138,13 @@ export default {
             dateStart: this.task.dateStart,
             timeStart: this.task.timeStart,
             dateEnd: this.task.dateEnd,
-            timeEnd: this.task.timeEnd,
-          },
+            timeEnd: this.task.timeEnd
+          }
         };
         this.addNewTask(task);
         this.$router.push("/calendar");
       }
-    },
+    }
 
     // sendTask() {
     //   const localDateStart = formatDateToLocal(this.dateStart, this.timeStart);
@@ -163,6 +169,6 @@ export default {
     //     alert("The task has not been registered successfully ");
     //   }
     // },
-  },
+  }
 };
 </script>

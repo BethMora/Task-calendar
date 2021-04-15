@@ -13,19 +13,13 @@
       </v-list-item>
       <v-col class="d-flex justify-center">
         <v-list-item-avatar size="60">
-          <v-img
-            src="@/assets/tasks.png"
-            transition="fab-transition"
-          ></v-img>
+          <v-img src="@/assets/tasks.png" transition="fab-transition"></v-img>
         </v-list-item-avatar>
       </v-col>
 
       <v-divider class="mb-2"></v-divider>
       <v-list nav dense>
-        <v-list-item-group
-          
-          active-class="accent--text text--accent-4"
-        >
+        <v-list-item-group active-class="accent--text text--accent-4">
           <v-list-item
             v-for="(item, index) in itemsNavigation"
             :key="index"
@@ -45,13 +39,7 @@
       </v-list>
 
       <v-col class="d-flex justify-center">
-        <v-btn
-          class="mx-2 primary--accent"
-          rounded
-          color="white"
-          
-          large
-        >
+        <v-btn class="mx-2 primary--accent" rounded color="white" large>
           <v-icon dark>
             mdi-close
           </v-icon>
@@ -69,25 +57,45 @@ export default {
     return {
       // group: null,
       itemsNavigation: [
-        { name: "Create task", ico: "mdi-folder-plus", color: "success", url:"/createTask" },
-        { name: "List Users", ico: "mdi-account-details", color: "info", url:"/users"},
-        { name: "List Tasks", ico: "mdi-calendar-check", color: "info", url:"/calendar"  },
-        { name: "Report", ico: "mdi-file-chart", color: "secondary", url:"/users" },
-        { name: "Logo Out", ico: "mdi-exit-run", color: "light", url:"/users" },
-      ],
+        {
+          name: "Create task",
+          ico: "mdi-folder-plus",
+          color: "success",
+          url: "/createTask"
+        },
+        {
+          name: "List Users",
+          ico: "mdi-account-details",
+          color: "info",
+          url: "/users"
+        },
+        {
+          name: "List Tasks",
+          ico: "mdi-calendar-check",
+          color: "info",
+          url: "/calendar"
+        },
+        {
+          name: "Report",
+          ico: "mdi-file-chart",
+          color: "secondary",
+          url: "/users"
+        },
+        { name: "Logo Out", ico: "mdi-exit-run", color: "light", url: "/users" }
+      ]
     };
   },
- 
+
   methods: {
     changeVal() {
       this.changeValue(false);
     },
-    sendUrl(url){
-      if(this.$route.path != url){
-        this.$router.push(url)
-        this.changeVal()
+    sendUrl(url) {
+      if (this.$route.path != url) {
+        this.$router.push(url);
+        this.changeVal();
       }
     }
-  },
+  }
 };
 </script>

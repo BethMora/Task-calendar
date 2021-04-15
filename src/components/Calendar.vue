@@ -96,7 +96,11 @@
                 <v-btn text color="accent" @click="editTask(selectedEvent.id)">
                   Edit
                 </v-btn>
-                <v-btn text color="accent" @click="deleteTask(selectedEvent.id)">
+                <v-btn
+                  text
+                  color="accent"
+                  @click="deleteTask(selectedEvent.id)"
+                >
                   Delete
                 </v-btn>
               </v-card-actions>
@@ -124,7 +128,7 @@ export default {
   name: "Calendar",
   components: {
     AddTaskDialog,
-    EditTaskDialog,
+    EditTaskDialog
   },
 
   data: () => ({
@@ -134,7 +138,7 @@ export default {
       month: "Month",
       week: "Week",
       day: "Day",
-      "4day": "4 Days",
+      "4day": "4 Days"
     },
     selectedEvent: {},
     selectedElement: null,
@@ -162,7 +166,7 @@ export default {
 
     isTaskDialog: false, //flag open modal windows
     isEditTaskDialog: false, //flag open modal windows
-    dateSelected: {}, //obj contains the task start date
+    dateSelected: {} //obj contains the task start date
 
     // hidden: false,
 
@@ -218,7 +222,7 @@ export default {
 
       set: function(value) {
         this.emit(value);
-      },
+      }
     },
 
     dialogEditTask: {
@@ -228,8 +232,8 @@ export default {
 
       set: function(value) {
         this.emitEdit(value);
-      },
-    },
+      }
+    }
   },
 
   methods: {
@@ -264,7 +268,7 @@ export default {
         this.dateSelected = {
           day: day,
           month: month,
-          year: year,
+          year: year
         };
 
         this.isTaskDialog = true;
@@ -331,7 +335,7 @@ export default {
           start: first,
           end: second,
           color: this.colors[this.rnd(0, this.colors.length - 1)],
-          timed: !allDay,
+          timed: !allDay
         });
       }
       // console.log(events)
@@ -341,8 +345,8 @@ export default {
       // console.log(this.tasks)
       // console.log(typeof(this.tasks))
       // this.events = events //muestra los eventos
-      console.log("El listado de eventios generados es \n ")
-      console.log(events)
+      console.log("El listado de eventios generados es \n ");
+      console.log(events);
       this.events = this.tasks; //muestra los eventos
     },
     rnd(a, b) {
@@ -407,7 +411,7 @@ export default {
       console.log("edit task de id " + id);
       console.log(id);
       this.isEditTaskDialog = true;
-    },
+    }
   },
 
   watch: {
@@ -429,7 +433,7 @@ export default {
       // this.selectedEvent  = this.tasks
       // this.showEvent();
       console.log(this.events);
-    },
-  },
+    }
+  }
 };
 </script>
