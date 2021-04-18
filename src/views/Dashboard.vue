@@ -1,13 +1,13 @@
 <template>
   <v-main>
-    Hola Dashboard {{ userLoggedOk }} <br><br>
-    <P> Hola Dashboard {{ userLoggedOk.name }} id </P>
-    
+     Hola Dashboard {{ userLoggedOk }} <br><br>
     <hr />
-    {{ this.$route.params.id }}
+    <P> Hola Dashboard: isLogin {{ userLoggedOk.isLogin }} </P>
+    
+    <!--{{ this.$route.params.id }}
 
     La data que estamos manejando :
-    <!-- :src="require('http://localhost:3000/public/img/' + userLoggedOk.imageName)"  -->
+    :src="require('http://localhost:3000/public/img/' + userLoggedOk.imageName)"  -->
     <v-container>
           <router-view> </router-view>
     </v-container>

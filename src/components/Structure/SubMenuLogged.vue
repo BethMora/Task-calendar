@@ -32,9 +32,6 @@
       <template v-else>
         <v-list-item @click="clickSubMenu(menu.action)">
           <v-list-item-icon>
-            <!-- <template v-if="!menu.url">
-              <Avatar :url="imageAvatar(imageName)" :size="40" />
-            </template> -->
             <v-icon v-text="menu.url" />
           </v-list-item-icon>
 
@@ -44,33 +41,6 @@
         </v-list-item>
       </template>
     </div>
-
-    <!-- <v-list-group
-        v-for="(e, i) in menuLoggedIn"
-        :key="i"
-        :value="true"
-        :prepend-icon="e.url ? e.url : (url = '')"
-      >
-        <template v-slot:activator>
-          <template v-if="!e.url">
-            <Avatar :url="imageAvatar(imageName)" :size="40" />
-          </template>
-          <v-list-item-title>{{ e.title }}</v-list-item-title>
-        </template>
-
-        <v-list-item
-          v-for="(element, index) in e.submenu"
-          :key="index"
-          :value="true"
-          no-action
-          link
-        >
-          <v-list-item-icon>
-            <v-icon v-text="element.url" />
-          </v-list-item-icon>
-          <v-list-item-title v-text="element.title" />
-        </v-list-item>
-      </v-list-group> -->
   </v-card>
 </template>
 

@@ -5,16 +5,9 @@ import EventService from "@/services/EventService";
 
 export default {
   strict: true,
-  // modules: {
-  //   subModule: {
-  //     getters: {
-  //       login() {},
-  //     },
-  //   },
-  // },
   state: {
     tasks: [],
-    counter: 1,
+    // counter: 1,
   },
 
   getters: {
@@ -26,7 +19,7 @@ export default {
   mutations: {
     setTask(state, task) {
       state.tasks.push(task);
-      state.counter++;
+      // state.counter++;
     },
   },
 

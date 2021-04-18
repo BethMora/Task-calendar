@@ -5,45 +5,54 @@
     </v-alert>
     <v-row justify="center">
       <v-col lg="6" xs="1" align="center">
-        <DatePickerModal
-          :dateModal="dateModal"
-          :isModalPicker="isModalPicker"
-          :date="dateStart"
-          titlePicker="Select start date"
-          :changeDialogPicker="changeDialogPicker"
-        />
-      </v-col>
+        <v-text-field
+          :rules="[rules.required]"
+          v-model="task.dateStart"
+          label="Start date:"
+          readonly
+          placeholder="Select start date on calendar"
+        ></v-text-field>
 
-      <v-col lg="6" xs="1" align="center" class="red" >
-        <v-menu
-          ref="dateModal"
-          v-model="isModalPicker"
-          :close-on-content-click="false"
-          :return-value.sync="dateStart"
-          transition="scale-transition"
-          offset-y
-          min-width="auto"
-        >
-          <template v-slot:activator="{ on, attrs }">
-            <v-text-field
-              v-model="dateStart"
-              label="Select start date"
-              prepend-icon="mdi-calendar"
-              readonly
-              v-bind="attrs"
-              v-on="on"
-            ></v-text-field>
-          </template>
-          <v-date-picker v-model="dateStart" no-title scrollable>
-            <v-spacer></v-spacer>
-            <v-btn text color="primary" @click="changeDialogPicker(false)">
-              Cancel
-            </v-btn>
-            <v-btn text color="primary" @click="$refs.dateModal.save(dateStart)">
-              OK
-            </v-btn>
-          </v-date-picker>
-        </v-menu>
+        <!-- <template v-if="task.dateStart">
+          <v-date-picker
+            v-model="task.dateStart"
+            year-icon="mdi-calendar-blank"
+            flat
+            disabled=""
+          ></v-date-picker>
+        </template>
+
+        <template v-else> -->
+          <v-menu
+            ref="menu"
+            v-model="menu"
+            :close-on-content-click="false"
+            :return-value.sync="date"
+            transition="scale-transition"
+            offset-y
+            min-width="auto"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-text-field
+                v-model="task.dateStart"
+                label="Start date:"
+                prepend-icon="mdi-calendar"
+                readonly
+                v-bind="attrs"
+                v-on="on"
+              ></v-text-field>
+            </template>
+            <v-date-picker v-model="task.dateStart" no-title scrollable>
+              <v-spacer></v-spacer>
+              <v-btn text color="primary" @click="menu = false">
+                Cancel
+              </v-btn>
+              <v-btn text color="primary" @click="$refs.menu.save(date)">
+                OK
+              </v-btn>
+            </v-date-picker>
+          </v-menu>
+        <!-- </template> -->
       </v-col>
 
       <v-col lg="6" xs="1" align="center">
@@ -132,23 +141,13 @@
 </template>
 
 <script>
-import DatePickerModal from "@/components/reusable/DatePickerModal";
 export default {
   name: "FormCreateTask",
   // props: ["task", "valid", "sendTask", "dialogAddTask", "emit", "dateSelected"],
   props: ["task"],
-  components: {
-    DatePickerModal,
-  },
   data() {
     return {
-      dateModal: "",
-      isPicker: false,
-      dateStart: null,
-
-      // titlePicker: "Select Start Date",
-
-      isDialogPicker: false,
+       menu: false,
       rules: {
         required: (v) => !!v || "Required",
         min: (v) => (v && v.length >= 5) || "Must be at least 5 characters",
@@ -169,24 +168,6 @@ export default {
         //   /[0-9]{2}:[0-9]{2}/.test(v) || "The time format is invalid",
       },
     };
-  },
-
-  computed: {
-    isModalPicker: {
-      get: function() {
-        return this.isPicker;
-      },
-
-      set: function(value) {
-        this.changeDialogPicker(value);
-      },
-    },
-  },
-
-  methods: {
-    changeDialogPicker(value) {
-      this.isPicker = value;
-    },
   },
 };
 </script>

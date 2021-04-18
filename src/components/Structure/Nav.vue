@@ -69,7 +69,6 @@
         <span>Choose language</span>
       </v-tooltip>
 
-      <!-- <template v-if="userLoggedOk.isLogin"> -->
       <template v-if="userLoggedOk.isLogin">
         <v-menu bottom origin="center center" transition="scale-transition">
           <template v-slot:activator="{ on, attrs }">
@@ -89,17 +88,6 @@
       </template>
     </v-app-bar>
 
-    <!-- hola <br />
-      hola <br />
-      hola <br />
-      hola<br />
-      hola <br />
-      <SubMenuLogged
-        :menuLoggedIn="menuLoggedIn"
-        :imageName="userLoggedOk.imageName"
-        class="pt-30"
-      /> -->
-
     <Navigation :drawer="drawer" :changeValue="changeValue" />
     <ConfirmActionComponent
       @confirmOff="confirmOff"
@@ -115,7 +103,6 @@
 import Navigation from "@/components/Structure/Navigation";
 import SubMenuLogged from "@/components/Structure/SubMenuLogged";
 import Avatar from "@/components/Structure/Avatar";
-// import ConfirmAction from "@/components/Modals/ConfirmAction";
 import ConfirmActionComponent from "@/components/reusable/ConfirmActionComponent";
 import { mapGetters, mapActions } from "vuex";
 
@@ -157,15 +144,8 @@ export default {
         },
         { title: "Sign out", url: "mdi-logout", action: "logoOut" },
       ],
-      // url: "",
-      // isLogin: false,
-      // url: "/login",
     };
   },
-  // beforeMount() {
-  //   this.url =
-  //     "http://localhost:3000/public/img/" + this.userLoggedOk.imageName;
-  // },
 
   computed: {
     ...mapGetters(["userLoggedOk"]),
@@ -192,7 +172,7 @@ export default {
 
   watch:{
     userLoggedOk(){
-      console.log("Ha cambiado la data")
+      // console.log("Ha cambiado la data")
       this.imageAvatar()
     }
   },
