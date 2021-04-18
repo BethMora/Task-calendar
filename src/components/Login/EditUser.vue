@@ -1,9 +1,6 @@
 <template>
   <div>
-    <h3 class="my-2">
-      Editing user information
-    </h3>
-    <v-divider class="mb-4" />
+    <TitleComponent title="Editing password" />
 
     <v-form
       ref="form"
@@ -32,12 +29,14 @@
 </template>
 
 <script>
+import TitleComponent from "@/components/reusable/TitleComponent";
 import FormUser from "@/components/Login/Forms/FormUser";
 import { mapGetters, mapActions } from "vuex";
 export default {
   name: "EditUser",
   components: {
     FormUser,
+    TitleComponent,
   },
   data() {
     return {
@@ -63,16 +62,9 @@ export default {
 
   methods: {
     ...mapActions(["editUserAPI"]),
-    validate() {
-      return this.$refs.form.validate();
-    },
-
-    // reset() {
-    //   this.$refs.form.reset();
-    // },
 
     updateUser() {
-      if (this.validate()) {
+      if (this.$refs.form.validate()) {
         this.formDataRegister._id = this.userLoggedOk._id;
         this.formDataRegister.modificationDate = new Date();
         this.editUserAPI(this.formDataRegister);

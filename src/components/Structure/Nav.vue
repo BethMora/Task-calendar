@@ -101,10 +101,12 @@
       /> -->
 
     <Navigation :drawer="drawer" :changeValue="changeValue" />
-    <ConfirmAction
+    <ConfirmActionComponent
       @confirmOff="confirmOff"
       :isConfirmation="isConfirmation"
       :changeFlagConfirmation="changeFlagConfirmation"
+      title = "Sign off"
+      subtitle = "Are you sure to log out?"
     />
   </div>
 </template>
@@ -113,7 +115,8 @@
 import Navigation from "@/components/Structure/Navigation";
 import SubMenuLogged from "@/components/Structure/SubMenuLogged";
 import Avatar from "@/components/Structure/Avatar";
-import ConfirmAction from "@/components/Modals/ConfirmAction";
+// import ConfirmAction from "@/components/Modals/ConfirmAction";
+import ConfirmActionComponent from "@/components/reusable/ConfirmActionComponent";
 import { mapGetters, mapActions } from "vuex";
 
 export default {
@@ -122,7 +125,7 @@ export default {
     Navigation,
     SubMenuLogged,
     Avatar,
-    ConfirmAction,
+    ConfirmActionComponent,
   },
 
   data() {

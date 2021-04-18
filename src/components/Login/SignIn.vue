@@ -1,5 +1,5 @@
 <template>
-  <v-form ref="form" v-model="valid" lazy-validation>
+  <v-form ref="form" v-model="valid" lazy-validation @submit.prevent="login">
     <v-text-field
       v-model="userName"
       :counter="4"
@@ -20,14 +20,7 @@
       @click:append="show1 = !show1"
     ></v-text-field>
 
-    <v-btn
-      class="secondary black--text mt-3"
-      block
-      :disabled="!valid"
-      @click.prevent="login"
-    >
-      Submit
-    </v-btn>
+    <BtnSubmitComponent :valid="valid" @methodOfAction="login"/>
 
     <v-alert
       v-model="isValidLogin"
@@ -50,9 +43,14 @@
 </template>
 
 <script>
+
+import BtnSubmitComponent from "@/components/reusable/BtnSubmitComponent";
 import { mapGetters, mapActions } from "vuex";
 export default {
   name: "SignIn",
+  components:{
+    BtnSubmitComponent,
+  },
   data() {
     return {
       valid: true,
@@ -105,8 +103,8 @@ export default {
     //   },
 
     userLoggedOk() {
-      console.log("esta es la informacion para el dashboard");
-      console.log(this.userLoggedOk);
+      // console.log("esta es la informacion para el dashboard");
+      // console.log(this.userLoggedOk);
 
       if (this.userLoggedOk.isLogin) {
         this.$router.push({
@@ -125,16 +123,13 @@ export default {
     //   "validateToken",
     // ]),
     ...mapActions(["loginUserAPI", "validateToken"]),
-    validate() {
-      return this.$refs.form.validate();
-    },
 
-    reset() {
-      return this.$refs.form.reset();
-    },
+    // reset() {
+    //   return this.$refs.form.reset();
+    // },
 
     login() {
-      if (this.validate()) {
+      if (this.$refs.form.validate()) {
         const user = {
           username: this.userName,
           psw: this.psw,

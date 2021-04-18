@@ -26,19 +26,12 @@
     >
     </v-file-input>
 
-    <v-btn
-      class="secondary black--text mt-3"
-      block
-      type="submit"
-      :disabled="!valid"
-      @keypress.enter="checkIn"
-    >
-      SUBMIT
-    </v-btn>
+    <BtnSubmitComponent :valid="valid" @methodOfAction="checkIn"/>
   </v-form>
 </template>
 
 <script>
+import BtnSubmitComponent from "@/components/reusable/BtnSubmitComponent";
 import FormUser from "@/components/Login/Forms/FormUser";
 import FormPassword from "@/components/Login/Forms/FormPassword";
 import { encryptKey } from "@/libs/encrypt";
@@ -47,7 +40,8 @@ export default {
   name: "SignUp",
   components: {
     FormUser,
-    FormPassword
+    FormPassword,
+    BtnSubmitComponent
   },
   data() {
     return {
@@ -84,16 +78,13 @@ export default {
 
   methods: {
     ...mapActions(["checkInAPI"]),
-    validate() {
-      return this.$refs.form.validate();
-    },
 
-    reset() {
-      this.$refs.form.reset();
-    },
+    // reset() {
+    //   this.$refs.form.reset();
+    // },
 
     checkIn() {
-      if (this.validate()) {
+      if (this.$refs.form.validate()) {
         const formData = new FormData();
         formData.append("file", this.selectedAvatar);
         // this.formDataRegister.password =encryptKey(this.formDataRegister.email, this.formDataRegister.psw)

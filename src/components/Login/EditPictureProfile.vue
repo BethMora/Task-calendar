@@ -1,9 +1,6 @@
 <template>
   <div>
-    <h3 class="my-2">
-      Editing profile picture
-    </h3>
-    <v-divider class="mb-4" />
+    <TitleComponent title="Editing password" />
 
     <v-form
       ref="form"
@@ -36,9 +33,11 @@
 </template>
 
 <script>
+import TitleComponent from "@/components/reusable/TitleComponent";
 import { mapGetters, mapActions } from "vuex";
 export default {
   name: "EditPictureProfile",
+  components: { TitleComponent },
   data() {
     return {
       valid: true,
@@ -49,22 +48,11 @@ export default {
         file: (value) =>
           !value || value.size < 2000000 || "Size should be less than 2 MB!",
       },
-
     };
   },
 
   computed: {
     ...mapGetters(["userLoggedOk"]),
-  },
-
-  beforeMount() {
-    console.log("Picture que vamos a enviar es: ");
-    console.log(this.userLoggedOk.imageName);
-    //No envia nunca el password eso hay que validar de informacion del user
-    // this.selectedAvatar = this.userLoggedOk.imageName;
-    // this.formDataRegister = {
-    //   imageName: this.userLoggedOk.imageName,
-    // };
   },
 
   methods: {
