@@ -73,7 +73,7 @@
             <v-card color="grey lighten-4" min-width="350px" flat>
               <v-toolbar :color="selectedEvent.color" dark>
                 <v-btn icon>
-                  <v-icon @click="editTask(selectedEvent.id)"
+                  <v-icon @click="editTask(selectedEvent)"
                     >mdi-pencil</v-icon
                   >
                 </v-btn>
@@ -93,7 +93,7 @@
                 <v-btn text @click="selectedOpen = false">
                   Cancel
                 </v-btn>
-                <v-btn text color="accent" @click="editTask(selectedEvent.id)">
+                <v-btn text color="accent" @click="editTask(selectedEvent)">
                   Edit
                 </v-btn>
                 <v-btn
@@ -115,23 +115,32 @@
       :emit="emit"
       :dateSelected="dateSelected"
     />
-    <EditTaskDialog :dialogEditTask="dialogEditTask" :emitEdit="emitEdit" />
+    <EditTaskDialog :dialogEditTask="dialogEditTask" :emitEdit="emitEdit" :eventEdit="eventEdit" />
+
+    <ConfirmAction
+      @confirmOff="confirmOff"
+      :isConfirmation="isConfirmation"
+      :changeFlagConfirmation="changeFlagConfirmation"
+    />
   </v-main>
 </template>
 
 <script>
 import AddTaskDialog from "@/components/Modals/AddTaskDialog";
 import EditTaskDialog from "@/components/Modals/EditTaskDialog";
+import ConfirmAction from "@/components/Modals/ConfirmAction";
 import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "Calendar",
   components: {
     AddTaskDialog,
-    EditTaskDialog
+    EditTaskDialog,
+    ConfirmAction,
   },
 
   data: () => ({
+    flagConfirmAction: false,
     focus: "",
     type: "month",
     typeToLabel: {
@@ -143,6 +152,7 @@ export default {
     selectedEvent: {},
     selectedElement: null,
     selectedOpen: false,
+    eventEdit:{},
     // events: [],
     // colors: [
     //   "blue",
@@ -214,6 +224,15 @@ export default {
 
   computed: {
     ...mapGetters(["tasks"]),
+    isConfirmation: {
+      get: function() {
+        return this.flagConfirmAction;
+      },
+
+      set: function(value) {
+        this.changeFlagConfirmation(value);
+      },
+    },
 
     dialogAddTask: {
       get: function() {
@@ -237,7 +256,12 @@ export default {
   },
 
   methods: {
-    ...mapActions(["DeleteTask"]),
+    ...mapActions(["DeleteTask", "editTaskAPI"]),
+    
+
+    changeFlagConfirmation(value) {
+      this.flagConfirmAction = value;
+    },
 
     emit(value) {
       this.isTaskDialog = value;
@@ -396,21 +420,30 @@ export default {
     },
 
     deleteTask(id) {
-      console.log("DELET task de id " + id);
-      var txt;
-      if (confirm("Press OK if you want to delete task")) {
-        txt = "You pressed OK!";
-      } else {
-        txt = "You pressed Cancel!";
-        this.selectedOpen = false;
-      }
-      console.log(txt);
+      this.selectedOpen = false
+      console.log("Vamos a eliminar la tarea de id "+id)
+      this.flagConfirmAction = true
+      // console.log("DELET task de id " + id);
+      // var txt;
+      // if (confirm("Press OK if you want to delete task")) {
+      //   txt = "You pressed OK!";
+      // } else {
+      //   txt = "You pressed Cancel!";
+      //   this.selectedOpen = false;
+      // }
+      // console.log(txt);
     },
 
-    editTask(id) {
-      console.log("edit task de id " + id);
-      console.log(id);
+    confirmOff(value) {
+      if (value) {
+        console.log("SE ELIMINO el evento")
+      }
+    },
+
+    editTask(task) {
+      this.eventEdit=task;
       this.isEditTaskDialog = true;
+      this.editTaskAPI(task);
     }
   },
 

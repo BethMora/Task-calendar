@@ -21,7 +21,7 @@ const routes = [
   {
     path: "/",
     name: "Index",
-    component: Index
+    component: Index,
   },
   {
     path: "/login",
@@ -31,14 +31,14 @@ const routes = [
       {
         path: "",
         name: "SignIn",
-        component: SignIn
+        component: SignIn,
       },
       {
         path: "/signUp",
         name: "SignUp",
-        component: SignUp
-      }
-    ]
+        component: SignUp,
+      },
+    ],
   },
   // {
   //   path: "*",
@@ -48,10 +48,10 @@ const routes = [
   {
     path: "/users",
     name: "ListUsers",
-    component: ListUsers
-    // meta: {
-    //   requiresAuth: true,
-    // },
+    component: ListUsers,
+    meta: {
+      requiresAuth: true,
+    },
   },
 
   {
@@ -65,7 +65,7 @@ const routes = [
   {
     path: "/createTask",
     name: "createTask",
-    component: CreateTask
+    component: CreateTask,
   },
   {
     path: "/dashboardAll",
@@ -75,46 +75,38 @@ const routes = [
       {
         path: "/dashboard/:id",
         name: "dashboard",
-        component: Dashboard
+        component: Dashboard,
       },
       {
         path: "/editUser",
         name: "EditUser",
-        component: EditUser
+        component: EditUser,
       },
       {
         path: "/editPassword",
         name: "EditPassword",
-        component: EditPassword
+        component: EditPassword,
       },
       {
         path: "/editPictureProfile",
         name: "EditPictureProfile",
-        component: EditPictureProfile
+        component: EditPictureProfile,
       },
-    ]
-  }
+    ],
+  },
 ];
 
 const router = new VueRouter({
   mode: "history",
   linkActiveClass: "active",
-  routes
+  routes,
 });
 
 router.beforeEach((to, from, next) => {
-  if (to.matched.some(route => route.meta.requiresAuth)) {
+  if (to.matched.some((route) => route.meta.requiresAuth)) {
     console.log(store.getters.isLogin);
     if (!store.getters.isLogin) {
       next({ path: "/login" });
-      // if (to.name === "Login") {
-      //   next({ name: "Index" });
-      // } else {
-      //   next({ path: "/login" });
-      // }
-    } else {
-      console.log("existe token");
-      next();
     }
   } else {
     next();

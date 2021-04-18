@@ -1,5 +1,5 @@
 <template>
-  <v-overlay :opacity="opacity" :value="isConfirmation">
+  <v-overlay :opacity="opacity"  :value="isConfirmation">
     <v-btn x-large class="error" @click="confirmLogOut">
       <v-icon class="mr-1">mdi-check-bold </v-icon>
       Confirm
@@ -17,6 +17,7 @@ export default {
   props: ["isConfirmation", "changeFlagConfirmation"],
   data: () => ({
     opacity: 0.75,
+    zIndex: 0,
   }),
 
   methods: {

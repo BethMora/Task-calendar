@@ -2,27 +2,22 @@ import axios from "axios";
 import UserService from "@/services/UserService";
 
 import { encryptKey } from "@/libs/encrypt";
-// const instanceRehister = axios.create({
-//   baseURL: 'http://localhost:300s0/api/user/register',
-//   timeout: 1000,
-//   headers: {'X-Custom-Header': 'foobar'}
-// });
 
 export default {
   strict: true,
   state: {
-    users: [],
-    loginStatus: {
-      username: "",
-      token: "",
-      status: false,
-    },
-    userLog: {},
+    // users: [],
+    // loginStatus: {
+    //   username: "",
+    //   token: "",
+    //   status: false,
+    // },
+    // userLog: {},
 
     creatingUsers: [],
 
     //datos de usuarios logueados
-    // isLogin: false,
+    isLogin: false,
 
     usersLogin: [],
     userLoggedOk: {},
@@ -332,8 +327,6 @@ export default {
     // },
 
     async loginUserAPI(context, obj) {
-      console.log("Se qiere loguear el usuario")
-      console.log(obj)
       let message = {};
       const email = obj.username;
       const psw = encryptKey(obj.psw);
@@ -341,10 +334,6 @@ export default {
         email: email,
         password: psw,
       };
-      console.log("Se qiere loguear el usuario")
-      console.log(dataLogin.email)
-      console.log(dataLogin.password)
-      
       try {
         const response = await UserService.loginUser(dataLogin);
         if (response.status === 200) {
@@ -353,6 +342,8 @@ export default {
           newUserLogged.token = response.data.token;
           const keyUnique = newUserLogged._id;
           context.commit("setUsersLogin", newUserLogged);
+          context.commit("setIsLogin", true);
+          
           if (context.getters.newUserLoggedIn(keyUnique) != null) {
             context.commit(
               "setUserLoggedOk",
@@ -386,13 +377,6 @@ export default {
     logoOutUser(context) {
       sessionStorage.removeItem("token");
       context.commit("setUserLoggedOk", {});
-      // const message = {
-      //   msg: "Thank you, you have logged out",
-      //   color: "accent",
-      //   status: "",
-      // };
-      // context.commit("setMesagge", message);
-      // context.commit("changeSheet");
     },
 
     async editUserAPI(context, obj) {

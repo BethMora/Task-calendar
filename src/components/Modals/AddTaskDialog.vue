@@ -29,14 +29,39 @@
 
       <v-card-text>
         <v-form ref="form" v-model="valid" lazy-validation @submit.prevent>
-          <FormCreateTask
-            :task="task"
-            :valid="valid"
-            :sendTaskDial="sendTaskDial"
-            :dialogAddTask="dialogAddTask"
-            :emit="emit"
-            :dateSelected="dateSelected"
-          />
+          <FormCreateTask :task="task" />
+
+          <v-row justify="center" class="mb-4">
+            <v-tooltip right>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  class="mr-4 success black--text"
+                  type="submit"
+                  :disabled="!valid"
+                  @click="sendTaskDial"
+                  v-bind="attrs"
+                  v-on="on"
+                >
+                  SUBMIT
+                </v-btn>
+              </template>
+              Is activated when completing the form
+            </v-tooltip>
+
+            <v-tooltip right>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  @click="reset"
+                  class="secondary black--text"
+                  v-bind="attrs"
+                  v-on="on"
+                >
+                  CLEAN UP
+                </v-btn>
+              </template>
+              Click to clear all fields
+            </v-tooltip>
+          </v-row>
         </v-form>
       </v-card-text>
     </v-card>
@@ -44,38 +69,41 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 import { formatDateToLocal, toMonthNumber } from "@/libs/dates";
 import FormCreateTask from "@/components/Tasks/Forms/FormCreateTask";
 
 export default {
   name: "AddTaskDialog",
-  props: ["dialogAddTask", "emit", "dateSelected", "task", "valid", "sendTask"],
+  // props: ["dialogAddTask", "emit", "dateSelected", "task", "valid", "sendTask"],
+  props: ["dialogAddTask", "emit", "dateSelected"],
   components: {
-    FormCreateTask
+    FormCreateTask,
   },
   data() {
     return {
-      // valid: true,
-      // task: {
-      //   dateStart: "",
-      //   timeStart: "",
-      //   dateEnd: "",
-      //   timeEnd: "",
-      //   nameTask: "",
-      //   descriptionTask: "",
-      //   colorTask: "",
-      // },
+      valid: true,
+      task: {
+        dateStart: "",
+        timeStart: "",
+        dateEnd: "",
+        timeEnd: "",
+        nameTask: "",
+        descriptionTask: "",
+        colorTask: "",
+      },
       // startDateSent: "",
-      minDate: ""
+      // minDate: "",
     };
   },
 
   beforeUpdate() {
-    this.minDate = this.dateSent();
+    // this.minDate = this.dateSent();
     this.task.dateStart = this.dateSent();
-    console.log(this.minDate);
-    console.log(this.task.dateStart);
+  },
+
+  computed: {
+    ...mapGetters(["userLoggedOk"]),
   },
 
   methods: {
@@ -104,6 +132,8 @@ export default {
       this.task.timeStart = "";
       this.task.dateEnd = "";
       this.task.timeEnd = "";
+      this.task.nameTask = "";
+      this.task.descriptionTask = "";
       this.task.colorTask = "";
       return this.$refs.form.reset();
     },
@@ -134,17 +164,19 @@ export default {
           end: localDateEnd,
           color: this.task.colorTask,
           timed: timed,
+          // idUser: this.userLoggedOk._id,
           times: {
             dateStart: this.task.dateStart,
             timeStart: this.task.timeStart,
             dateEnd: this.task.dateEnd,
-            timeEnd: this.task.timeEnd
-          }
+            timeEnd: this.task.timeEnd,
+          },
         };
         this.addNewTask(task);
-        this.$router.push("/calendar");
+        this.$forceUpdate();
+        this.close();
       }
-    }
+    },
 
     // sendTask() {
     //   const localDateStart = formatDateToLocal(this.dateStart, this.timeStart);
@@ -169,6 +201,6 @@ export default {
     //     alert("The task has not been registered successfully ");
     //   }
     // },
-  }
+  },
 };
 </script>
