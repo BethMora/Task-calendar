@@ -79,9 +79,6 @@ export default {
       this.task.colorTask = "";
       return this.$refs.form.reset();
     },
-    validate() {
-      return this.$refs.form.validate();
-    },
 
     sendTask() {
       const localDateStart = formatDateToLocal(
@@ -96,7 +93,7 @@ export default {
       if (this.task.dateStart === this.task.dateEnd) {
         timed = true;
       }
-      if (this.validate()) {
+      if (this.$refs.form.validate()) {
         const task = {
           name: this.task.nameTask,
           description: this.task.descriptionTask,

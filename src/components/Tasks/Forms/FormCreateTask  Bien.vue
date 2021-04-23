@@ -7,19 +7,18 @@
       <v-col lg="6" xs="1" align="center">
         <DatePickerModal
           :rules="[rules.required]"
+          :date="task.dateStart"
           color="accent"
           titlePicker="Select start date on calendar"
-          :dateEnd="task.dateEnd"
-          @setDate="setDateStart"
         />
       </v-col>
 
       <v-col lg="6" xs="1" align="center">
         <TimePickerModal
           :rules="[rules.required]"
+          :time="task.timeStart"
           color="accent"
           titlePicker="Select start time on clock"
-          @setTime="setTimeStart"
         />
       </v-col>
     </v-row>
@@ -31,8 +30,7 @@
       <v-col lg="6" xs="1" align="center">
         <DatePickerModal
           :rules="[rules.required]"
-          @setDate="setDateEnd"
-          :dateStart="task.dateStart"
+          :date="task.dateEnd"
           color="primary"
           titlePicker="Select end date on calendar"
         />
@@ -41,7 +39,7 @@
       <v-col lg="6" xs="1" align="center">
         <TimePickerModal
           :rules="[rules.required]"
-          @setTime="setTimeEnd"
+          :time="task.timeEnd"
           color="primary"
           titlePicker="Select end time on clock"
         />
@@ -84,6 +82,7 @@ import DatePickerModal from "@/components/reusable/DatePickerModal";
 import TimePickerModal from "@/components/reusable/TimePickerModal";
 export default {
   name: "FormCreateTask",
+  // props: ["task", "valid", "sendTask", "dialogAddTask", "emit", "dateSelected"],
   props: ["task"],
   components: {
     DatePickerModal,
@@ -91,6 +90,17 @@ export default {
   },
   data() {
     return {
+      dateStart: "",
+      timeStart: "",
+      dateEnd: "",
+      timeEnd: "",
+
+      // isPicker: false,
+      // dateStart: null,
+
+      // titlePicker: "Select Start Date",
+
+      // isDialogPicker: false,
       rules: {
         required: (v) => !!v || "Required",
         min: (v) => (v && v.length >= 5) || "Must be at least 5 characters",
@@ -98,26 +108,45 @@ export default {
           (v && v.length <= 30) || "Must not be longer than 30 characters",
         maxMsg: (v) =>
           (v && v.length <= 120) || "Must not be longer than 120 characters",
+        minDate: (v) =>
+          (this.task.dateStart && v >= this.task.dateStart) ||
+          "This date cannot be less than the start date ",
+        // minDateEnd: (v) =>
+        //   v <= this.task.dateEnd ||
+        //   "La fecha de fin no puede ser menor a esta fecha ",
+        // formatDate: (v) =>
+        //   /[0-9]{4}-[0-9]{2}-[0-9]{2}/.test(v) ||
+        //   "The date format is invalid",
+        // formatTime: (v) =>
+        //   /[0-9]{2}:[0-9]{2}/.test(v) || "The time format is invalid",
       },
     };
   },
 
+  computed: {
+    // isModalPicker: {
+    //   get: function() {
+    //     return this.isPicker;
+    //   },
+    //   set: function(value) {
+    //     this.changeDialogPicker(value);
+    //   },
+    // },
+
+    // task: {
+    //   get: function() {
+    //     return this.dateStart;
+    //   },
+    //   set: function(value) {
+    //     this.changeDialogPicker(value);
+    //   },
+    // },
+  },
+
   methods: {
-    setDateStart(value) {
-      this.task.dateStart = value;
-    },
-
-    setTimeStart(value) {
-      this.task.timeStart = value;
-    },
-
-    setDateEnd(value) {
-      this.task.dateEnd = value;
-    },
-
-    setTimeEnd(value) {
-      this.task.timeEnd = value;
-    },
+    // changeDialogPicker(value) {
+    //   this.isPicker = value;
+    // },
   },
 };
 </script>

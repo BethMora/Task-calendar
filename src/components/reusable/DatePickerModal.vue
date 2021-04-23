@@ -1,27 +1,35 @@
 <template>
   <v-menu
     ref="dateModal"
-    v-model="isModalPicker"
-    :close-on-content-click="closeDialogPicker(false)"
+    v-model="isDialog"
+    :close-on-content-click="false"
     :return-value.sync="date"
     transition="scale-transition"
     offset-y
     min-width="auto"
-    @click="closeDialogPicker(true)"
   >
     <template v-slot:activator="{ on, attrs }">
       <v-text-field
         v-model="date"
         :label="titlePicker"
+        :rules="rules"
         prepend-icon="mdi-calendar"
         readonly
         v-bind="attrs"
         v-on="on"
+        :color="color"
       ></v-text-field>
     </template>
-    <v-date-picker v-model="date" no-title scrollable>
+    <v-date-picker
+      v-model="date"
+      scrollable
+      :color="color"
+      :min="dateStart"
+      :max="dateEnd"
+      @click:month="$refs.dateModal.save(date)"
+    >
       <v-spacer></v-spacer>
-      <v-btn text color="primary" @click="closeDialogPicker(false)">
+      <v-btn text color="primary" @click="isDialog = false">
         Cancel
       </v-btn>
       <v-btn text color="primary" @click="$refs.dateModal.save(date)">
@@ -34,13 +42,25 @@
 <script>
 export default {
   name: "DatePickerModal",
-  // props: ["isDialogPicker", "task" , "changeDialogPicker"],
-  props: ["titlePicker", "dateModal", "isModalPicker", "changeDialogPicker", "date"],
+  props: ["titlePicker", "rules", "color", "setDate", "dateStart", "dateEnd"],
+  data() {
+    return {
+      dateModal: "",
+      isDialog: false,
+      date: null,
+    };
+  },
+
+  watch: {
+    date() {
+      this.$emit("setDate", this.date);
+    },
+  },
 
   methods: {
-    closeDialogPicker(value) {
-      this.changeDialogPicker(value);
-    },
+    // closeDialogPicker(value) {
+    //   this.changeDialogPicker(value);
+    // },
   },
 };
 </script>
