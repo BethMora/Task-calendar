@@ -1,55 +1,47 @@
 <template>
   <v-main>
-    <v-form ref="form" v-model="valid" lazy-validation @submit.prevent>
-      <FormCreateTask :task="task" />
+    <v-container>
+      <v-form ref="form" v-model="valid" lazy-validation @submit.prevent>
+        <FormCreateTask :task="task" />
 
-      <v-row justify="center" class="mb-4">
-        <v-tooltip right>
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn
-              class="mr-4 success black--text"
-              type="submit"
-              :disabled="!valid"
-              @click="sendTask"
-              v-bind="attrs"
-              v-on="on"
-            >
-              SUBMIT
-            </v-btn>
-          </template>
-          Is activated when completing the form
-        </v-tooltip>
+        <v-row justify="center" class="mb-4">
+          <BtnToolTipComponent
+            title="Submit"
+            :valid="valid"
+            :action="sendTask"
+            :block="btnBlock"
+            color="success"
+          />
 
-        <v-tooltip right>
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn
-              @click="reset"
-              class="secondary black--text"
-              v-bind="attrs"
-              v-on="on"
-            >
-              CLEAN UP
-            </v-btn>
-          </template>
-          Click to clear all fields
-        </v-tooltip>
-      </v-row>
-    </v-form>
+          <BtnToolTipComponent
+            title="CLEAN UP"
+            :valid="true"
+            :action="reset"
+            :block="btnBlock"
+            color="secondary"
+            tip="Click to clear all fields"
+          />
+        </v-row>
+      </v-form>
+    </v-container>
   </v-main>
 </template>
 
 <script>
+import BtnToolTipComponent from "@/components/reusable/BtnToolTipComponent";
+import FormCreateTask from "@/components/Tasks/Forms/FormCreateTask";
 import { mapGetters, mapActions } from "vuex";
 import { formatDateToLocal } from "@/libs/dates";
-import FormCreateTask from "@/components/Tasks/Forms/FormCreateTask";
 
 export default {
   name: "CreateTask",
   components: {
     FormCreateTask,
+    BtnToolTipComponent,
   },
   data() {
     return {
+      btnBlock: false,
       valid: true,
       task: {
         dateStart: "",
@@ -76,7 +68,7 @@ export default {
       this.task.timeEnd = "";
       this.task.nameTask = "";
       this.task.descriptionTask = "";
-      this.task.colorTask = "";
+      // this.task.colorTask = "";
       return this.$refs.form.reset();
     },
 

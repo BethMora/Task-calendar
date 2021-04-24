@@ -26,15 +26,8 @@
       :color="color"
       :min="dateStart"
       :max="dateEnd"
-      @click:month="$refs.dateModal.save(date)"
+      @click:date="$refs.dateModal.save(date)"
     >
-      <v-spacer></v-spacer>
-      <v-btn text color="primary" @click="isDialog = false">
-        Cancel
-      </v-btn>
-      <v-btn text color="primary" @click="$refs.dateModal.save(date)">
-        OK
-      </v-btn>
     </v-date-picker>
   </v-menu>
 </template>

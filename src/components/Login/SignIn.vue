@@ -20,7 +20,13 @@
       @click:append="show1 = !show1"
     ></v-text-field>
 
-    <BtnSubmitComponent :valid="valid" @methodOfAction="login"/>
+    <BtnToolTipComponent
+      title="Submit"
+      :valid="valid"
+      :action="login"
+      :block="btnBlock"
+      color="secondary"
+    />
 
     <v-alert
       v-model="isValidLogin"
@@ -43,16 +49,17 @@
 </template>
 
 <script>
-
-import BtnSubmitComponent from "@/components/reusable/BtnSubmitComponent";
+import BtnToolTipComponent from "@/components/reusable/BtnToolTipComponent";
+// import BtnSubmitComponent from "@/components/reusable/BtnSubmitComponent";
 import { mapGetters, mapActions } from "vuex";
 export default {
   name: "SignIn",
-  components:{
-    BtnSubmitComponent,
+  components: {
+    BtnToolTipComponent,
   },
   data() {
     return {
+      btnBlock: true,
       valid: true,
       show1: false,
       userName: "",

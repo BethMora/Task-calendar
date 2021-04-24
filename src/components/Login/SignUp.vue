@@ -26,12 +26,19 @@
     >
     </v-file-input>
 
-    <BtnSubmitComponent :valid="valid" @methodOfAction="checkIn"/>
+    <BtnToolTipComponent  title="Submit"
+            :valid="valid"
+            :action="checkIn"
+            :block="btnBlock"
+            color="secondary"/>
+            <!-- <BtnSubmitComponent :valid="valid" @methodOfAction="checkIn"/> -->
   </v-form>
 </template>
 
 <script>
-import BtnSubmitComponent from "@/components/reusable/BtnSubmitComponent";
+// import BtnSubmitComponent from "@/components/reusable/BtnSubmitComponent";
+import BtnToolTipComponent from "@/components/reusable/BtnToolTipComponent";
+
 import FormUser from "@/components/Login/Forms/FormUser";
 import FormPassword from "@/components/Login/Forms/FormPassword";
 import { encryptKey } from "@/libs/encrypt";
@@ -41,10 +48,11 @@ export default {
   components: {
     FormUser,
     FormPassword,
-    BtnSubmitComponent
+    BtnToolTipComponent
   },
   data() {
     return {
+      btnBlock: true,
       valid: true,
       rol: ["ADMIN", "USER"],
       formDataRegister: {},

@@ -26,16 +26,23 @@ export default {
   actions: {
     
     async addNewTask({ commit, rootState }, task) {
+      console.log(task)
       let message = {};
       const event = {
+        idUser: rootState.login.userLoggedOk._id,
         name: task.name,
         description: task.description,
         startDate: task.start,
+        isVisible: false,
+        color: task.color,
         endDate: task.end,
         done: task.timed,
-        idUser: rootState.login.userLoggedOk._id,
+        creationDate : new Date(),
       };
+      console.log("Vamos a guardar la siguiente tarea")
+      console.log(event)
       const response = await EventService.registerEvent(event);
+      console.log(response)
       try {
         if (response.status === 200) {
           commit("setTask", task);
