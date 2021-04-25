@@ -7,6 +7,7 @@
     transition="scale-transition"
     offset-y
     min-width="auto"
+    :disabled="dateStartSent!=null ? true : false"
   >
     <template v-slot:activator="{ on, attrs }">
       <v-text-field
@@ -35,7 +36,16 @@
 <script>
 export default {
   name: "DatePickerModal",
-  props: ["titlePicker", "rules", "color", "setDate", "dateStart", "dateEnd"],
+  props: [
+    "titlePicker",
+    "rules",
+    "color",
+    "setDate",
+    "dateStart",
+    "dateEnd",
+    "dateStartSent",
+  ],
+  // props: ["titlePicker", "rules", "color", "setDate", "dateStartSent"],
   data() {
     return {
       dateModal: "",
@@ -43,10 +53,16 @@ export default {
       date: null,
     };
   },
+  beforeMount(){
+     this.date=this.dateStartSent
+  },
 
   watch: {
     date() {
       this.$emit("setDate", this.date);
+    },
+    dateStartSent() {
+      this.date=this.dateStartSent
     },
   },
 

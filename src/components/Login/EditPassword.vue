@@ -1,7 +1,20 @@
 <template>
-  <div>
-    <TitleComponent title="Editing password" />
-    <FormPassword :formDataRegister="formDataRegister" />
+  <div class="mt-10">
+    <v-card elevation="4" max-width="600" class="mx-auto">
+      <v-card-text>
+        <TitleComponent title="Editing password" />
+        <FormPassword :formDataRegister="formDataRegister" />
+        <v-btn
+          class="secondary black--text mt-3"
+          block
+          type="submit"
+          :disabled="!valid"
+          @keypress.enter="updateImageUser"
+        >
+          SUBMIT
+        </v-btn>
+      </v-card-text>
+    </v-card>
   </div>
 </template>
 
@@ -18,6 +31,7 @@ export default {
   data() {
     return {
       formDataRegister: {},
+      valid: true,
     };
   },
 

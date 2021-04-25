@@ -1,4 +1,6 @@
+
 <template>
+<!-- is ok -->
   <v-footer dark padless app>
     <v-card flat tile class="accent  text-center flex">
       <v-col class="py-2">

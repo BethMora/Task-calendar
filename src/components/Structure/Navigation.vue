@@ -73,7 +73,7 @@ export default {
           name: "List Tasks",
           ico: "mdi-calendar-check",
           color: "info",
-          url: "/calendar"
+          url: "/dashboard/:id"
         },
         {
           name: "Report",

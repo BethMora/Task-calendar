@@ -1,23 +1,15 @@
 <template>
   <v-main>
-    <v-card :loading="loading" class="mx-auto my-12" :max-width="widthConten">
-      <template slot="progress">
-        <v-progress-linear
-          color="deep-purple"
-          height="10"
-          indeterminate
-        ></v-progress-linear>
-      </template>
-
-      <v-col class="d-flex justify-center">
-        <v-icon x-large color="blue darken-2">
-          mdi-shield-account
-        </v-icon>
-
-        <v-card-title>
-          <span> {{ title }} </span>
-        </v-card-title>
-      </v-col>
+    <v-card class="mx-auto my-12" :max-width="widthConten">
+      <v-card-title class="d-flex justify-center mb-4">
+        <v-avatar>
+          <img v-if="setUrl" :src="setUrl" />
+          <v-icon v-else x-large color="blue darken-2">
+            mdi-shield-account
+          </v-icon>
+        </v-avatar>
+        <span> {{ title }} </span>
+      </v-card-title>
 
       <v-card-text style="margin-top: -30px">
         <v-container>
@@ -54,6 +46,7 @@
 
 <script>
 import { mapGetters, mapMutations } from "vuex";
+import { EventBus } from "@/libs/event-bus";
 export default {
   name: "Login",
   data() {
@@ -61,7 +54,8 @@ export default {
       title: "Sign In",
       widthConten: 374,
       loading: false,
-      url: ""
+      url: "",
+      urlImagen: null,
     };
   },
 
@@ -82,15 +76,22 @@ export default {
         this.title = "Sign Up";
         this.widthConten = 674;
       }
-    }
+    },
   },
 
   computed: {
-    ...mapGetters(["message", "loginStatus"])
+    ...mapGetters(["message", "loginStatus"]),
+
+    setUrl() {
+      EventBus.$on("urlAvatar", (item) => {
+        this.urlImagen = item;
+      });
+      return this.urlImagen;
+    },
   },
 
   methods: {
-    ...mapMutations(["resetMessage"])
-  }
+    ...mapMutations(["resetMessage"]),
+  },
 };
 </script>

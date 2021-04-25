@@ -1,34 +1,55 @@
 <template>
-  <div>
-    <TitleComponent title="Editing password" />
+  <div class="mt-10">
+    <v-card elevation="4" max-width="600" class="mx-auto">
+      <v-card-text>
+        <TitleComponent title="Editing picture profile" />
+        <v-form
+          ref="form"
+          v-model="valid"
+          lazy-validation
+          enctype="multipart/form-data"
+          @submit.prevent="updateImageUser"
+        >
+          <div v-if="url" class=" my-4">
+            <v-alert
+              border="right"
+              outlined
+              color="primary"
+              class="text-center"
+              prominent
+              id="titleImg"
+            >
+              New profile picture
+              <v-divider class="my-2"/>
+              <v-row justify="center">
+                <v-img max-height="200" max-width="200" :src="url" />
+              </v-row>
+            </v-alert>
+          </div>
 
-    <v-form
-      ref="form"
-      v-model="valid"
-      lazy-validation
-      enctype="multipart/form-data"
-      @submit.prevent="updateImageUser"
-    >
-      <v-file-input
-        label="Profile picture"
-        accept="image/png, image/jpeg, image/bmp"
-        show-size
-        :rules="[rules.file, rules.required]"
-        prepend-icon="mdi-camera"
-        v-model="selectedAvatar"
-      >
-      </v-file-input>
+          <v-file-input
+            label="Profile picture"
+            accept="image/png, image/jpeg, image/bmp"
+            show-size
+            :rules="[rules.file, rules.required]"
+            prepend-icon="mdi-camera"
+            @change="onFileChange"
+            v-model="selectedAvatar"
+          >
+          </v-file-input>
 
-      <v-btn
-        class="secondary black--text mt-3"
-        block
-        type="submit"
-        :disabled="!valid"
-        @keypress.enter="updateImageUser"
-      >
-        SUBMIT
-      </v-btn>
-    </v-form>
+          <v-btn
+            class="secondary black--text mt-3"
+            block
+            type="submit"
+            :disabled="!valid"
+            @keypress.enter="updateImageUser"
+          >
+            SUBMIT
+          </v-btn>
+        </v-form>
+      </v-card-text>
+    </v-card>
   </div>
 </template>
 
@@ -43,6 +64,7 @@ export default {
       valid: true,
       selectedAvatar: null,
       formDataRegister: {},
+      url: null,
       rules: {
         required: (v) => !!v || "Required.",
         file: (value) =>
@@ -58,12 +80,16 @@ export default {
   methods: {
     ...mapActions(["editImageProfileAPI"]),
 
-    validate() {
-      return this.$refs.form.validate();
+    onFileChange(e) {
+      if (e) {
+        this.url = URL.createObjectURL(e);
+      } else {
+        this.url = null;
+      }
     },
 
     updateImageUser() {
-      if (this.validate()) {
+      if (this.$refs.form.validate()) {
         const formData = new FormData();
         formData.append("_id", this.userLoggedOk._id);
         formData.append("file", this.selectedAvatar);
@@ -78,3 +104,12 @@ export default {
   },
 };
 </script>
+
+<style>
+#titleImg {
+  width: 300px;
+  display: flex;
+  justify-content: center;
+  margin: 0 auto;
+}
+</style>

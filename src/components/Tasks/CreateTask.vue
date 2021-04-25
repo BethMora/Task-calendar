@@ -1,8 +1,14 @@
 <template>
-  <v-main>
-    <v-container>
+  <v-container
+    :style="
+      this.$route.path === '/createTask'
+        ? 'margin-top: 50px'
+        : ' margin-top: 0px'
+    "
+  >
+    <v-card fill-height fluid class="text-center justify-center">
       <v-form ref="form" v-model="valid" lazy-validation @submit.prevent>
-        <FormCreateTask :task="task" />
+        <FormCreateTask :task="task" :dateStartSent="dateStartSent" />
 
         <v-row justify="center" class="mb-4">
           <BtnToolTipComponent
@@ -23,8 +29,8 @@
           />
         </v-row>
       </v-form>
-    </v-container>
-  </v-main>
+    </v-card>
+  </v-container>
 </template>
 
 <script>
@@ -35,6 +41,7 @@ import { formatDateToLocal } from "@/libs/dates";
 
 export default {
   name: "CreateTask",
+  props: ["dateStartSent"],
   components: {
     FormCreateTask,
     BtnToolTipComponent,
@@ -102,7 +109,8 @@ export default {
           },
         };
         this.addNewTask(task);
-        this.$router.push("/calendar");
+        this.$router.push("/dashboard/:id");
+        this.reset();
       }
     },
   },

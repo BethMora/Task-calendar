@@ -73,9 +73,7 @@
             <v-card color="grey lighten-4" min-width="350px" flat>
               <v-toolbar :color="selectedEvent.color" dark>
                 <v-btn icon>
-                  <v-icon @click="editTask(selectedEvent)"
-                    >mdi-pencil</v-icon
-                  >
+                  <v-icon @click="editTask(selectedEvent)">mdi-pencil</v-icon>
                 </v-btn>
                 <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
                 <v-spacer></v-spacer>
@@ -115,12 +113,18 @@
       :emit="emit"
       :dateSelected="dateSelected"
     />
-    <EditTaskDialog :dialogEditTask="dialogEditTask" :emitEdit="emitEdit" :eventEdit="eventEdit" />
+    <EditTaskDialog
+      :dialogEditTask="dialogEditTask"
+      :emitEdit="emitEdit"
+      :eventEdit="eventEdit"
+    />
 
-    <ConfirmAction
+    <ConfirmActionComponent
       @confirmOff="confirmOff"
       :isConfirmation="isConfirmation"
       :changeFlagConfirmation="changeFlagConfirmation"
+      title="Delete task event"
+      subtitle="Are you sure to delete task event?"
     />
   </v-main>
 </template>
@@ -128,7 +132,8 @@
 <script>
 import AddTaskDialog from "@/components/Modals/AddTaskDialog";
 import EditTaskDialog from "@/components/Modals/EditTaskDialog";
-import ConfirmAction from "@/components/Modals/ConfirmAction";
+// import ConfirmAction from "@/components/Modals/ConfirmAction";
+import ConfirmActionComponent from "@/components/reusable/ConfirmActionComponent";
 import { mapGetters, mapActions } from "vuex";
 
 export default {
@@ -136,7 +141,7 @@ export default {
   components: {
     AddTaskDialog,
     EditTaskDialog,
-    ConfirmAction,
+    ConfirmActionComponent,
   },
 
   data: () => ({
@@ -147,12 +152,12 @@ export default {
       month: "Month",
       week: "Week",
       day: "Day",
-      "4day": "4 Days"
+      "4day": "4 Days",
     },
     selectedEvent: {},
     selectedElement: null,
     selectedOpen: false,
-    eventEdit:{},
+    eventEdit: {},
     // events: [],
     // colors: [
     //   "blue",
@@ -176,7 +181,7 @@ export default {
 
     isTaskDialog: false, //flag open modal windows
     isEditTaskDialog: false, //flag open modal windows
-    dateSelected: {} //obj contains the task start date
+    dateSelected: {}, //obj contains the task start date
 
     // hidden: false,
 
@@ -241,7 +246,7 @@ export default {
 
       set: function(value) {
         this.emit(value);
-      }
+      },
     },
 
     dialogEditTask: {
@@ -251,13 +256,12 @@ export default {
 
       set: function(value) {
         this.emitEdit(value);
-      }
-    }
+      },
+    },
   },
 
   methods: {
     ...mapActions(["DeleteTask", "editTaskAPI"]),
-    
 
     changeFlagConfirmation(value) {
       this.flagConfirmAction = value;
@@ -292,7 +296,7 @@ export default {
         this.dateSelected = {
           day: day,
           month: month,
-          year: year
+          year: year,
         };
 
         this.isTaskDialog = true;
@@ -359,7 +363,7 @@ export default {
           start: first,
           end: second,
           color: this.colors[this.rnd(0, this.colors.length - 1)],
-          timed: !allDay
+          timed: !allDay,
         });
       }
       // console.log(events)
@@ -420,9 +424,9 @@ export default {
     },
 
     deleteTask(id) {
-      this.selectedOpen = false
-      console.log("Vamos a eliminar la tarea de id "+id)
-      this.flagConfirmAction = true
+      this.selectedOpen = false;
+      console.log("Vamos a eliminar la tarea de id " + id);
+      this.flagConfirmAction = true;
       // console.log("DELET task de id " + id);
       // var txt;
       // if (confirm("Press OK if you want to delete task")) {
@@ -436,15 +440,15 @@ export default {
 
     confirmOff(value) {
       if (value) {
-        console.log("SE ELIMINO el evento")
+        console.log("SE ELIMINO el evento");
       }
     },
 
     editTask(task) {
-      this.eventEdit=task;
+      this.eventEdit = task;
       this.isEditTaskDialog = true;
       this.editTaskAPI(task);
-    }
+    },
   },
 
   watch: {
@@ -466,7 +470,7 @@ export default {
       // this.selectedEvent  = this.tasks
       // this.showEvent();
       console.log(this.events);
-    }
-  }
+    },
+  },
 };
 </script>

@@ -26,7 +26,7 @@ export default {
   data: () => ({}),
 
   computed: {
-    ...mapGetters(["message", "sheet"])
+    ...mapGetters(["message", "sheet"]),
   },
 
   methods: {
@@ -35,7 +35,7 @@ export default {
     closeAlert() {
       this.changeSheet();
       this.resetMessage();
-    }
-  }
+    },
+  },
 };
 </script>

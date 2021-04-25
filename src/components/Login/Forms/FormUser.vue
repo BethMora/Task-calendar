@@ -53,10 +53,6 @@
         ></v-select>
       </v-col>
     </v-row>
-
-    
-
-    
   </div>
 </template>
 

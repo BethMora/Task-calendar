@@ -10,12 +10,16 @@ import Dashboard from "@/views/Dashboard.vue";
 import EditUser from "@/components/Login/EditUser.vue";
 import EditPassword from "@/components/Login/EditPassword.vue";
 import EditPictureProfile from "@/components/Login/EditPictureProfile.vue";
-import Calendar from "@/components/Calendar.vue";
+import Calendar from "@/components/Tasks/Calendar.vue";
 import CreateTask from "@/components/Tasks/CreateTask";
 
 import store from "../store";
 
 Vue.use(VueRouter);
+// {
+//   path: "*",
+//   redirect: "/",
+// },
 
 const routes = [
   {
@@ -40,42 +44,30 @@ const routes = [
       },
     ],
   },
-  // {
-  //   path: "*",
-  //   redirect: "/",
-  // },
+  { 
+    path: "/createTask",
+    name: "CreateTask",
+    component: CreateTask,
+  },
 
   {
     path: "/users",
     name: "ListUsers",
     component: ListUsers,
     meta: {
-      requiresAuth: true,
+      requiresAuth: false,
     },
   },
 
   {
-    path: "/calendar",
-    name: "Calendar",
-    component: Calendar,
-    // meta: {
-    //   requiresAuth: true
-    // }
-  },
-  {
-    path: "/createTask",
-    name: "createTask",
-    component: CreateTask,
-  },
-  {
-    path: "/dashboardAll",
-    name: "DashboardAll",
+    path: "/dashboard/:id",
+    name: "Dashboard",
     component: Dashboard,
     children: [
       {
-        path: "/dashboard/:id",
-        name: "dashboard",
-        component: Dashboard,
+        path: "",
+        name: "Calendar",
+        component: Calendar,
       },
       {
         path: "/editUser",

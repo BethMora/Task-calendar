@@ -1,30 +1,34 @@
 <template>
-  <div>
-    <TitleComponent title="Editing password" />
+  <div class="mt-10">
+    <v-card elevation="4" max-width="600" class="mx-auto">
+      <v-card-text>
+        <TitleComponent title="Editing general user information" />
 
-    <v-form
-      ref="form"
-      v-model="valid"
-      lazy-validation
-      enctype="multipart/form-data"
-      @submit.prevent="updateUser"
-    >
-      <FormUser
-        :valid="valid"
-        :rol="rol"
-        :formDataRegister="formDataRegister"
-      />
+        <v-form
+          ref="form"
+          v-model="valid"
+          lazy-validation
+          enctype="multipart/form-data"
+          @submit.prevent="updateUser"
+        >
+          <FormUser
+            :valid="valid"
+            :rol="rol"
+            :formDataRegister="formDataRegister"
+          />
 
-      <v-btn
-        class="secondary black--text mt-3"
-        block
-        type="submit"
-        :disabled="!valid"
-        @keypress.enter="updateUser"
-      >
-        SUBMIT
-      </v-btn>
-    </v-form>
+          <v-btn
+            class="secondary black--text mt-3"
+            block
+            type="submit"
+            :disabled="!valid"
+            @keypress.enter="updateUser"
+          >
+            SUBMIT
+          </v-btn>
+        </v-form>
+      </v-card-text>
+    </v-card>
   </div>
 </template>
 

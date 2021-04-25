@@ -46,20 +46,20 @@ export default {
         {
           title: "Users",
           src: "https://cdn.vuetifyjs.com/images/cards/house.jpg",
-          flex: 12
+          flex: 12,
         },
         {
           title: "Tasks",
           src: "https://cdn.vuetifyjs.com/images/cards/road.jpg",
-          flex: 6
+          flex: 6,
         },
         {
           title: "Best airlines",
           src: "https://cdn.vuetifyjs.com/images/cards/plane.jpg",
-          flex: 6
-        }
-      ]
+          flex: 6,
+        },
+      ],
     };
-  }
+  },
 };
 </script>
