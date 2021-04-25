@@ -7,7 +7,7 @@
     transition="scale-transition"
     offset-y
     min-width="auto"
-    :disabled="dateStartSent!=null ? true : false"
+    :disabled="dateStartSent != null ? true : false"
   >
     <template v-slot:activator="{ on, attrs }">
       <v-text-field
@@ -45,7 +45,6 @@ export default {
     "dateEnd",
     "dateStartSent",
   ],
-  // props: ["titlePicker", "rules", "color", "setDate", "dateStartSent"],
   data() {
     return {
       dateModal: "",
@@ -53,8 +52,8 @@ export default {
       date: null,
     };
   },
-  beforeMount(){
-     this.date=this.dateStartSent
+  beforeMount() {
+    this.date = this.dateStartSent;
   },
 
   watch: {
@@ -62,14 +61,8 @@ export default {
       this.$emit("setDate", this.date);
     },
     dateStartSent() {
-      this.date=this.dateStartSent
+      this.date = this.dateStartSent;
     },
-  },
-
-  methods: {
-    // closeDialogPicker(value) {
-    //   this.changeDialogPicker(value);
-    // },
   },
 };
 </script>

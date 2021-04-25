@@ -279,6 +279,7 @@ export default {
       let message = {};
       try {
         const response = await UserService.registerUser(obj);
+        
         if (response.status === 200) {
           message = {
             msg: response.data.message,
@@ -336,6 +337,7 @@ export default {
       };
       try {
         const response = await UserService.loginUser(dataLogin);
+        console.log(response)
         if (response.status === 200) {
           sessionStorage.setItem("token", response.data.token);
           const newUserLogged = response.data.user;
@@ -359,6 +361,7 @@ export default {
             color: "error",
             status: response.status,
           };
+          console.log(message)
           context.commit("setMesagge", message);
           context.commit("changeSheet");
         }

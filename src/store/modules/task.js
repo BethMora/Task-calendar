@@ -24,9 +24,16 @@ export default {
   },
 
   actions: {
+    // async getPaginatedEvents({ commit, rootState }){
+    async getPaginatedEvents({ rootState}, {page, sizePage}){
+        const idUser = rootState.login.userLoggedOk._id;
+        console.log(idUser)
+        console.log(page , " , ", sizePage)
+        const response = await EventService.getEvents(idUser, page, sizePage);
+        console.log(response);
+    },
     
     async addNewTask({ commit, rootState }, task) {
-      console.log(task)
       let message = {};
       const event = {
         idUser: rootState.login.userLoggedOk._id,
@@ -42,7 +49,6 @@ export default {
       console.log("Vamos a guardar la siguiente tarea")
       console.log(event)
       const response = await EventService.registerEvent(event);
-      console.log(response)
       try {
         if (response.status === 200) {
           commit("setTask", task);

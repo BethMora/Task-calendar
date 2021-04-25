@@ -27,7 +27,7 @@
         </v-toolbar-items>
       </v-toolbar>
 
-      <CreateTask :dateStartSent="dateStartSent" />
+      <CreateTask :dateStartSent="dateStartSent" :emit="emit"/>
     </v-card>
   </v-dialog>
 </template>
@@ -36,7 +36,6 @@
 import { mapGetters, mapActions } from "vuex";
 import { toMonthNumber } from "@/libs/dates";
 import CreateTask from "@/components/Tasks/CreateTask";
-// import FormCreateTask from "@/components/Tasks/Forms/FormCreateTask";
 
 export default {
   name: "AddTaskDialog",
@@ -72,10 +71,6 @@ export default {
         this.dateSelected.day;
       return date;
     },
-
-    // changeFlag() {
-    //   this.emit(false);
-    // },
 
     close() {
       this.emit(false);

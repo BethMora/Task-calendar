@@ -5,6 +5,10 @@ export default {
     return Api().post("event/add", params);
   },
 
+  getEvents(params) {
+    return Api().get("event/paginated-by-id-user/{idUser}/{page}/{sizePage}", params);
+  },
+
   updateEvent(params) {
     return Api().put("event/update", params);
   },

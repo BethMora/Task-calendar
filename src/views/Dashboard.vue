@@ -1,20 +1,20 @@
 <template>
   <v-main>
-     <!-- Hola Dashboard {{ userLoggedOk }} <br><br>
+    <!-- Hola Dashboard {{ userLoggedOk }} <br><br>
     <hr />
     <P> Hola Dashboard: isLogin {{ userLoggedOk.isLogin }} </P> -->
-    
+
     <!--{{ this.$route.params.id }}
 
     La data que estamos manejando :
     :src="require('http://localhost:3000/public/img/' + userLoggedOk.imageName)"  -->
-          <router-view> </router-view>
-
+    <router-view> </router-view>
   </v-main>
 </template>
 
 <script>
 // import { mapGetters } from "vuex";
+import { mapActions } from "vuex";
 
 export default {
   name: "Dashboard",
@@ -22,7 +22,6 @@ export default {
   data() {
     return {};
   },
-
 
   computed: {
     // ...mapGetters(["userLoggedOk"]),
@@ -34,8 +33,16 @@ export default {
   //   // console.log(user);
   // },
 
+  created() {
+    this.getEvent();
+  },
+
   methods: {
-    // ...mapActions(["getUserId"])
+    ...mapActions(["getPaginatedEvents"]),
+
+    getEvent() {
+      this.getPaginatedEvents({ page: 1, sizePage: 20 });
+    },
   },
 };
 </script>

@@ -41,7 +41,7 @@ import { formatDateToLocal } from "@/libs/dates";
 
 export default {
   name: "CreateTask",
-  props: ["dateStartSent"],
+  props: ["dateStartSent","emit"],
   components: {
     FormCreateTask,
     BtnToolTipComponent,
@@ -109,7 +109,16 @@ export default {
           },
         };
         this.addNewTask(task);
-        this.$router.push("/dashboard/:id");
+        // this.reset();
+        this.emit(false);
+        if( this.$route.path === '/createTask'){
+          this.$router.push("/dashboard/:id");
+
+        }else{
+          this.$forceUpdate();
+
+        }
+        // this.addNewTask(task);
         this.reset();
       }
     },
