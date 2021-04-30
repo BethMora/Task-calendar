@@ -1,15 +1,27 @@
 import Api from "./Api";
 
 export default {
-  registerUser(params) {
-    return Api().post("user/register", params);
+  async registerUser(params) {
+    try {
+      return await Api().post("user/register", params);
+    } catch (error) {
+      return error;
+    }
   },
 
-  loginUser(params) {
-    return Api().post("user/login", params);
+  async loginUser(params) {
+    try {
+      return await Api().post("user/login", params);
+    } catch (error) {
+      return error;
+    }
   },
 
-  updateUser(params) {
-    return Api().put("user/update", params);
+  async updateUser(params) {
+    try {
+      return await Api().put("user/update", params);
+    } catch (error) {
+      return error;
+    }
   },
 };

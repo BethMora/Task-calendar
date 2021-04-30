@@ -34,7 +34,7 @@
 <script>
 export default {
   name: "TimePickerModal",
-  props: ["titlePicker", "rules", "color", "setTime"],
+  props: ["titlePicker", "rules", "color", "setTime", "timeSentEdit"],
   data() {
     return {
       dateModal: "",
@@ -43,9 +43,18 @@ export default {
     };
   },
 
+  beforeMount() {
+    if (this.timeSentEdit) {
+      this.time = this.timeSentEdit;
+    }
+  },
+
   watch: {
     time() {
       this.$emit("setTime", this.time);
+    },
+    timeSentEdit() {
+      this.time = this.timeSentEdit;
     },
   },
 };

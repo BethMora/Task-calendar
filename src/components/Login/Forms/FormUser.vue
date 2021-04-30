@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-row>
-      <v-col cols="12" md="6">
+      <v-col cols="12" sm="6" md="6">
         <v-text-field
           v-model="formDataRegister.name"
           :counter="30"
@@ -11,7 +11,7 @@
         ></v-text-field>
       </v-col>
 
-      <v-col cols="12" md="6">
+      <v-col cols="12" sm="6" md="6">
         <v-text-field
           v-model="formDataRegister.lastName"
           :counter="30"
@@ -30,7 +30,7 @@
     ></v-text-field>
 
     <v-row>
-      <v-col cols="12" md="6">
+      <v-col cols="12" sm="6" md="6">
         <v-text-field
           v-model="formDataRegister.userName"
           :counter="15"
@@ -44,7 +44,7 @@
         ></v-text-field>
       </v-col>
 
-      <v-col cols="12" md="6">
+      <v-col cols="12" sm="6" md="6">
         <v-select
           :items="rol"
           label="Rol"
@@ -59,9 +59,10 @@
 <script>
 export default {
   name: "FormUser",
-  props: ["valid", "rol", "formDataRegister"],
+  props: ["valid",  "formDataRegister"],
   data() {
     return {
+      rol: ["ADMIN", "USER"],
       rules: {
         required: (v) => !!v || "Required.",
         min: (v) => (v && v.length >= 2) || "At least 2 characters",

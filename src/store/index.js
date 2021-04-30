@@ -7,6 +7,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   strict: true,
+  // namespaced: true,
   modules: {
     login,
     task

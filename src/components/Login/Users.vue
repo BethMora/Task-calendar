@@ -33,22 +33,22 @@
 
 <script>
 // import { mapGetters, mapActions } from "vuex";
-import { mapGetters, mapActions } from "vuex";
+// import { mapGetters, mapActions } from "vuex";
 export default {
   name: "Users",
   computed: {
-    ...mapGetters(["allUsers"])
+    // ...mapGetters(["allUsers"])
   },
 
   methods: {
-    ...mapActions(["bringUserAPI"])
+    // ...mapActions(["bringUserAPI"])
   },
-  async created() {
-    try {
-      this.bringUserAPI();
-    } catch (error) {
-      console.error(error);
-    }
-  }
+  // async created() {
+  //   try {
+  //     this.bringUserAPI();
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // }
 };
 </script>

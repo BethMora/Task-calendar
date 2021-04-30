@@ -63,67 +63,71 @@ export function formatDateToLocal(date, time) {
 }
 
 export function getFormatDate(dateWithTime) {
-  let day = dateWithTime.getDate();
-  if (day < 10) {
-    day = "0" + day;
-  }
+  // let day = dateWithTime.getDate();
+  let day = dateWithTime.split(" ");
+  // if (day < 10) {
+  //   day = "0" + day;
+  // }
 
-  let month = dateWithTime.getMonth() + 1;
-  if (month < 10) {
-    month = "0" + month;
-  }
+  // let month = dateWithTime.getMonth() + 1;
+  // if (month < 10) {
+  //   month = "0" + month;
+  // }
 
-  return dateWithTime.getFullYear() + "-" + month + "-" + day;
+  // return dateWithTime.getFullYear() + "-" + month + "-" + day;
+  return day[0]
 }
 
-function convertAccordingHorary(time){
-  switch(time) {
-    case 12:
-      return 12
-    case 1:
-      return 13
-    case 2:
-      return 14
-    case 3:
-      return 15
-    case 4:
-      return 16
-    case 5:
-      return 17
-    case 6:
-      return 18
-    case 7:
-      return 19
-    case 8:
-      return 20
-    case 9:
-      return 21
-    case 10:
-      return 22
-    case 11:
-      return 23
-    default:
-      // code block
-  } 
-}
+// function convertAccordingHorary(time){
+//   switch(time) {
+//     case 12:
+//       return 12
+//     case 1:
+//       return 13
+//     case 2:
+//       return 14
+//     case 3:
+//       return 15
+//     case 4:
+//       return 16
+//     case 5:
+//       return 17
+//     case 6:
+//       return 18
+//     case 7:
+//       return 19
+//     case 8:
+//       return 20
+//     case 9:
+//       return 21
+//     case 10:
+//       return 22
+//     case 11:
+//       return 23
+//     default:
+//       // code block
+//   } 
+// }
 
 export function getFormatTime(time) {
-  let timeFormated = time.toLocaleTimeString();
-  timeFormated =  timeFormated.split(":");
-  let hour = timeFormated[0];
-  let minute = timeFormated[1];
-  let horary = timeFormated[2];
-  horary =horary.substr(3,4)
+  let day = time.split(" ");
+  return day[1]
+  // let timeFormated = time.toLocaleTimeString();
+  // timeFormated =  timeFormated.split(":");
+  // let hour = timeFormated[0];
+  // let minute = timeFormated[1];
+  // let horary = timeFormated[2];
+  // horary =horary.substr(3,4)
 
-  if(horary === "PM"){
-    hour = convertAccordingHorary(parseInt(hour))
-  }else{
-    if(parseInt(hour) === 12 ){
-      hour = 0;
-    }
-  }
-  if (parseInt(hour)< 10 ) {
-    hour = "0" + hour;
-  }
-  return hour + ":" + minute;
+  // if(horary === "PM"){
+  //   hour = convertAccordingHorary(parseInt(hour))
+  // }else{
+  //   if(parseInt(hour) === 12 ){
+  //     hour = 0;
+  //   }
+  // }
+  // if (parseInt(hour)< 10 ) {
+  //   hour = "0" + hour;
+  // }
+  // return hour + ":" + minute;
 }

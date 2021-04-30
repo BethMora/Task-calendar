@@ -1,5 +1,4 @@
 <template>
-<!-- is ok -->
   <v-avatar :size="size">
     <img :src="url"/>
   </v-avatar>

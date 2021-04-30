@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-row>
-      <v-col cols="12" md="6">
+      <v-col cols="12" sm="6" md="6">
         <v-text-field
           v-model="formDataRegister.password"
           :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
@@ -13,7 +13,7 @@
           @click:append="show1 = !show1"
         ></v-text-field>
       </v-col>
-      <v-col cols="12" md="6">
+      <v-col cols="12" sm="6" md="6">
         <v-text-field
           v-model="formDataRegister.pswConfirm"
           :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"

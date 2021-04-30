@@ -13,7 +13,6 @@
         >
           <FormUser
             :valid="valid"
-            :rol="rol"
             :formDataRegister="formDataRegister"
           />
 
@@ -23,6 +22,7 @@
             type="submit"
             :disabled="!valid"
             @keypress.enter="updateUser"
+            @click:submit.prevent="updateUser"
           >
             SUBMIT
           </v-btn>
@@ -45,13 +45,12 @@ export default {
   data() {
     return {
       valid: true,
-      rol: ["ADMIN", "USER"],
       formDataRegister: {},
     };
   },
 
   computed: {
-    ...mapGetters(["creatingUser", "userLoggedOk"]),
+    ...mapGetters(["userLoggedOk"]),
   },
 
   beforeMount() {
@@ -73,7 +72,7 @@ export default {
         this.formDataRegister.modificationDate = new Date();
         this.editUserAPI(this.formDataRegister);
         this.$router.push({
-          name: "dashboard",
+          name: "Calendar",
           params: { id: this.userLoggedOk.userName },
         });
       }

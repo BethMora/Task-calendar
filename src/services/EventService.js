@@ -1,19 +1,39 @@
 import Api from "./Api";
 
 export default {
-  registerEvent(params) {
-    return Api().post("event/add", params);
+  
+  async registerEvent(params) {
+    try {
+      return await Api().post("event/add", params);
+    } catch (error) {
+      return error
+    }
   },
 
-  getEvents(params) {
-    return Api().get("event/paginated-by-id-user/{idUser}/{page}/{sizePage}", params);
+  async getEvents(params) {
+    try {
+      return await Api().get(`event/paginated-by-id-user/${params.idUser}/${params.page}/${params.sizePage}`);
+    } catch (error) {
+      return error
+    }
   },
 
-  updateEvent(params) {
-    return Api().put("event/update", params);
+  async updateEvent(params) {
+    try {
+      return await Api().put("event/update", params);
+    } catch (error) {
+      return error
+    }
   },
 
-  deleteEvent(params) {
-    return Api().delete("event/update", params);
+  async deleteEvent(params) {    
+    try {
+      console.log("Vamos a imprimir para ",params)
+      // return await Api().delete("event/delete",{data: {params}});
+      return await Api().delete("event/delete",{ data: params});
+    } catch (error) {
+      return error
+    }
   },
+
 };

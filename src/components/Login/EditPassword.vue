@@ -10,6 +10,7 @@
           type="submit"
           :disabled="!valid"
           @keypress.enter="updateImageUser"
+          @click:submit.prevent="updateImageUser"
         >
           SUBMIT
         </v-btn>

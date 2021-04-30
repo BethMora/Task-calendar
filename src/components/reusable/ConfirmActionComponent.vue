@@ -39,6 +39,7 @@ export default {
     confirmLogOut() {
       this.changeFlagConfirmation(false);
       this.$emit("confirmOff", true);
+      this.$forceUpdate();
     },
 
     cancelLogOut() {

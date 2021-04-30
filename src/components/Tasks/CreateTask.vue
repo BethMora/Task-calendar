@@ -2,34 +2,46 @@
   <v-container
     :style="
       this.$route.path === '/createTask'
-        ? 'margin-top: 50px'
-        : ' margin-top: 0px'
+        ? 'margin-top: 60px'
+        : 'margin-top: 0px'
     "
   >
-    <v-card fill-height fluid class="text-center justify-center">
-      <v-form ref="form" v-model="valid" lazy-validation @submit.prevent>
-        <FormCreateTask :task="task" :dateStartSent="dateStartSent" />
+    <v-row align="center" justify="center">
+      <v-card
+        fill-height
+        fluid
+        class="text-center justify-center"
+        width="600px"
+      >
+        <v-form
+          ref="form"
+          v-model="valid"
+          lazy-validation
+          @submit.prevent="sendTask"
+        >
+          <FormCreateTask :task="task" :dateStartSent="dateStartSent" />
 
-        <v-row justify="center" class="mb-4">
-          <BtnToolTipComponent
-            title="Submit"
-            :valid="valid"
-            :action="sendTask"
-            :block="btnBlock"
-            color="success"
-          />
+          <v-row justify="center" class="mb-4">
+            <BtnToolTipComponent
+              title="Submit"
+              :valid="valid"
+              :action="sendTask"
+              :block="btnBlock"
+              color="success"
+            />
 
-          <BtnToolTipComponent
-            title="CLEAN UP"
-            :valid="true"
-            :action="reset"
-            :block="btnBlock"
-            color="secondary"
-            tip="Click to clear all fields"
-          />
-        </v-row>
-      </v-form>
-    </v-card>
+            <BtnToolTipComponent
+              title="CLEAN UP"
+              :valid="true"
+              :action="reset"
+              :block="btnBlock"
+              color="secondary"
+              tip="Click to clear all fields"
+            />
+          </v-row>
+        </v-form>
+      </v-card>
+    </v-row>
   </v-container>
 </template>
 
@@ -41,7 +53,7 @@ import { formatDateToLocal } from "@/libs/dates";
 
 export default {
   name: "CreateTask",
-  props: ["dateStartSent","emit"],
+  props: ["dateStartSent", "emit"],
   components: {
     FormCreateTask,
     BtnToolTipComponent,
@@ -80,19 +92,20 @@ export default {
     },
 
     sendTask() {
-      const localDateStart = formatDateToLocal(
-        this.task.dateStart,
-        this.task.timeStart
-      );
-      const localDateEnd = formatDateToLocal(
-        this.task.dateEnd,
-        this.task.timeEnd
-      );
-      let timed = false;
-      if (this.task.dateStart === this.task.dateEnd) {
-        timed = true;
-      }
       if (this.$refs.form.validate()) {
+        const localDateStart = formatDateToLocal(
+          this.task.dateStart,
+          this.task.timeStart
+        );
+        const localDateEnd = formatDateToLocal(
+          this.task.dateEnd,
+          this.task.timeEnd
+        );
+        let timed = false;
+        if (this.task.dateStart === this.task.dateEnd) {
+          timed = true;
+        }
+
         const task = {
           name: this.task.nameTask,
           description: this.task.descriptionTask,
@@ -101,23 +114,24 @@ export default {
           color: this.task.colorTask,
           timed: timed,
           // idUser: this.userLoggedOk._id,
-          times: {
-            dateStart: this.task.dateStart,
-            timeStart: this.task.timeStart,
-            dateEnd: this.task.dateEnd,
-            timeEnd: this.task.timeEnd,
-          },
+          // times: {
+          //   dateStart: this.task.dateStart,
+          //   timeStart: this.task.timeStart,
+          //   dateEnd: this.task.dateEnd,
+          //   timeEnd: this.task.timeEnd,
+          // },
         };
         this.addNewTask(task);
-        // this.reset();
-        this.emit(false);
-        if( this.$route.path === '/createTask'){
-          this.$router.push("/dashboard/:id");
-
-        }else{
-          this.$forceUpdate();
-
+        if (this.emit) {
+          this.emit(false);
         }
+        if (this.$route.path === "/createTask") {
+          this.$router.push("/dashboard/:id");
+        }
+        // } else {
+        //   console.log("ejecuta el refresco");
+        //   this.$forceUpdate();
+        // }
         // this.addNewTask(task);
         this.reset();
       }

@@ -27,7 +27,7 @@
         </v-toolbar-items>
       </v-toolbar>
 
-      <CreateTask :dateStartSent="dateStartSent" :emit="emit"/>
+      <CreateTask :dateStartSent="dateStartSent" :emit="emit" />
     </v-card>
   </v-dialog>
 </template>
@@ -74,6 +74,8 @@ export default {
 
     close() {
       this.emit(false);
+      // this.$forceUpdate();
+      // this.reset();
     },
   },
 };

@@ -6,7 +6,7 @@
     enctype="multipart/form-data"
     @submit.prevent="checkIn"
   >
-    <FormUser :valid="valid" :rol="rol" :formDataRegister="formDataRegister" />
+    <FormUser :valid="valid" :formDataRegister="formDataRegister" />
     <FormPassword :formDataRegister="formDataRegister" />
 
     <v-file-input
@@ -37,7 +37,7 @@ import FormUser from "@/components/Login/Forms/FormUser";
 import FormPassword from "@/components/Login/Forms/FormPassword";
 import { encryptKey } from "@/libs/encrypt";
 import { EventBus } from "@/libs/event-bus";
-import { mapGetters, mapActions } from "vuex";
+import { mapActions } from "vuex";
 export default {
   name: "SignUp",
   components: {
@@ -49,7 +49,6 @@ export default {
     return {
       btnBlock: true,
       valid: true,
-      rol: ["ADMIN", "USER"],
       formDataRegister: {},
       selectedAvatar: null,
 
@@ -60,8 +59,10 @@ export default {
       },
     };
   },
-  computed: {
-    ...mapGetters(["creatingUser"]),
+
+  beforeDestroy() {
+    EventBus.$emit("urlAvatar", null);
+    EventBus.$off();
   },
 
   methods: {
@@ -84,11 +85,11 @@ export default {
         formData.append("password", pswSafe);
         formData.append("creationDate", new Date());
         formData.append("modificationDate", new Date());
-        Object.entries(this.formDataRegister).forEach(([key, val]) =>{
-          if(key != "password"){
-            formData.append(key, val)
-          }}
-        )
+        Object.entries(this.formDataRegister).forEach(([key, val]) => {
+          if (key != "password") {
+            formData.append(key, val);
+          }
+        });
         this.checkInAPI(formData);
         this.$router.push("/login");
         EventBus.$emit("urlAvatar", null);

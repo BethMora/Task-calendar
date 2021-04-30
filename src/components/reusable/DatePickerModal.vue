@@ -44,6 +44,7 @@ export default {
     "dateStart",
     "dateEnd",
     "dateStartSent",
+    "dateSentEdit",
   ],
   data() {
     return {
@@ -53,12 +54,20 @@ export default {
     };
   },
   beforeMount() {
-    this.date = this.dateStartSent;
+    if (this.dateStartSent) {
+      this.date = this.dateStartSent;
+    }
+    if (this.dateSentEdit) {
+      this.date = this.dateSentEdit;
+    }
   },
 
   watch: {
     date() {
       this.$emit("setDate", this.date);
+    },
+    dateSentEdit() {
+      this.date = this.dateSentEdit;
     },
     dateStartSent() {
       this.date = this.dateStartSent;

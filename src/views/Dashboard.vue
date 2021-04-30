@@ -24,7 +24,7 @@ export default {
   },
 
   computed: {
-    // ...mapGetters(["userLoggedOk"]),
+    // ...mapGetters(["eventsUserId"]),
   },
 
   // async created() {
@@ -33,16 +33,12 @@ export default {
   //   // console.log(user);
   // },
 
-  created() {
-    this.getEvent();
-  },
+  
 
   methods: {
     ...mapActions(["getPaginatedEvents"]),
 
-    getEvent() {
-      this.getPaginatedEvents({ page: 1, sizePage: 20 });
-    },
+   
   },
 };
 </script>

@@ -7,7 +7,7 @@
         type="submit"
         :block="block"
         :disabled="!valid"
-        @click="action"
+        @click:submit.prevent="action"
         v-bind="attrs"
         v-on="on"
       >

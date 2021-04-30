@@ -58,6 +58,8 @@ export default {
     ...mapGetters(["userLoggedOk"]),
   },
 
+//revisar el userLoggedOk, creo es mejor usar el getter de isLogin
+//revisar el watch
   watch: {
     userLoggedOk() {
       if (this.userLoggedOk.isLogin) {
@@ -71,7 +73,6 @@ export default {
 
   methods: {
     ...mapActions(["loginUserAPI"]),
-
     login() {
       if (this.$refs.form.validate()) {
         const user = {

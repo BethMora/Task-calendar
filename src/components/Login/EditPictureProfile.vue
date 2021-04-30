@@ -20,7 +20,7 @@
               id="titleImg"
             >
               New profile picture
-              <v-divider class="my-2"/>
+              <v-divider class="my-2" />
               <v-row justify="center">
                 <v-img max-height="200" max-width="200" :src="url" />
               </v-row>
@@ -44,6 +44,7 @@
             type="submit"
             :disabled="!valid"
             @keypress.enter="updateImageUser"
+            @click:submit.prevent="updateImageUser"
           >
             SUBMIT
           </v-btn>
@@ -96,7 +97,7 @@ export default {
         formData.append("modificationDate", new Date());
         this.editImageProfileAPI(formData);
         this.$router.push({
-          name: "dashboard",
+          name: "Calendar",
           params: { id: this.userLoggedOk.userName },
         });
       }
