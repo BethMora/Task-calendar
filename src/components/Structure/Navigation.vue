@@ -1,6 +1,12 @@
 <template>
   <div @click="changeVal">
-    <v-navigation-drawer v-model="drawer" absolute left class="blue lighten-5">
+    <v-navigation-drawer
+      v-model="drawer"
+      absolute
+      left
+      class="blue lighten-5"
+      style="z-index: 100"
+    >
       <v-list-item class="mt-10 text-center">
         <v-list-item-content>
           <v-list-item-title class="title">
@@ -130,7 +136,7 @@ export default {
           name: "List Tasks",
           ico: "mdi-file-tree",
           color: "success",
-          url: "/dashboard/:id",
+          url: "/listTasks",
         },
         {
           name: "List Users",
@@ -142,7 +148,7 @@ export default {
           name: "Reports",
           ico: "mdi-file-chart",
           color: "light",
-          url: "/about",
+          url: "/reports",
         },
       ],
 
@@ -157,7 +163,7 @@ export default {
           name: "Calendar",
           ico: "mdi-calendar-check",
           color: "success",
-          url: "/signUp",
+          url: "/dashboard/:id",
         },
         {
           name: "List Tasks",
@@ -169,7 +175,7 @@ export default {
           name: "Reports",
           ico: "mdi-file-chart",
           color: "light",
-          url: "/about",
+          url: "/reports",
         },
       ],
     };

@@ -1,14 +1,37 @@
 <template>
   <div class="my-3 mx-3">
-    <TableList
-      titleTable="List of all users"
-      titleBtn="New User"
-      :headers="headers"
-      :items="allUsers"
-      :newActionBtn="newActionBtn"
-      :edit="editUser"
-      :delet="deleteUser"
-    />
+    <TitleComponent title="List of all users" />
+    <v-card elevation="16" class="mx-auto">
+      <v-card-title class="light">
+        <v-text-field
+          v-model="search"
+          append-icon="mdi-magnify"
+          label="Search"
+          single-line
+          hide-details
+        ></v-text-field>
+
+        <v-btn color="primary" dark class="ml-4" @click="isUserDialog = true">
+          New User
+        </v-btn>
+      </v-card-title>
+      <v-data-table :headers="headers" :items="allUsers" :search="search">
+        <template v-slot:item.imageName="{ item }">
+          <v-avatar size="50px" class="py-2">
+            <img :src="imageAvatar(item.imageName)" />
+          </v-avatar>
+        </template>
+
+        <template v-slot:item.actions="{ item }">
+          <v-icon small class="mr-2" @click="editUser(item)" color="accent">
+            mdi-pencil
+          </v-icon>
+          <v-icon small @click="deleteUser(item)" color="error">
+            mdi-delete
+          </v-icon>
+        </template>
+      </v-data-table>
+    </v-card>
 
     <NewUserDialog :dialogAddUser="dialogAddUser" :emit="emit" />
   </div>
@@ -16,18 +39,19 @@
 
 <script>
 // import { mapGetters, mapActions } from "vuex";
-import TableList from "@/components/reusable/TableList";
+import TitleComponent from "@/components/reusable/TitleComponent";
 import NewUserDialog from "@/components/Modals/NewUserDialog";
 
 export default {
   name: "Users",
   components: {
-    TableList,
+    TitleComponent,
     NewUserDialog,
   },
   data() {
     return {
       isUserDialog: false,
+      search: "",
       headers: [
         {
           text: "FIRST NAME",
@@ -124,13 +148,8 @@ export default {
       console.log(item);
     },
 
-    newActionBtn() {
-      this.isUserDialog = true;
-    },
-
     // ...mapActions(["bringUserAPI"])
   },
-
   // async created() {
   //   try {
   //     this.bringUserAPI();

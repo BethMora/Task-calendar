@@ -6,6 +6,7 @@ import About from "@/views/About.vue";
 import SignIn from "@/components/Login/SignIn.vue";
 import SignUp from "@/components/Login/SignUp.vue";
 import Users from "@/components/Login/Users.vue";
+import Reports from "@/views/Reports.vue";
 
 import Dashboard from "@/views/Dashboard.vue";
 import EditUser from "@/components/Login/EditUser.vue";
@@ -98,6 +99,11 @@ const routes = [
         path: "/listTasks",
         name: "ListTasks",
         component: ListTasks,
+      },
+      {
+        path: "/reports",
+        name: "Reports",
+        component: Reports,
       },
     ],
   },

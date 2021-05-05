@@ -2,7 +2,7 @@
   <v-container
     :style="
       this.$route.path === '/createTask'
-        ? 'margin-top: 60px'
+        ? 'margin-top: 10px'
         : 'margin-top: 0px'
     "
   >

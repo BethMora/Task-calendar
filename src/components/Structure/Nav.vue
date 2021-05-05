@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-app-bar app dark absolute color="white" class="accent" elevate-on-scroll>
+    <v-app-bar app dark absolute color="white" :class="!userLoggedOk.isLogin ? 'accent' : 'blue darken-4'" elevate-on-scroll>
       <template v-if="!userLoggedOk.isLogin">
         <router-link to="/">
           <v-img

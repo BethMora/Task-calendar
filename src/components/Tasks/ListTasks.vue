@@ -1,53 +1,29 @@
 <template>
   <!-- list tasks de un usuario -->
-  <div>
-    <TitleComponent title="List of all tasks" />
-
-    <v-card elevation="16" class="mx-auto">
-      <v-card-title class="light">
-        <v-text-field
-          v-model="search"
-          append-icon="mdi-magnify"
-          label="Search"
-          single-line
-          hide-details
-        ></v-text-field>
-
-        <v-btn color="primary" dark class="ml-4" @click="isTaskDialog = true">
-          New Task
-        </v-btn>
-      </v-card-title>
-      <v-data-table :headers="headers" :items="allTasks" :search="search">
-        <template v-slot:item.actions="{ item }">
-          <v-icon small class="mr-2" @click="editTask(item)" color="accent">
-            mdi-pencil
-          </v-icon>
-          <v-icon small @click="deleteTask(item)" color="error">
-            mdi-delete
-          </v-icon>
-        </template>
-      </v-data-table>
-    </v-card>
-
-    <AddTaskDialog
-      :dialogAddTask="dialogAddTask"
-      :emit="emit"
+  <div class="my-3 mx-3">
+    <TableList
+      titleTable="List of all tasks"
+      titleBtn="New Task"
+      :headers="headers"
+      :items="allTasks"
+      :newActionBtn="newActionBtn"
+      :edit="editTask"
+      :delet="deleteTask"
     />
-    <EditTaskDialog
-      :dialogEditTask="dialogEditTask"
-      :emitEdit="emitEdit"
-    />
+
+    <AddTaskDialog :dialogAddTask="dialogAddTask" :emit="emit" />
+    <EditTaskDialog :dialogEditTask="dialogEditTask" :emitEdit="emitEdit" />
   </div>
 </template>
 
 <script>
-import TitleComponent from "@/components/reusable/TitleComponent";
+import TableList from "@/components/reusable/TableList";
 import AddTaskDialog from "@/components/Modals/AddTaskDialog";
 import EditTaskDialog from "@/components/Modals/EditTaskDialog";
 export default {
   name: "ListTasks",
   components: {
-    TitleComponent,
+    TableList,
     AddTaskDialog,
     EditTaskDialog,
   },
@@ -55,7 +31,7 @@ export default {
     return {
       isTaskDialog: false, //flag open modal windows
       isEditTaskDialog: false, //flag open modal windows
-      search: "",
+
       headers: [
         { text: "NAME", value: "name" },
         { text: "DESCRIPTION", value: "description" },
@@ -143,9 +119,12 @@ export default {
       this.isEditTaskDialog = value;
     },
 
-
     imageAvatar(name) {
       return "http://localhost:3000/public/img/" + name;
+    },
+
+    newActionBtn() {
+      this.isTaskDialog = true;
     },
 
     editTask(item) {
