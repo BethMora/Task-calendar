@@ -12,7 +12,7 @@
         </v-btn>
         <v-toolbar-title dark
           >Adding new task
-          <label class="subtitle-1 info--text ml-3">
+          <label class="subtitle-1 info--text ml-3" v-if="dateSelected">
             Starting date: {{ dateSelected.day }}/{{ dateSelected.month }}/{{
               dateSelected.year
             }}

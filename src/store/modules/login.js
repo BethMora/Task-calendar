@@ -7,14 +7,21 @@ export default {
   // namespaced: true,
   state: {
     isLogin: false,
+    rol: "",
 
-    usersLogin: [],
-    userLoggedOk: {},
+    // usersLogin: [],
+    userLoggedOk: {
+      isLogin: false,
+      // rol : '',
+    },
   },
 
   getters: {
     isLogin(state) {
       return state.isLogin;
+    },
+    rol(state) {
+      return state.rol;
     },
 
     usersLogin(state) {
@@ -50,10 +57,13 @@ export default {
     setIsLogin(state, value) {
       state.isLogin = value;
     },
-
-    setUsersLogin(state, value) {
-      state.usersLogin.push(value);
+    setRol(state, value) {
+      state.rol = value;
     },
+
+    // setUsersLogin(state, value) {
+    //   state.usersLogin.push(value);
+    // },
 
     setUserLoggedOk(state, user) {
       state.userLoggedOk = user;
@@ -71,48 +81,25 @@ export default {
   },
 
   actions: {
-    async checkInAPI(context, obj) {
-      let message = {};
+    async checkInAPI({ commit }, obj) {
       try {
         const response = await UserService.registerUser(obj);
-
         if (response.status === 200) {
-          message = {
-            msg: response.data.message,
-            color: "success",
-            status: response.request.status,
-          };
-          context.commit("setCheckIn", obj);
-          // context.commit("setMesagge", message);
+          response.flagMsg = "OK";
         } else {
-          alert("There was an error the following \n" + response);
-          message = {
-            msg: response.data.error.message,
-            color: "error",
-            status: response.status,
-          };
-          // context.commit("setMesagge", message);
+          response.flagMsg = "ERROR";
         }
+        commit("setMesagge", response);
       } catch (error) {
-        alert("There was an error the following \n" + error);
-        message = {
-          msg: error,
-          color: "danger",
-          status: error,
-        };
-        // context.commit("setMesagge", message);
+        commit("setMesaggeErrorCatch", error);
       }
-      context.commit("setMesagge", message);
-      context.commit("changeSheet");
+      commit("changeSheet");
     },
 
     async loginUserAPI(context, obj) {
-      let message = {};
-      const email = obj.username;
-      const psw = encryptKey(obj.psw);
       const dataLogin = {
-        email: email,
-        password: psw,
+        email: obj.username,
+        password: encryptKey(obj.psw),
       };
       try {
         const response = await UserService.loginUser(dataLogin);
@@ -120,111 +107,74 @@ export default {
           sessionStorage.setItem("token", response.data.token);
           const newUserLogged = response.data.user;
           newUserLogged.token = response.data.token;
-          const keyUnique = newUserLogged._id;
-          context.commit("setUsersLogin", newUserLogged);
-          context.commit("setIsLogin", true);
+          newUserLogged.isLogin = true;
+          // console.log(newUserLogged)
+          // const keyUnique = newUserLogged._id;
+          // context.commit("setUsersLogin", newUserLogged);
 
-          if (context.getters.newUserLoggedIn(keyUnique) != null) {
-            context.commit(
-              "setUserLoggedOk",
-              context.getters.userLoggedId(keyUnique)
-            );
-          } else {
-            console.log("No esta logueado, esta es la lista de usuarios");
-            console.log(context.getters.usersLogin);
-          }
+          context.commit("setUserLoggedOk", newUserLogged);
+          // context.commit("setIsLogin", true);
+          // context.commit("setRol", newUserLogged.role);
+
+          // if (context.getters.newUserLoggedIn(keyUnique) != null) {
+          //   context.commit(
+          //     "setUserLoggedOk",
+          //     context.getters.userLoggedId(keyUnique)
+          //   );
+          // } else {
+          //   console.log("No esta logueado, esta es la lista de usuarios");
+          //   console.log(context.getters.usersLogin);
+          // }
         } else {
-          message = {
-            msg: response.data.message,
-            color: "error",
-            status: response.status,
-          };
-          context.commit("setMesagge", message);
+          response.flagMsg = "ERROR";
+          context.commit("setMesagge", response);
           context.commit("changeSheet");
         }
       } catch (error) {
-        alert("There was an error the following \n" + error);
-        message = {
-          msg: error,
-          color: "danger",
-          status: error,
-        };
-        context.commit("setMesagge", message);
+        context.commit("setMesaggeErrorCatch", error);
         context.commit("changeSheet");
       }
     },
 
-    logoOutUser(context) {
+    logoOutUser({ commit }) {
       sessionStorage.removeItem("token");
-      context.commit("setUserLoggedOk", null);
-      context.commit("setUserLoggedOk", {isLogin : false});
-      context.commit('setEventsUserId', null, {root: true})
+      commit("setUserLoggedOk", null);
+      commit("setUserLoggedOk", { isLogin: false });
+      commit("setEventsUserId", null, { root: true });
+      commit("setIsLogin", false);
+      commit("setRol", "");
     },
 
-    async editUserAPI(context, obj) {
-      let message = {};
+    async editUserAPI({ commit }, obj) {
       try {
         const response = await UserService.updateUser(obj);
         if (response.status === 200) {
-          message = {
-            msg: response.data.message,
-            color: "success",
-            status: response.request.status,
-          };
-          // context.commit("setCheckIn", obj);
-          context.commit("updateUserLoggedOk", obj);
+          response.flagMsg = "OK";
+          commit("updateUserLoggedOk", obj);
         } else {
-          alert("There was an error the following \n" + response);
-          message = {
-            msg: response.data.error.message,
-            color: "error",
-            status: response.status,
-          };
+          response.flagMsg = "ERROR";
         }
+        commit("setMesagge", response);
       } catch (error) {
-        alert("There was an error the following \n" + error);
-        message = {
-          msg: error,
-          color: "danger",
-          status: error,
-        };
-        // context.commit("setMesagge", message);
+        commit("setMesaggeErrorCatch", error);
       }
-      context.commit("setMesagge", message);
-      context.commit("changeSheet");
+      commit("changeSheet");
     },
 
-    async editImageProfileAPI(context, obj) {
-      let message = {};
+    async editImageProfileAPI({ commit }, obj) {
       try {
         const response = await UserService.updateUser(obj);
         if (response.status === 200) {
-          message = {
-            msg: response.data.message,
-            color: "success",
-            status: response.request.status,
-          };
-          // context.commit("setCheckIn", obj);
-          context.commit("updateUserLoggedOk", obj);
+          response.flagMsg = "OK";
+          commit("updateUserLoggedOk", obj);
         } else {
-          alert("There was an error the following \n" + response);
-          message = {
-            msg: response.data.error.message,
-            color: "error",
-            status: response.status,
-          };
+          response.flagMsg = "ERROR";
         }
+        commit("setMesagge", response);
       } catch (error) {
-        alert("There was an error the following \n" + error);
-        message = {
-          msg: error,
-          color: "danger",
-          status: error,
-        };
-        // context.commit("setMesagge", message);
+        commit("setMesaggeErrorCatch", error);
       }
-      context.commit("setMesagge", message);
-      context.commit("changeSheet");
+      commit("changeSheet");
     },
   },
 };

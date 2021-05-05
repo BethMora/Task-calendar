@@ -10,6 +10,7 @@
 <script>
 export default {
     name: "TitleComponent",
-    props: ["title", "subtitle"]
+    // props: ["title", "subtitle"]
+    props: ["title"]
 }
 </script>

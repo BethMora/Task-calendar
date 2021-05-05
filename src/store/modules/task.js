@@ -54,7 +54,6 @@ export default {
     async getPaginatedEvents({ commit, rootState }, { page, sizePage }) {
       const idUser = rootState.login.userLoggedOk._id;
       const response = await EventService.getEvents({ idUser, page, sizePage });
-      let message;
       try {
         if (response.status === 200) {
           const events = response.data.data;
@@ -62,28 +61,17 @@ export default {
             commit("setEventsUserId", events);
           }
         } else {
-          message = {
-            msg: response.data.message,
-            color: "error",
-            status: response.status,
-          };
-          commit("setMesagge", message);
+          response.flagMsg = "ERROR";
+          commit("setMesagge", response);
           commit("changeSheet");
         }
       } catch (error) {
-        alert("There was an error the following \n" + error);
-        message = {
-          msg: error,
-          color: "danger",
-          status: error,
-        };
-        commit("setMesagge", message);
+        commit("setMesaggeErrorCatch", error);
         commit("changeSheet");
       }
     },
 
     async addNewTask({ commit, rootState }, task) {
-      let message = {};
       const event = {
         idUser: rootState.login.userLoggedOk._id,
         name: task.name,
@@ -100,28 +88,17 @@ export default {
         if (response.status === 200) {
           commit("setOneEventUserId", event);
         } else {
-          message = {
-            msg: response.data.message,
-            color: "error",
-            status: response.status,
-          };
-          commit("setMesagge", message);
+          response.flagMsg = "ERROR";
+          commit("setMesagge", response);
           commit("changeSheet");
         }
       } catch (error) {
-        alert("There was an error the following \n" + error);
-        message = {
-          msg: error,
-          color: "danger",
-          status: error,
-        };
-        commit("setMesagge", message);
+        commit("setMesaggeErrorCatch", error);
         commit("changeSheet");
       }
     },
 
     async editTaskAPI({ commit }, task) {
-      let message = {};
       const response = await EventService.updateEvent(task);
       try {
         if (response.status === 200) {
@@ -129,29 +106,17 @@ export default {
           // commit("setTask", task);
           // actions("getPaginatedEvents")
         } else {
-          message = {
-            msg: response.data.message,
-            color: "error",
-            status: response.status,
-          };
-          commit("setMesagge", message);
+          response.flagMsg = "ERROR";
+          commit("setMesagge", response);
           commit("changeSheet");
         }
       } catch (error) {
-        alert("There was an error the following \n" + error);
-        message = {
-          msg: error,
-          color: "danger",
-          status: error,
-        };
-        commit("setMesagge", message);
+        commit("setMesaggeErrorCatch", error);
         commit("changeSheet");
       }
     },
 
-    // async deleteTaskAPI({ commit }, id) {
     async deleteTaskAPI(context, id) {
-      let message = {};
       const idEventDelete = {
         _id: id,
       };
@@ -161,25 +126,13 @@ export default {
           console.log("Task delete");
           const index = context.getters.indexTasks(id);
           context.commit("deleteStateTask", index);
-          // commit("setTask", task);
-          // actions("getPaginatedEvents")
         } else {
-          message = {
-            msg: response.data.message,
-            color: "error",
-            status: response.status,
-          };
-          context.commit("setMesagge", message);
+          response.flagMsg = "ERROR";
+          context.commit("setMesagge", response);
           context.commit("changeSheet");
         }
       } catch (error) {
-        alert("There was an error the following \n" + error);
-        message = {
-          msg: error,
-          color: "danger",
-          status: error,
-        };
-        context.commit("setMesagge", message);
+        context.commit("setMesaggeErrorCatch", error);
         context.commit("changeSheet");
       }
     },

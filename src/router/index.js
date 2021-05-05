@@ -2,9 +2,10 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import Index from "@/views/Index.vue";
 import Login from "@/views/Login.vue";
+import About from "@/views/About.vue";
 import SignIn from "@/components/Login/SignIn.vue";
 import SignUp from "@/components/Login/SignUp.vue";
-import ListUsers from "@/views/ListUsers.vue";
+import Users from "@/components/Login/Users.vue";
 
 import Dashboard from "@/views/Dashboard.vue";
 import EditUser from "@/components/Login/EditUser.vue";
@@ -12,6 +13,7 @@ import EditPassword from "@/components/Login/EditPassword.vue";
 import EditPictureProfile from "@/components/Login/EditPictureProfile.vue";
 import Calendar from "@/components/Tasks/Calendar.vue";
 import CreateTask from "@/components/Tasks/CreateTask";
+import ListTasks from "@/components/Tasks/ListTasks";
 
 import store from "../store";
 
@@ -26,6 +28,11 @@ const routes = [
     path: "/",
     name: "Index",
     component: Index,
+  },
+  {
+    path: "/about",
+    name: "About",
+    component: About,
   },
   {
     path: "/login",
@@ -44,24 +51,14 @@ const routes = [
       },
     ],
   },
-  { 
-    path: "/createTask",
-    name: "CreateTask",
-    component: CreateTask,
-  },
-
-  {
-    path: "/users",
-    name: "ListUsers",
-    component: ListUsers,
-    meta: {
-      requiresAuth: false,
-    },
-  },
+  // {
+  //   path: "/createTask",
+  //   name: "CreateTask",
+  //   component: CreateTask,
+  // },
 
   {
     path: "/dashboard/:id",
-    // name: "Dashboard",
     component: Dashboard,
     children: [
       {
@@ -83,6 +80,24 @@ const routes = [
         path: "/editPictureProfile",
         name: "EditPictureProfile",
         component: EditPictureProfile,
+      },
+      {
+        path: "/createTask",
+        name: "CreateTask",
+        component: CreateTask,
+      },
+      {
+        path: "/users",
+        name: "ListUsers",
+        component: Users,
+        meta: {
+          requiresAuth: false,
+        },
+      },
+      {
+        path: "/listTasks",
+        name: "ListTasks",
+        component: ListTasks,
       },
     ],
   },

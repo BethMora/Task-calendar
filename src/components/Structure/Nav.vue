@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-app-bar app dark absolute color="white" class="accent" elevate-on-scroll>
-      <template v-if="!userLoggedOk.isLogin" class="d-flex align-center">
+      <template v-if="!userLoggedOk.isLogin">
         <router-link to="/">
           <v-img
             alt="Vuetify Logo"
@@ -21,7 +21,7 @@
             />
           </v-row>
           <v-toolbar-title class="info--text ml-6">
-            {{ this.$route.params.id }}
+            {{ this.userLoggedOk.name }}
           </v-toolbar-title>
         </div>
       </template>
@@ -41,35 +41,20 @@
         solo-inverted
       />
 
-      <v-tooltip bottom v-if="!userLoggedOk.isLogin">
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn v-bind="attrs" v-on="on" icon>
-            <template>
+      <template v-if="!userLoggedOk.isLogin">
+        <v-tooltip bottom v-if="!userLoggedOk.isLogin">
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn color="success" v-bind="attrs" v-on="on" icon>
               <v-icon v-model="userLoggedOk.isLogin" @click="goLogin">
                 mdi-account-circle
               </v-icon>
-            </template>
-          </v-btn>
-        </template>
-        <span>Click to login</span>
-      </v-tooltip>
+            </v-btn>
+          </template>
+          <span>Click to login</span>
+        </v-tooltip>
+      </template>
 
-      <v-tooltip bottom>
-        <template v-slot:activator="{ on, attrs }">
-          <v-col xs="1" lg="2" v-bind="attrs" v-on="on">
-            <v-select
-              :items="languages"
-              menu-props="auto"
-              label="Translations"
-              hide-details
-              prepend-icon="mdi-web"
-            ></v-select>
-          </v-col>
-        </template>
-        <span>Choose language</span>
-      </v-tooltip>
-
-      <template v-if="userLoggedOk.isLogin">
+      <template v-else>
         <v-menu bottom origin="center center" transition="scale-transition">
           <template v-slot:activator="{ on, attrs }">
             <v-btn v-bind="attrs" v-on="on" dark small icon>
@@ -79,13 +64,27 @@
 
           <v-list-item-action-text>
             <SubMenuLogged
-              :menuLoggedIn="menuLoggedIn"
               :imageName="userLoggedOk.imageName"
               @handleClick="handleClick"
             />
           </v-list-item-action-text>
         </v-menu>
       </template>
+
+      <v-tooltip bottom>
+        <template v-slot:activator="{ on, attrs }">
+          <v-col xs="1" lg="1" v-bind="attrs" v-on="on">
+            <v-select
+              :items="languages"
+              menu-props="auto"
+              label="Es-En"
+              hide-details
+              prepend-icon="mdi-translate"
+            ></v-select>
+          </v-col>
+        </template>
+        <span>Choose language</span>
+      </v-tooltip>
     </v-app-bar>
 
     <Navigation :drawer="drawer" :changeValue="changeValue" />
@@ -93,8 +92,8 @@
       @confirmOff="confirmOff"
       :isConfirmation="isConfirmation"
       :changeFlagConfirmation="changeFlagConfirmation"
-      title = "Sign off"
-      subtitle = "Are you sure to log out?"
+      title="Sign off"
+      subtitle="Are you sure to log out?"
     />
   </div>
 </template>
@@ -120,30 +119,30 @@ export default {
       bandDrawer: false,
       flagConfirmAction: false,
       languages: [{ text: "English" }, { text: "Spanish" }],
-      menuLoggedIn: [
-        {
-          title: "Your Profile",
-          submenu: [
-            {
-              title: "Edit Profile information",
-              url: "mdi-account-edit-outline",
-              action: "editProfile",
-            },
-            {
-              title: "Change profile picture ",
-              url: "mdi-camera-wireless-outline",
-              action: "editProfilePicture",
-            },
+      // menuLoggedIn: [
+      //   {
+      //     title: "Your Profile",
+      //     submenu: [
+      //       {
+      //         title: "Edit Profile information",
+      //         url: "mdi-account-edit-outline",
+      //         action: "editProfile",
+      //       },
+      //       {
+      //         title: "Change profile picture ",
+      //         url: "mdi-camera-wireless-outline",
+      //         action: "editProfilePicture",
+      //       },
 
-            {
-              title: "Change Password ",
-              url: "mdi-account-key",
-              action: "editProfilePassword",
-            },
-          ],
-        },
-        { title: "Sign out", url: "mdi-logout", action: "logoOut" },
-      ],
+      //       {
+      //         title: "Change Password ",
+      //         url: "mdi-account-key",
+      //         action: "editProfilePassword",
+      //       },
+      //     ],
+      //   },
+      //   { title: "Sign out", url: "mdi-logout", action: "logoOut" },
+      // ],
     };
   },
 
@@ -170,11 +169,10 @@ export default {
     },
   },
 
-  watch:{
-    userLoggedOk(){
-      // console.log("Ha cambiado la data")
-      this.imageAvatar()
-    }
+  watch: {
+    userLoggedOk() {
+      this.imageAvatar();
+    },
   },
 
   methods: {

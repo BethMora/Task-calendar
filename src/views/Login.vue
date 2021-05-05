@@ -1,15 +1,7 @@
 <template>
   <v-main>
     <v-card class="mx-auto my-12" :max-width="widthConten">
-      <v-card-title class="d-flex justify-center mb-4">
-        <v-avatar>
-          <img v-if="setUrl" :src="setUrl" />
-          <v-icon v-else x-large color="blue darken-2">
-            mdi-shield-account
-          </v-icon>
-        </v-avatar>
-        <span> {{ title }} </span>
-      </v-card-title>
+      <AvatarSignUp title="Sign Up" />
 
       <v-card-text style="margin-top: -30px">
         <v-container>
@@ -45,17 +37,21 @@
 </template>
 
 <script>
+import AvatarSignUp from "@/components/reusable/AvatarSignUp";
 import { mapGetters, mapMutations } from "vuex";
-import { EventBus } from "@/libs/event-bus";
+// import { EventBus } from "@/libs/event-bus";
 export default {
   name: "Login",
+  components: {
+    AvatarSignUp,
+  },
   data() {
     return {
       title: "Sign In",
       widthConten: 374,
       loading: false,
       url: "",
-      urlImagen: null,
+      // urlImagen: null,
     };
   },
 
@@ -82,12 +78,12 @@ export default {
   computed: {
     ...mapGetters(["message", "loginStatus"]),
 
-    setUrl() {
-      EventBus.$on("urlAvatar", (item) => {
-        this.urlImagen = item;
-      });
-      return this.urlImagen;
-    },
+    // setUrl() {
+    //   EventBus.$on("urlAvatar", (item) => {
+    //     this.urlImagen = item;
+    //   });
+    //   return this.urlImagen;
+    // },
   },
 
   methods: {

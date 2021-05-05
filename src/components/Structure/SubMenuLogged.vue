@@ -19,7 +19,6 @@
             :value="true"
             no-action
             link
-            
             @click="clickSubMenu(element.action)"
           >
             <v-list-item-title v-text="element.title" />
@@ -51,7 +50,35 @@ export default {
   components: {
     Avatar,
   },
-  props: ["menuLoggedIn", "imageName", "handleClick"],
+  props: ["imageName", "handleClick"],
+  data() {
+    return {
+      menuLoggedIn: [
+        {
+          title: "Your Profile",
+          submenu: [
+            {
+              title: "Edit Profile information",
+              url: "mdi-account-edit-outline",
+              action: "editProfile",
+            },
+            {
+              title: "Change profile picture ",
+              url: "mdi-camera-wireless-outline",
+              action: "editProfilePicture",
+            },
+
+            {
+              title: "Change Password ",
+              url: "mdi-account-key",
+              action: "editProfilePassword",
+            },
+          ],
+        },
+        { title: "Sign out", url: "mdi-logout", action: "logoOut" },
+      ],
+    };
+  },
 
   methods: {
     imageAvatar(name) {
@@ -59,7 +86,6 @@ export default {
     },
 
     clickSubMenu(value) {
-      // console.log(value)
       this.$emit("handleClick", value);
     },
   },
