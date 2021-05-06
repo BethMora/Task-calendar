@@ -10,6 +10,7 @@ export default {
     rol: "",
 
     // usersLogin: [],
+    allUsers: [],
     userLoggedOk: {
       isLogin: false,
       // rol : '',
@@ -51,6 +52,10 @@ export default {
     userLoggedOk(state) {
       return state.userLoggedOk;
     },
+
+    allUsers(state) {
+      return state.allUsers;
+    },
   },
 
   mutations: {
@@ -78,9 +83,34 @@ export default {
         }
       }
     },
+
+    setAllUsers(state, users) {
+      state.allUsers = users;
+      console.log(state.allUsers);
+    },
   },
 
   actions: {
+    async usersAPI({ commit }, obj) {
+      try {
+        const response = await UserService.allUsers(obj);
+        // console.log(response);
+        // console.log(arrayUsers);
+        if (response.status === 200) {
+          response.flagMsg = "OK";
+          const arrayUsers = response.data.data;
+          commit("setAllUsers", arrayUsers);
+        } else {
+          response.flagMsg = "ERROR";
+        }
+        commit("setMesagge", response);
+        commit("changeSheet");
+      } catch (error) {
+        commit("setMesaggeErrorCatch", error);
+        commit("changeSheet");
+      }
+    },
+
     async checkInAPI({ commit }, obj) {
       try {
         const response = await UserService.registerUser(obj);
