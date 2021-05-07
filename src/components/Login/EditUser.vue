@@ -11,10 +11,7 @@
           enctype="multipart/form-data"
           @submit.prevent="updateUser"
         >
-          <FormUser
-            :valid="valid"
-            :formDataRegister="formDataRegister"
-          />
+          <FormUser :valid="valid" :formDataRegister="formDataRegister" />
 
           <v-btn
             class="secondary black--text mt-3"
@@ -42,6 +39,7 @@ export default {
     FormUser,
     TitleComponent,
   },
+  // props: ["dataEditUser"],
   data() {
     return {
       valid: true,
@@ -54,13 +52,18 @@ export default {
   },
 
   beforeMount() {
-    this.formDataRegister = {
-      name: this.userLoggedOk.name,
-      lastName: this.userLoggedOk.lastName,
-      role: this.userLoggedOk.role,
-      userName: this.userLoggedOk.userName,
-      email: this.userLoggedOk.email,
-    };
+    // if (this.dataEditUser) {
+    //   console.log("El admin va a editar al usuario")
+    //   console.log(this.dataEditUser)
+    // } else {
+      this.formDataRegister = {
+        name: this.userLoggedOk.name,
+        lastName: this.userLoggedOk.lastName,
+        role: this.userLoggedOk.role,
+        userName: this.userLoggedOk.userName,
+        email: this.userLoggedOk.email,
+      };
+    // }
   },
 
   methods: {

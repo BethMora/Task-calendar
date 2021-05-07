@@ -5,10 +5,12 @@
       titleTable="List of all tasks"
       titleBtn="New Task"
       :headers="headers"
-      :items="allTasks"
+      :items="tasksUserId"
       :newActionBtn="newActionBtn"
       :edit="editTask"
       :delet="deleteTask"
+      :page.sync="page"
+      :items-per-page="itemsPerPage"
     />
 
     <AddTaskDialog :dialogAddTask="dialogAddTask" :emit="emit" />
@@ -20,6 +22,7 @@
 import TableList from "@/components/reusable/TableList";
 import AddTaskDialog from "@/components/Modals/AddTaskDialog";
 import EditTaskDialog from "@/components/Modals/EditTaskDialog";
+import { mapActions, mapGetters } from "vuex";
 export default {
   name: "ListTasks",
   components: {
@@ -42,51 +45,21 @@ export default {
         { text: "ACTIONS", sortable: false, value: "actions" },
       ],
 
-      allTasks: [
-        {
-          _id: { $oid: "608af6dc51ae7458d8429f93" },
-          isVisible: false,
-          done: false,
-          idUser: "60899ad00a0dd9316403d8e4",
-          name: "13 al 30",
-          description: "mari@gmail.com\n#702269FF",
-          start: { $date: "2021-04-13T18:00:00.000Z" },
-          color: "#702269FF",
-          end: { $date: "2021-04-30T18:30:00.000Z" },
-          creationDate: { $date: "2021-04-29T18:11:40.794Z" },
-          __v: 0,
-        },
-        {
-          _id: { $oid: "608b369651ae7458d8429faa" },
-          isVisible: false,
-          done: false,
-          idUser: "60847c71c97814286c05f852",
-          name: "dasdasdsa",
-          description: "sadasdsada",
-          start: { $date: "2021-04-06T06:50:00.000Z" },
-          color: "#00E3FFFF",
-          end: { $date: "2021-04-23T07:17:00.000Z" },
-          creationDate: { $date: "2021-04-29T22:43:34.915Z" },
-          __v: 0,
-        },
-        {
-          _id: { $oid: "60909073a506c45fd8c45bc9" },
-          isVisible: false,
-          done: false,
-          idUser: "6089c3a80a0dd9316403d8e5",
-          name: "5 al 20",
-          description: "#51C165FF",
-          start: { $date: "2021-05-05T10:25:00.000Z" },
-          color: "#51C165FF",
-          end: { $date: "2021-05-21T01:00:00.000Z" },
-          creationDate: { $date: "2021-05-04T00:08:19.753Z" },
-          __v: 0,
-        },
-      ],
+      page: 1,
+      itemsPerPage: 5,
     };
   },
 
+  beforeMount() {
+    // this.usersAPI({ page: 1, sizePage: 10 });
+    this.getPaginatedEvents({
+      page: this.pageNum,
+      sizePage: this.itemsPerPageNum,
+    });
+  },
+
   computed: {
+    ...mapGetters(["tasksUserId"]),
     dialogAddTask: {
       get: function() {
         return this.isTaskDialog;
@@ -109,6 +82,7 @@ export default {
   },
 
   methods: {
+    ...mapActions(["getPaginatedEvents", "deleteTaskAPI"]),
     //Metodo para cambiar el estado que maneja la ventana modal Crear Tarea
     emit(value) {
       this.isTaskDialog = value;
@@ -128,16 +102,15 @@ export default {
     },
 
     editTask(item) {
-      console.log("editando user");
+      console.log("editando TASK");
       console.log(item);
     },
 
-    deleteTask(item) {
-      console.log("DELETE user");
-      console.log(item);
+    deleteTask(id) {
+      console.log("DELETE task");
+      console.log(id);
+      this.deleteTaskAPI(id);
     },
-
-    // ...mapActions(["bringUserAPI"])
   },
 };
 </script>

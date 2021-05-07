@@ -13,7 +13,7 @@ export default {
     allUsers: [],
     userLoggedOk: {
       isLogin: false,
-      // rol : '',
+      role: "",
     },
   },
 
@@ -44,10 +44,18 @@ export default {
       return userLogged;
     },
 
-    userLoggedId: (state) => (id) => {
-      const userAccordingId = state.usersLogin.find((user) => user._id === id);
+    //Devuelve el indice del arreglo allUsers donde el indice sea igual al param id
+    userIndex: (state) => (id) => {
+      const userAccordingId = state.allUsers.findIndex(
+        (user) => user._id === id
+      );
       return userAccordingId;
     },
+
+    // userLoggedId: (state) => (id) => {
+    //   const userAccordingId = state.usersLogin.find((user) => user._id === id);
+    //   return userAccordingId;
+    // },
 
     userLoggedOk(state) {
       return state.userLoggedOk;
@@ -84,9 +92,47 @@ export default {
       }
     },
 
+    updateUserInAllUsers(state, data) {
+      console.log("Recibimos en las mutaciones el siguiente valor");
+      console.log(data);
+      // if (data.typeEdit === "updatedByAdmin") {
+      for (const property in data) {
+        if (
+          Object.prototype.hasOwnProperty.call(
+            state.allUsers[data.index],
+            property
+          )
+        ) {
+          state.allUsers[data.index][property] = data[property];
+        }
+        // }
+      }
+
+      // if (data.typeEdit === "deletedByAdmin") {
+      //   state.allUsers[data.index].isActive = data.isActive;
+      // }
+
+      // if (data.typeEdit === "resetedByAdmin") {
+      //   state.allUsers[data.index].password = data.password;
+      // }
+    },
+
     setAllUsers(state, users) {
-      state.allUsers = users;
-      console.log(state.allUsers);
+      // state.allUsers = users;
+      // state.allUsers = [];
+      if (users === null) {
+        state.allUsers = [];
+      } else {
+        if (users.length >= 1) {
+          // for (const iterator of users) {
+          //   state.allUsers.push(iterator);
+          // }
+          state.allUsers = users;
+        }
+        if (users.length === undefined) {
+          state.allUsers.push(users);
+        }
+      }
     },
   },
 
@@ -94,17 +140,14 @@ export default {
     async usersAPI({ commit }, obj) {
       try {
         const response = await UserService.allUsers(obj);
-        // console.log(response);
-        // console.log(arrayUsers);
         if (response.status === 200) {
           response.flagMsg = "OK";
-          const arrayUsers = response.data.data;
-          commit("setAllUsers", arrayUsers);
+          commit("setAllUsers", response.data.data);
         } else {
           response.flagMsg = "ERROR";
+          commit("setMesagge", response);
+          commit("changeSheet");
         }
-        commit("setMesagge", response);
-        commit("changeSheet");
       } catch (error) {
         commit("setMesaggeErrorCatch", error);
         commit("changeSheet");
@@ -116,6 +159,7 @@ export default {
         const response = await UserService.registerUser(obj);
         if (response.status === 200) {
           response.flagMsg = "OK";
+          commit("setAllUsers", response.data.user);
         } else {
           response.flagMsg = "ERROR";
         }
@@ -175,20 +219,66 @@ export default {
       commit("setRol", "");
     },
 
-    async editUserAPI({ commit }, obj) {
+    // async deleteUserAPI(context, obj) {
+    //   try {
+    //     const response = await UserService.updateUser(obj);
+    //     if (response.status === 200) {
+    //       const indexIdUser = context.getters.userIndex(obj._id);
+    //       context.commit("updateUserInAllUsers", {
+    //         index: indexIdUser,
+    //         isActive: obj.isActive,
+    //       });
+    //       // response.flagMsg = "OK";
+    //     } else {
+    //       response.flagMsg = "ERROR";
+    //       context.commit("setMesagge", response);
+    //       context.commit("changeSheet");
+    //     }
+    //   } catch (error) {
+    //     context.commit("setMesaggeErrorCatch", error);
+    //     context.commit("changeSheet");
+    //   }
+    // },
+
+    async editUserAPI(context, obj) {
+      // console.log("recibo la data ",obj)
+      // console.log("recibo la data ")
+      // console.log(obj.constructor)
+      // if(obj.constructor === "FormData() { [native code] }"){
+      //   console.log("es un form data")
+      // }
       try {
         const response = await UserService.updateUser(obj);
+        console.log(response);
         if (response.status === 200) {
+          try {
+            const object = {};
+            obj.forEach((value, key) => {
+              object[key] = value;
+            });
+            const indexIdUser = context.getters.userIndex(obj.get("_id"));
+            object.index = indexIdUser;
+
+            // console.log("____________________________");
+            // console.log("Enviamos el objeto");
+            // console.log(object);
+            // console.log("____________________________");
+            context.commit("updateUserInAllUsers", object);
+          } catch (error) {
+            const indexIdUser = context.getters.userIndex(obj._id);
+            obj.index = indexIdUser;
+            context.commit("updateUserInAllUsers", obj);
+          }
+          context.commit("updateUserLoggedOk", obj);
           response.flagMsg = "OK";
-          commit("updateUserLoggedOk", obj);
         } else {
           response.flagMsg = "ERROR";
         }
-        commit("setMesagge", response);
+        context.commit("setMesagge", response);
       } catch (error) {
-        commit("setMesaggeErrorCatch", error);
+        context.commit("setMesaggeErrorCatch", error);
       }
-      commit("changeSheet");
+      context.commit("changeSheet");
     },
 
     async editImageProfileAPI({ commit }, obj) {

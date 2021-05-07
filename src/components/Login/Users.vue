@@ -8,9 +8,17 @@
       :newActionBtn="newActionBtn"
       :edit="editUser"
       :delet="deleteUser"
+      :page.sync="page"
+      :items-per-page="itemsPerPage"
+      :restore="restoreUser"
     />
 
     <NewUserDialog :dialogAddUser="dialogAddUser" :emit="emit" />
+    <EditUserDialog
+      :dialogEditUser="dialogEditUser"
+      :emitEdit="emitEdit"
+      :dataEditUser="dataEditUser"
+    />
   </div>
 </template>
 
@@ -18,16 +26,19 @@
 import { mapActions, mapGetters } from "vuex";
 import TableList from "@/components/reusable/TableList";
 import NewUserDialog from "@/components/Modals/NewUserDialog";
+import EditUserDialog from "@/components/Modals/EditUserDialog";
 
 export default {
   name: "Users",
   components: {
     TableList,
     NewUserDialog,
+    EditUserDialog,
   },
   data() {
     return {
       isUserDialog: false,
+      isEditDialog: false,
       headers: [
         {
           text: "FIRST NAME",
@@ -40,63 +51,37 @@ export default {
         { text: "USER NAME", value: "userName" },
         { text: "EMAIL", value: "email" },
         { text: "ROL", value: "role" },
+        { text: "ACTIVO", value: "isActive" },
         { text: "AVATAR", sortable: false, value: "imageName" },
         { text: "CREATION DATE", value: "creationDate" },
         { text: "MODIFICATION DATE", value: "modificationDate" },
         { text: "ACTIONS", sortable: false, value: "actions" },
       ],
 
-      // allUsers: [
-      //   {
-      //     _id: { $oid: "60847c71c97814286c05f852" },
-      //     role: "USER",
-      //     password:
-      //       "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4",
-      //     creationDate: "Sat Apr 24 2021 15:15:45 GMT-0500 (Ecuador Time)",
-      //     modificationDate: "Wed Apr 28 2021 15:43:39 GMT-0500 (Ecuador Time)",
-      //     name: "David  V",
-      //     lastName: "Vaca Mora",
-      //     email: "david@vacam.com",
-      //     userName: "Muñecote",
-      //     imageName: "1619642620041-IMG-20181201-WA0001.jpeg",
-      //     __v: 0,
-      //   },
-      //   {
-      //     _id: { $oid: "60899ad00a0dd9316403d8e4" },
-      //     role: "ADMIN",
-      //     password:
-      //       "5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5",
-      //     creationDate: "Wed Apr 28 2021 12:26:39 GMT-0500 (Ecuador Time)",
-      //     modificationDate: "Wed Apr 28 2021 15:47:39 GMT-0500 (Ecuador Time)",
-      //     name: "Maria",
-      //     lastName: "Mora",
-      //     email: "mari@gmail.com",
-      //     userName: "MaryBeth74",
-      //     imageName: "1619642859234-feb.jpg",
-      //     __v: 0,
-      //   },
-      //   {
-      //     _id: { $oid: "6089c3a80a0dd9316403d8e5" },
-      //     role: "ADMIN",
-      //     password:
-      //       "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4",
-      //     creationDate: "Wed Apr 28 2021 15:20:56 GMT-0500 (Ecuador Time)",
-      //     modificationDate: "2021-04-28T20:24:41.780Z",
-      //     name: "Ramses",
-      //     lastName: "Vaca",
-      //     email: "ramses@vaca.com",
-      //     userName: "Ramses",
-      //     imageName: "1619641256184-cone.jpg",
-      //     __v: 0,
-      //   },
-      // ],
+      // pageCount: 0,
+      // pageNum: 1,
+      // itemsPerPageNum: null,
+      page: 1,
+      itemsPerPage: 5,
+
+      dataEditUser: null,
     };
   },
 
-  beforeMount(){
-    console.log("Before mount")
-    console.log(this.usersAPI({page: 1, sizePage: 5}))
+  beforeMount() {
+    // this.usersAPI({ page: 1, sizePage: 10 });
+    this.usersAPI({ page: this.pageNum, sizePage: this.itemsPerPageNum });
+    // console.log("beforeMount users");
+    // console.log(this.allUsers);
   },
+
+  // watch: {
+  //   allUsers() {
+  //     //   this.usersAPI({ page: this.pageNum, sizePage: this.itemsPerPageNum });
+  //     console.log("Cambio el array users");
+  //     console.log(this.allUsers);
+  //   },
+  // },
 
   computed: {
     ...mapGetters(["allUsers"]),
@@ -109,11 +94,44 @@ export default {
         this.emit(value);
       },
     },
+    dialogEditUser: {
+      get: function() {
+        return this.isEditDialog;
+      },
+
+      set: function(value) {
+        this.emitEdit(value);
+      },
+    },
+
+    // page: {
+    //   get: function() {
+    //     return this.pageNum;
+    //   },
+
+    //   set: function(value) {
+    //     this.emitPage(value);
+    //   },
+    // },
+
+    // itemsPerPage: {
+    //   get: function() {
+    //     return this.itemsPerPageNum;
+    //   },
+
+    //   set: function(value) {
+    //     this.emitItemsPerPage(value);
+    //   },
+    // },
   },
 
   methods: {
+    ...mapActions(["usersAPI", "editUserAPI"]),
     emit(value) {
       this.isUserDialog = value;
+    },
+    emitEdit(value) {
+      this.isEditDialog = value;
     },
 
     imageAvatar(name) {
@@ -121,20 +139,42 @@ export default {
     },
 
     editUser(item) {
-      console.log("editando user");
-      console.log(item);
+      this.dataEditUser = item;
+      this.isEditDialog = true;
     },
 
     deleteUser(item) {
-      console.log("DELETE user");
-      console.log(item);
+      const data = {
+        _id: item,
+        isActive: false,
+        modificationDate: new Date(),
+      };
+      this.editUserAPI(data);
+      //   formData.append("modificationDate", new Date());
+      //   formData.append("typeEdit", "updatedByAdmin");
+      //   formData.append("_id", this.dataEditUser._id);
+    },
+
+    restoreUser(item) {
+      const data = {
+        _id: item,
+        isActive: true,
+        modificationDate: new Date(),
+      };
+      this.editUserAPI(data);
     },
 
     newActionBtn() {
       this.isUserDialog = true;
     },
 
-    ...mapActions(["usersAPI"])
+    // emitPage(value){
+    //    this.pageNum = value;
+    // },
+
+    // emitItemsPerPage(value){
+    //    this.itemsPerPageNum = value;
+    // },
   },
 
   // async created() {

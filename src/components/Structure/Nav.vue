@@ -225,7 +225,6 @@ export default {
     },
 
     confirmOff(value) {
-      console.log("recivo del hijo ");
       if (value) {
         this.logoOut();
       }

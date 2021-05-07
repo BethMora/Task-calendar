@@ -40,6 +40,7 @@ import { EventBus } from "@/libs/event-bus";
 import { mapActions } from "vuex";
 export default {
   name: "SignUp",
+  props: ["close"],
   components: {
     FormUser,
     FormPassword,
@@ -59,6 +60,23 @@ export default {
       },
     };
   },
+
+  // beforeMount() {
+  //   if (this.dataEditUser) {
+  //     console.log("traemos data para editar BEFORE MOUNT");
+  //     console.log(this.dataEditUser);
+  //     this.formDataRegister
+  //      = this.dataEditUser;
+  //   }
+  // },
+
+  // watch: {
+  //   dataEditUser() {
+  //     console.log("WATCH traemos data para editar");
+  //     console.log(this.dataEditUser);
+  //     this.formDataRegister = this.dataEditUser;
+  //   },
+  // },
 
   beforeDestroy() {
     EventBus.$emit("urlAvatar", null);
@@ -91,7 +109,13 @@ export default {
           }
         });
         this.checkInAPI(formData);
-        this.$router.push("/login");
+        if (this.$route.path === "/users") {
+          this.$forceUpdate();
+          this.close();
+        } else {
+          this.$router.push("/login");
+        }
+        this.$refs.form.reset();
         EventBus.$emit("urlAvatar", null);
         EventBus.$off();
       }

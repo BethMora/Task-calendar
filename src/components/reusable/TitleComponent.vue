@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3 class="my-2 accent--text">
+    <h3 class="my-2 accent--text text-uppercase">
         {{title}}
     </h3>
     <v-divider class="mb-4" />

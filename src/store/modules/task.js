@@ -7,6 +7,7 @@ export default {
   strict: true,
   // namespaced: true,
   state: {
+    allTasks: [],
     tasksUserId: [],
   },
 
@@ -17,6 +18,10 @@ export default {
 
     indexTasks: (state) => (id) => {
       return state.tasksUserId.findIndex((e) => e._id === id);
+    },
+
+    allTasks(state) {
+      return state.allTasks;
     },
   },
 
@@ -48,9 +53,33 @@ export default {
     deleteStateTask(state, index) {
       state.tasksUserId.splice(index, 1);
     },
+
+    setAllTasks(state, tasks) {
+      state.allTasks = tasks;
+    },
   },
 
   actions: {
+    async tasksAPI({ commit }, obj) {
+      try {
+        const response = await EventService.getEventStartEnd(obj);
+        console.log(response);
+        if (response.status === 200) {
+          response.flagMsg = "OK";
+          const arrayUsers = response.data.data;
+          // commit("setAllUsers", arrayUsers);
+          commit("setEventsUserId", arrayUsers);
+        } else {
+          response.flagMsg = "ERROR";
+        }
+        commit("setMesagge", response);
+        commit("changeSheet");
+      } catch (error) {
+        commit("setMesaggeErrorCatch", error);
+        commit("changeSheet");
+      }
+    },
+
     async getPaginatedEvents({ commit, rootState }, { page, sizePage }) {
       const idUser = rootState.login.userLoggedOk._id;
       const response = await EventService.getEvents({ idUser, page, sizePage });
@@ -59,6 +88,7 @@ export default {
           const events = response.data.data;
           if (response.data.data.length > 0) {
             commit("setEventsUserId", events);
+            // commit("setAllTasks", events);
           }
         } else {
           response.flagMsg = "ERROR";

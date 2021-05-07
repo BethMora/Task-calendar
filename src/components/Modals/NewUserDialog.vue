@@ -23,8 +23,8 @@
       <v-container>
         <v-card>
           <AvatarSignUp title="Sign Up" />
-          <v-container>
-            <SignUp />
+          <v-container style="margin-top: -40px">
+            <SignUp :close="close" />
           </v-container>
         </v-card>
       </v-container>
@@ -55,7 +55,7 @@ export default {
       // EventBus.$emit("resetSignUp", null);
       // EventBus.$off();
 
-      this.$forceUpdate();
+      // this.$forceUpdate();
       // this.reset();
     },
   },
