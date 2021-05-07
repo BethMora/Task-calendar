@@ -79,7 +79,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(["editImageProfileAPI"]),
+    ...mapActions(["editUserAPI"]),
 
     onFileChange(e) {
       if (e) {
@@ -95,7 +95,7 @@ export default {
         formData.append("_id", this.userLoggedOk._id);
         formData.append("file", this.selectedAvatar);
         formData.append("modificationDate", new Date());
-        this.editImageProfileAPI(formData);
+        this.editUserAPI(formData);
         this.$router.push({
           name: "Calendar",
           params: { id: this.userLoggedOk.userName },

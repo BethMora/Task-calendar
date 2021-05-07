@@ -19,10 +19,18 @@
       :emitEdit="emitEdit"
       :dataEditUser="dataEditUser"
     />
+    <ConfirmActionComponent
+      @confirmOff="confirmOff"
+      :isConfirmation="isConfirmation"
+      :changeFlagConfirmation="changeFlagConfirmation"
+      title="CHANGE USER STATUS"
+      :subtitle="subtitleConfirmAction"
+    />
   </div>
 </template>
 
 <script>
+import ConfirmActionComponent from "@/components/reusable/ConfirmActionComponent";
 import { mapActions, mapGetters } from "vuex";
 import TableList from "@/components/reusable/TableList";
 import NewUserDialog from "@/components/Modals/NewUserDialog";
@@ -34,19 +42,18 @@ export default {
     TableList,
     NewUserDialog,
     EditUserDialog,
+    ConfirmActionComponent,
   },
   data() {
     return {
+      flagConfirmAction: false,
+      dataDelete: {},
+      // titleConfirmAction : "",
+      subtitleConfirmAction: "",
       isUserDialog: false,
       isEditDialog: false,
       headers: [
-        {
-          text: "FIRST NAME",
-          // align: "center",
-          // filterable: false,
-          value: "name",
-          // class: "secondary text-uppercase pt-2",
-        },
+        { text: "FIRST NAME", value: "name" },
         { text: "LAST NAME", value: "lastName" },
         { text: "USER NAME", value: "userName" },
         { text: "EMAIL", value: "email" },
@@ -104,6 +111,16 @@ export default {
       },
     },
 
+    isConfirmation: {
+      get: function() {
+        return this.flagConfirmAction;
+      },
+
+      set: function(value) {
+        this.changeFlagConfirmation(value);
+      },
+    },
+
     // page: {
     //   get: function() {
     //     return this.pageNum;
@@ -144,28 +161,42 @@ export default {
     },
 
     deleteUser(item) {
-      const data = {
-        _id: item,
-        isActive: false,
-        modificationDate: new Date(),
-      };
-      this.editUserAPI(data);
-      //   formData.append("modificationDate", new Date());
-      //   formData.append("typeEdit", "updatedByAdmin");
-      //   formData.append("_id", this.dataEditUser._id);
+      this.dataDelete = item;
+      this.subtitleConfirmAction = "Are you sure to unsubscribe the user";
+      this.flagConfirmAction = true;
     },
 
     restoreUser(item) {
-      const data = {
-        _id: item,
-        isActive: true,
-        modificationDate: new Date(),
-      };
-      this.editUserAPI(data);
+      this.dataDelete = item;
+      this.subtitleConfirmAction = "Are you sure to activate the user";
+      this.flagConfirmAction = true;
     },
 
     newActionBtn() {
       this.isUserDialog = true;
+    },
+
+    changeFlagConfirmation(value) {
+      this.flagConfirmAction = value;
+    },
+
+    confirmOff(value) {
+      if (value) {
+        const data = {
+          _id: this.dataDelete,
+          isActive: true,
+          modificationDate: new Date(),
+        };
+
+        if (
+          this.subtitleConfirmAction === "Are you sure to activate the user"
+        ) {
+          this.editUserAPI(data);
+        } else {
+          data.isActive = false;
+          this.editUserAPI(data);
+        }
+      }
     },
 
     // emitPage(value){
@@ -176,13 +207,5 @@ export default {
     //    this.itemsPerPageNum = value;
     // },
   },
-
-  // async created() {
-  //   try {
-  //     this.bringUserAPI();
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // }
 };
 </script>

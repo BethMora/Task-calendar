@@ -5,6 +5,13 @@
     <router-view />
     <Footer />
     <Alert />
+    <!-- <ConfirmActionComponent
+      @confirmOff="confirmOff"
+      :isConfirmation="isConfirmation"
+      :changeFlagConfirmation="changeFlagConfirmation"
+      title="Sign off"
+      subtitle="Are you sure to log out?"
+    /> -->
   </v-app>
 </template>
 
@@ -14,6 +21,7 @@ import Nav from "@/components/Structure/Nav";
 // import Navigation from "@/components/Navigation";
 import Footer from "@/components/Structure/Footer";
 import Alert from "@/components/Modals/Alert";
+// import ConfirmActionComponent from "@/components/reusable/ConfirmActionComponent";
 
 export default {
   name: "App",
@@ -23,12 +31,37 @@ export default {
     // Navigation,
     // Started,
     Footer,
-    Alert
+    Alert,
+    // ConfirmActionComponent,
   },
 
   data: () => ({
     //
-  })
+  }),
+
+  // computed: {
+  //   isConfirmation: {
+  //     get: function() {
+  //       return this.flagConfirmAction;
+  //     },
+
+  //     set: function(value) {
+  //       this.changeFlagConfirmation(value);
+  //     },
+  //   },
+  // },
+
+  // methods: {
+  //   changeFlagConfirmation(value) {
+  //     this.flagConfirmAction = value;
+  //   },
+
+  //   confirmOff(value) {
+  //     if (value) {
+  //       console.log("Action delete");
+  //     }
+  //   },
+  // },
 };
 </script>
 

@@ -219,34 +219,7 @@ export default {
       commit("setRol", "");
     },
 
-    // async deleteUserAPI(context, obj) {
-    //   try {
-    //     const response = await UserService.updateUser(obj);
-    //     if (response.status === 200) {
-    //       const indexIdUser = context.getters.userIndex(obj._id);
-    //       context.commit("updateUserInAllUsers", {
-    //         index: indexIdUser,
-    //         isActive: obj.isActive,
-    //       });
-    //       // response.flagMsg = "OK";
-    //     } else {
-    //       response.flagMsg = "ERROR";
-    //       context.commit("setMesagge", response);
-    //       context.commit("changeSheet");
-    //     }
-    //   } catch (error) {
-    //     context.commit("setMesaggeErrorCatch", error);
-    //     context.commit("changeSheet");
-    //   }
-    // },
-
     async editUserAPI(context, obj) {
-      // console.log("recibo la data ",obj)
-      // console.log("recibo la data ")
-      // console.log(obj.constructor)
-      // if(obj.constructor === "FormData() { [native code] }"){
-      //   console.log("es un form data")
-      // }
       try {
         const response = await UserService.updateUser(obj);
         console.log(response);
@@ -258,11 +231,6 @@ export default {
             });
             const indexIdUser = context.getters.userIndex(obj.get("_id"));
             object.index = indexIdUser;
-
-            // console.log("____________________________");
-            // console.log("Enviamos el objeto");
-            // console.log(object);
-            // console.log("____________________________");
             context.commit("updateUserInAllUsers", object);
           } catch (error) {
             const indexIdUser = context.getters.userIndex(obj._id);
@@ -271,30 +239,31 @@ export default {
           }
           context.commit("updateUserLoggedOk", obj);
           response.flagMsg = "OK";
+          context.commit("setMesagge", response);
         } else {
           response.flagMsg = "ERROR";
+          context.commit("setMesagge", response);
         }
-        context.commit("setMesagge", response);
       } catch (error) {
         context.commit("setMesaggeErrorCatch", error);
       }
       context.commit("changeSheet");
     },
 
-    async editImageProfileAPI({ commit }, obj) {
-      try {
-        const response = await UserService.updateUser(obj);
-        if (response.status === 200) {
-          response.flagMsg = "OK";
-          commit("updateUserLoggedOk", obj);
-        } else {
-          response.flagMsg = "ERROR";
-        }
-        commit("setMesagge", response);
-      } catch (error) {
-        commit("setMesaggeErrorCatch", error);
-      }
-      commit("changeSheet");
-    },
+    // async editImageProfileAPI({ commit }, obj) {
+    //   try {
+    //     const response = await UserService.updateUser(obj);
+    //     if (response.status === 200) {
+    //       response.flagMsg = "OK";
+    //       commit("updateUserLoggedOk", obj);
+    //     } else {
+    //       response.flagMsg = "ERROR";
+    //     }
+    //     commit("setMesagge", response);
+    //   } catch (error) {
+    //     commit("setMesaggeErrorCatch", error);
+    //   }
+    //   commit("changeSheet");
+    // },
   },
 };
