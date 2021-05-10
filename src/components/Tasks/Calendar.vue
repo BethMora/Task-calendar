@@ -106,13 +106,6 @@
         :eventEdit="eventEdit"
       />
 
-      <ConfirmActionComponent
-        @confirmOff="confirmOff"
-        :isConfirmation="isConfirmation"
-        :changeFlagConfirmation="changeFlagConfirmation"
-        title="Delete task event"
-        subtitle="Are you sure to delete task event?"
-      />
     </v-col>
   </v-row>
 </template>
@@ -120,7 +113,6 @@
 <script>
 import AddTaskDialog from "@/components/Modals/AddTaskDialog";
 import EditTaskDialog from "@/components/Modals/EditTaskDialog";
-import ConfirmActionComponent from "@/components/reusable/ConfirmActionComponent";
 import { mapGetters, mapActions } from "vuex";
 
 export default {
@@ -128,11 +120,9 @@ export default {
   components: {
     AddTaskDialog,
     EditTaskDialog,
-    ConfirmActionComponent,
   },
 
   data: () => ({
-    flagConfirmAction: false,
     focus: "",
     type: "month",
     typeToLabel: {
@@ -173,15 +163,6 @@ export default {
 
   computed: {
     ...mapGetters(["tasksUserId"]),
-    isConfirmation: {
-      get: function() {
-        return this.flagConfirmAction;
-      },
-
-      set: function(value) {
-        this.changeFlagConfirmation(value);
-      },
-    },
 
     dialogAddTask: {
       get: function() {
@@ -208,9 +189,6 @@ export default {
     ...mapActions(["deleteTaskAPI", "editTaskAPI", "getPaginatedEvents"]),
 
     //Metodo para cambiar el estado que maneja la ventana modal Confirmar accion
-    changeFlagConfirmation(value) {
-      this.flagConfirmAction = value;
-    },
 
     //Metodo para cambiar el estado que maneja la ventana modal Crear Tarea
     emit(value) {
@@ -265,7 +243,6 @@ export default {
     deleteTask(id) {
       this.idTaskDelete = id;
       this.selectedOpen = false;
-      this.flagConfirmAction = true;
       console.log("Vamos a buscar en el arreglo de task")
       console.log(this.tasksUserId)
       const element = this.tasksUserId.find(e => e._id === id);

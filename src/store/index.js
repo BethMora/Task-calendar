@@ -2,17 +2,14 @@ import Vue from "vue";
 import Vuex from "vuex";
 import login from "./modules/login";
 import task from "./modules/task";
-import confirmActionDialog from "./modules/confirmActionDialog";
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   strict: true,
-  // namespaced: true,
   modules: {
     login,
     task,
-    confirmActionDialog,
   },
   state: {
     sheet: false,
