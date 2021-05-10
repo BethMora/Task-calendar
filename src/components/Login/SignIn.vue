@@ -32,7 +32,7 @@
 
 <script>
 import BtnToolTipComponent from "@/components/reusable/BtnToolTipComponent";
-import { mapGetters, mapActions } from "vuex";
+import { mapActions } from "vuex";
 export default {
   name: "SignIn",
   components: {
@@ -52,23 +52,6 @@ export default {
         valid: (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
       },
     };
-  },
-
-  computed: {
-    ...mapGetters(["userLoggedOk"]),
-  },
-
-//revisar el userLoggedOk, creo es mejor usar el getter de isLogin
-//revisar el watch
-  watch: {
-    userLoggedOk() {
-      if (this.userLoggedOk.isLogin) {
-        this.$router.push({
-          name: "Calendar",
-          params: { id: this.userLoggedOk.userName },
-        });
-      }
-    },
   },
 
   methods: {

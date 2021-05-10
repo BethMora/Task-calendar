@@ -7,9 +7,9 @@
       :items="allUsers"
       :newActionBtn="newActionBtn"
       :edit="editUser"
-      :delet="deleteUser"
       :page.sync="page"
       :items-per-page="itemsPerPage"
+      :delet="deleteUser"
       :restore="restoreUser"
     />
 
@@ -19,18 +19,10 @@
       :emitEdit="emitEdit"
       :dataEditUser="dataEditUser"
     />
-    <ConfirmActionComponent
-      @confirmOff="confirmOff"
-      :isConfirmation="isConfirmation"
-      :changeFlagConfirmation="changeFlagConfirmation"
-      title="CHANGE USER STATUS"
-      :subtitle="subtitleConfirmAction"
-    />
   </div>
 </template>
 
 <script>
-import ConfirmActionComponent from "@/components/reusable/ConfirmActionComponent";
 import { mapActions, mapGetters } from "vuex";
 import TableList from "@/components/reusable/TableList";
 import NewUserDialog from "@/components/Modals/NewUserDialog";
@@ -42,14 +34,9 @@ export default {
     TableList,
     NewUserDialog,
     EditUserDialog,
-    ConfirmActionComponent,
   },
   data() {
     return {
-      flagConfirmAction: false,
-      dataDelete: {},
-      // titleConfirmAction : "",
-      subtitleConfirmAction: "",
       isUserDialog: false,
       isEditDialog: false,
       headers: [
@@ -76,19 +63,8 @@ export default {
   },
 
   beforeMount() {
-    // this.usersAPI({ page: 1, sizePage: 10 });
     this.usersAPI({ page: this.pageNum, sizePage: this.itemsPerPageNum });
-    // console.log("beforeMount users");
-    // console.log(this.allUsers);
   },
-
-  // watch: {
-  //   allUsers() {
-  //     //   this.usersAPI({ page: this.pageNum, sizePage: this.itemsPerPageNum });
-  //     console.log("Cambio el array users");
-  //     console.log(this.allUsers);
-  //   },
-  // },
 
   computed: {
     ...mapGetters(["allUsers"]),
@@ -110,36 +86,6 @@ export default {
         this.emitEdit(value);
       },
     },
-
-    isConfirmation: {
-      get: function() {
-        return this.flagConfirmAction;
-      },
-
-      set: function(value) {
-        this.changeFlagConfirmation(value);
-      },
-    },
-
-    // page: {
-    //   get: function() {
-    //     return this.pageNum;
-    //   },
-
-    //   set: function(value) {
-    //     this.emitPage(value);
-    //   },
-    // },
-
-    // itemsPerPage: {
-    //   get: function() {
-    //     return this.itemsPerPageNum;
-    //   },
-
-    //   set: function(value) {
-    //     this.emitItemsPerPage(value);
-    //   },
-    // },
   },
 
   methods: {
@@ -161,51 +107,51 @@ export default {
     },
 
     deleteUser(item) {
-      this.dataDelete = item;
-      this.subtitleConfirmAction = "Are you sure to unsubscribe the user";
-      this.flagConfirmAction = true;
+      const dataDelete = {
+        _id: item,
+        isActive: false,
+        modificationDate: new Date(),
+      };
+
+      this.$confirm({
+        title: "CHANGE USER STATUS",
+        message: `Are you sure to unsubscribe the user? ${item}`,
+        button: {
+          yes: "Yes",
+          no: "Cancel",
+        },
+        callback: (confirm) => {
+          if (confirm == true) {
+            this.editUserAPI(dataDelete);
+          }
+        },
+      });
     },
 
     restoreUser(item) {
-      this.dataDelete = item;
-      this.subtitleConfirmAction = "Are you sure to activate the user";
-      this.flagConfirmAction = true;
+      const dataDelete = {
+        _id: item,
+        isActive: true,
+        modificationDate: new Date(),
+      };
+      this.$confirm({
+        title: "CHANGE USER STATUS",
+        message: `Are you sure to activate the user? ${item}`,
+        button: {
+          yes: "Yes",
+          no: "Cancel",
+        },
+        callback: (confirm) => {
+          if (confirm == true) {
+            this.editUserAPI(dataDelete);
+          }
+        },
+      });
     },
 
     newActionBtn() {
       this.isUserDialog = true;
     },
-
-    changeFlagConfirmation(value) {
-      this.flagConfirmAction = value;
-    },
-
-    confirmOff(value) {
-      if (value) {
-        const data = {
-          _id: this.dataDelete,
-          isActive: true,
-          modificationDate: new Date(),
-        };
-
-        if (
-          this.subtitleConfirmAction === "Are you sure to activate the user"
-        ) {
-          this.editUserAPI(data);
-        } else {
-          data.isActive = false;
-          this.editUserAPI(data);
-        }
-      }
-    },
-
-    // emitPage(value){
-    //    this.pageNum = value;
-    // },
-
-    // emitItemsPerPage(value){
-    //    this.itemsPerPageNum = value;
-    // },
   },
 };
 </script>

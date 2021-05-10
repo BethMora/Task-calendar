@@ -2,6 +2,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 import login from "./modules/login";
 import task from "./modules/task";
+import confirmActionDialog from "./modules/confirmActionDialog";
 
 Vue.use(Vuex);
 
@@ -11,6 +12,7 @@ export default new Vuex.Store({
   modules: {
     login,
     task,
+    confirmActionDialog,
   },
   state: {
     sheet: false,
@@ -33,13 +35,11 @@ export default new Vuex.Store({
       const message = {
         status: response.status,
       };
-      
-      if(response.flagMsg === "OK"){
-        message.msg = response.data.message,
-        message.color = "success"
-      }else{
-        message.msg = response.data.error.message,
-        message.color = "error"
+
+      if (response.flagMsg === "OK") {
+        (message.msg = response.data.message), (message.color = "success");
+      } else {
+        (message.msg = response.data.error.message), (message.color = "error");
       }
       state.message = message;
     },
@@ -50,7 +50,7 @@ export default new Vuex.Store({
     //     // color: "success",
     //     status: response.status,
     //   };
-      
+
     //   if(response.flagMsg === "OK"){
     //     message.msg = response.data.message,
     //     message.color = "success"

@@ -1,15 +1,10 @@
 import UserService from "@/services/UserService";
-
+import router from "../../router/index";
 import { encryptKey } from "@/libs/encrypt";
 
 export default {
   strict: true,
-  // namespaced: true,
   state: {
-    isLogin: false,
-    rol: "",
-
-    // usersLogin: [],
     allUsers: [],
     userLoggedOk: {
       isLogin: false,
@@ -18,44 +13,12 @@ export default {
   },
 
   getters: {
-    isLogin(state) {
-      return state.isLogin;
-    },
-    rol(state) {
-      return state.rol;
-    },
-
-    usersLogin(state) {
-      return state.usersLogin;
-    },
-
-    newUserLoggedIn: (state) => (keyUnique) => {
-      const userLogged = state.usersLogin.find(
-        (user) => user._id === keyUnique
-      );
-
-      if (userLogged != undefined) {
-        if (userLogged.token === sessionStorage.getItem("token")) {
-          userLogged.isLogin = true;
-        } else {
-          userLogged.isLogin = false;
-        }
-      }
-      return userLogged;
-    },
-
-    //Devuelve el indice del arreglo allUsers donde el indice sea igual al param id
     userIndex: (state) => (id) => {
       const userAccordingId = state.allUsers.findIndex(
         (user) => user._id === id
       );
       return userAccordingId;
     },
-
-    // userLoggedId: (state) => (id) => {
-    //   const userAccordingId = state.usersLogin.find((user) => user._id === id);
-    //   return userAccordingId;
-    // },
 
     userLoggedOk(state) {
       return state.userLoggedOk;
@@ -67,17 +30,6 @@ export default {
   },
 
   mutations: {
-    setIsLogin(state, value) {
-      state.isLogin = value;
-    },
-    setRol(state, value) {
-      state.rol = value;
-    },
-
-    // setUsersLogin(state, value) {
-    //   state.usersLogin.push(value);
-    // },
-
     setUserLoggedOk(state, user) {
       state.userLoggedOk = user;
     },
@@ -105,28 +57,14 @@ export default {
         ) {
           state.allUsers[data.index][property] = data[property];
         }
-        // }
       }
-
-      // if (data.typeEdit === "deletedByAdmin") {
-      //   state.allUsers[data.index].isActive = data.isActive;
-      // }
-
-      // if (data.typeEdit === "resetedByAdmin") {
-      //   state.allUsers[data.index].password = data.password;
-      // }
     },
 
     setAllUsers(state, users) {
-      // state.allUsers = users;
-      // state.allUsers = [];
       if (users === null) {
         state.allUsers = [];
       } else {
         if (users.length >= 1) {
-          // for (const iterator of users) {
-          //   state.allUsers.push(iterator);
-          // }
           state.allUsers = users;
         }
         if (users.length === undefined) {
@@ -187,6 +125,7 @@ export default {
           // context.commit("setUsersLogin", newUserLogged);
 
           context.commit("setUserLoggedOk", newUserLogged);
+          router.replace(`/dashboard/${newUserLogged.userName}`);
           // context.commit("setIsLogin", true);
           // context.commit("setRol", newUserLogged.role);
 
@@ -213,10 +152,9 @@ export default {
     logoOutUser({ commit }) {
       sessionStorage.removeItem("token");
       commit("setUserLoggedOk", null);
-      commit("setUserLoggedOk", { isLogin: false });
+      commit("setUserLoggedOk", { isLogin: false, role: "" });
       commit("setEventsUserId", null, { root: true });
-      commit("setIsLogin", false);
-      commit("setRol", "");
+      router.replace("/login");
     },
 
     async editUserAPI(context, obj) {

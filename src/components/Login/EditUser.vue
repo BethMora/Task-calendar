@@ -39,7 +39,6 @@ export default {
     FormUser,
     TitleComponent,
   },
-  // props: ["dataEditUser"],
   data() {
     return {
       valid: true,
@@ -52,10 +51,6 @@ export default {
   },
 
   beforeMount() {
-    // if (this.dataEditUser) {
-    //   console.log("El admin va a editar al usuario")
-    //   console.log(this.dataEditUser)
-    // } else {
       this.formDataRegister = {
         name: this.userLoggedOk.name,
         lastName: this.userLoggedOk.lastName,
@@ -63,7 +58,6 @@ export default {
         userName: this.userLoggedOk.userName,
         email: this.userLoggedOk.email,
       };
-    // }
   },
 
   methods: {

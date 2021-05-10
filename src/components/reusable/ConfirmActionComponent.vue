@@ -1,23 +1,23 @@
 <template>
-  <v-dialog v-model="isConfirmation" width="500">
+  <v-dialog v-model="isVisible" width="500">
     <v-card>
       <v-card-title class=" text-uppercase accent white--text text-center">
-        {{ title }}
+        {{ information.title }}
       </v-card-title>
 
       <v-card-text class="my-3 indigo--text">
-        {{ subtitle }}
+        {{ information.subtitle }}
       </v-card-text>
 
       <v-divider></v-divider>
 
       <v-card-actions class="my-3">
         <v-spacer></v-spacer>
-        <v-btn x-large class="error" @click="confirmLogOut">
+        <v-btn x-large class="error" @click.stop="processSignOf(true)">
           <v-icon class="mr-1">mdi-check-bold </v-icon>
           Confirm
         </v-btn>
-        <v-btn x-large class="accent ml-4" @click="cancelLogOut">
+        <v-btn x-large class="accent ml-4" @click.stop="processSignOf(false)">
           <v-icon class="mr-1">mdi-hand-left</v-icon>
           Cancel
         </v-btn>
@@ -27,24 +27,27 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from "vuex";
 export default {
   name: "ConfirmActionComponent",
-  props: ["isConfirmation", "changeFlagConfirmation", "title", "subtitle"],
-  data: () => ({
-    opacity: 0.75,
-    zIndex: 0,
-  }),
+  data: () => ({}),
+  props:["process"],
+
+  computed: {
+    ...mapGetters(["isDialog", "information"]),
+     isVisible: {
+      get: function() {
+        return this.isDialog
+      },
+      set: function(value) {
+        this.processSignOf(value)
+      }
+    }
+  },
 
   methods: {
-    confirmLogOut() {
-      this.changeFlagConfirmation(false);
-      this.$emit("confirmOff", true);
-      this.$forceUpdate();
-    },
-
-    cancelLogOut() {
-      this.changeFlagConfirmation(false);
-    },
+    // ...mapActions(["confirmLogOut", "cancelLogOut"])
+    ...mapActions(["processSignOf"])
   },
 };
 </script>

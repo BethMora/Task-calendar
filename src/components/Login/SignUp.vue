@@ -61,23 +61,6 @@ export default {
     };
   },
 
-  // beforeMount() {
-  //   if (this.dataEditUser) {
-  //     console.log("traemos data para editar BEFORE MOUNT");
-  //     console.log(this.dataEditUser);
-  //     this.formDataRegister
-  //      = this.dataEditUser;
-  //   }
-  // },
-
-  // watch: {
-  //   dataEditUser() {
-  //     console.log("WATCH traemos data para editar");
-  //     console.log(this.dataEditUser);
-  //     this.formDataRegister = this.dataEditUser;
-  //   },
-  // },
-
   beforeDestroy() {
     EventBus.$emit("urlAvatar", null);
     EventBus.$off();

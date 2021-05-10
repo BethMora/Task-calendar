@@ -33,6 +33,7 @@ const routes = [
   {
     path: "/about",
     name: "About",
+    meta: { requiresAuth: false },
     component: About,
   },
   {
@@ -61,6 +62,9 @@ const routes = [
   {
     path: "/dashboard/:id",
     component: Dashboard,
+    meta: {
+      requiresAuth: true,
+    },
     children: [
       {
         path: "",
@@ -104,6 +108,9 @@ const routes = [
         path: "/reports",
         name: "Reports",
         component: Reports,
+        meta: {
+          requiresAuth: true,
+        },
       },
     ],
   },
@@ -117,9 +124,10 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   if (to.matched.some((route) => route.meta.requiresAuth)) {
-    console.log(store.getters.isLogin);
     if (!store.getters.isLogin) {
       next({ path: "/login" });
+    } else {
+      next();
     }
   } else {
     next();

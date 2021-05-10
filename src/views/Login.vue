@@ -76,7 +76,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["message", "loginStatus"]),
+    ...mapGetters(["message"]),
 
     // setUrl() {
     //   EventBus.$on("urlAvatar", (item) => {

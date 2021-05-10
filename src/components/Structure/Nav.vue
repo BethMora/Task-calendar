@@ -1,6 +1,13 @@
 <template>
   <div>
-    <v-app-bar app dark absolute color="white" :class="!userLoggedOk.isLogin ? 'accent' : 'blue darken-4'" elevate-on-scroll>
+    <v-app-bar
+      app
+      dark
+      absolute
+      color="white"
+      :class="!userLoggedOk.isLogin ? 'accent' : 'blue darken-4'"
+      elevate-on-scroll
+    >
       <template v-if="!userLoggedOk.isLogin">
         <router-link to="/">
           <v-img
@@ -26,7 +33,7 @@
         </div>
       </template>
 
-      <v-app-bar-nav-icon @click.stop="openNavigation"></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
 
       <v-toolbar-title> Task Management </v-toolbar-title>
 
@@ -87,14 +94,7 @@
       </v-tooltip>
     </v-app-bar>
 
-    <Navigation :drawer="drawer" :changeValue="changeValue" />
-    <ConfirmActionComponent
-      @confirmOff="confirmOff"
-      :isConfirmation="isConfirmation"
-      :changeFlagConfirmation="changeFlagConfirmation"
-      title="Sign off"
-      subtitle="Are you sure to log out?"
-    />
+    <Navigation :drawer="drawer" :changeValue="changeValue"/>
   </div>
 </template>
 
@@ -102,7 +102,6 @@
 import Navigation from "@/components/Structure/Navigation";
 import SubMenuLogged from "@/components/Structure/SubMenuLogged";
 import Avatar from "@/components/Structure/Avatar";
-import ConfirmActionComponent from "@/components/reusable/ConfirmActionComponent";
 import { mapGetters, mapActions } from "vuex";
 
 export default {
@@ -111,38 +110,15 @@ export default {
     Navigation,
     SubMenuLogged,
     Avatar,
-    ConfirmActionComponent,
   },
 
   data() {
     return {
       bandDrawer: false,
-      flagConfirmAction: false,
-      languages: [{ text: "English" }, { text: "Spanish" }],
-      // menuLoggedIn: [
-      //   {
-      //     title: "Your Profile",
-      //     submenu: [
-      //       {
-      //         title: "Edit Profile information",
-      //         url: "mdi-account-edit-outline",
-      //         action: "editProfile",
-      //       },
-      //       {
-      //         title: "Change profile picture ",
-      //         url: "mdi-camera-wireless-outline",
-      //         action: "editProfilePicture",
-      //       },
+      drawers: false,
+     
 
-      //       {
-      //         title: "Change Password ",
-      //         url: "mdi-account-key",
-      //         action: "editProfilePassword",
-      //       },
-      //     ],
-      //   },
-      //   { title: "Sign out", url: "mdi-logout", action: "logoOut" },
-      // ],
+      languages: [{ text: "English" }, { text: "Spanish" }],
     };
   },
 
@@ -157,33 +133,24 @@ export default {
         this.changeValue(value);
       },
     },
-
-    isConfirmation: {
-      get: function() {
-        return this.flagConfirmAction;
-      },
-
-      set: function(value) {
-        this.changeFlagConfirmation(value);
-      },
-    },
   },
 
   watch: {
     userLoggedOk() {
       this.imageAvatar();
     },
+
+    
+    drawer(){
+      console.log("Drawer ",this.drawer)
+    }
   },
 
   methods: {
-    ...mapActions(["logoOutUser"]),
+    ...mapActions(["logoOutUser" ]),
 
     changeValue(value) {
       this.bandDrawer = value;
-    },
-
-    changeFlagConfirmation(value) {
-      this.flagConfirmAction = value;
     },
 
     openNavigation() {
@@ -212,24 +179,12 @@ export default {
           this.editProfilePassword();
           break;
         case "logoOut":
-          this.flagConfirmAction = true;
+         this.showConfirm();
           break;
         default:
         // code block
       }
     },
-
-    logoOut() {
-      this.logoOutUser();
-      this.$router.push("/login");
-    },
-
-    confirmOff(value) {
-      if (value) {
-        this.logoOut();
-      }
-    },
-
     editProfile() {
       if (this.$route.name != "EditUser") {
         this.$router.push("/editUser");
@@ -246,6 +201,22 @@ export default {
       if (this.$route.name != "EditPassword") {
         this.$router.push("/editPassword");
       }
+    },
+
+    showConfirm() {
+      this.$confirm({
+        title: "SIGN OFF",
+        message: `Are you sure to log out?`,
+        button: {
+          yes: "Yes",
+          no: "Cancel",
+        },
+        callback: (confirm) => {
+          if (confirm == true) {
+            this.logoOutUser();
+          }
+        },
+      });
     },
   },
 };
