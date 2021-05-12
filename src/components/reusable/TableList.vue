@@ -30,21 +30,31 @@
             <img :src="imageAvatar(item.imageName)" />
           </v-avatar>
         </template>
+
+        <template v-slot:item.creationDate="{ item }">
+          {{ transformDate(item.creationDate) }} <br />
+          {{ transformTime(item.creationDate) }}
+        </template>
+
+        <template v-slot:item.modificationDate="{ item }">
+          {{ transformDate(item.modificationDate) }} <br />
+          {{ transformTime(item.modificationDate) }}
+        </template>
+
         <template v-slot:item.actions="{ item }">
           <v-icon small class="mr-2" @click="edit(item)" color="accent">
             mdi-pencil
           </v-icon>
-          <v-icon
-            v-if="item.isActive"
-            small
-            @click.stop="delet(item._id)"
-            color="error"
-          >
-            mdi-delete
-          </v-icon>
-          <v-icon v-else small @click.stop="restore(item._id)" color="success">
-            mdi-backup-restore
-          </v-icon>
+          <template v-if="convertBoolean(item.isActive)">
+            <v-icon small @click.stop="delet(item._id)" color="error">
+              mdi-delete
+            </v-icon>
+          </template>
+          <template v-else>
+            <v-icon small @click.stop="restore(item._id)" color="success">
+              mdi-backup-restore
+            </v-icon>
+          </template>
         </template>
       </v-data-table>
     </v-card>
@@ -52,6 +62,7 @@
 </template>
 
 <script>
+import { timeEcuador, onlyDate } from "@/libs/dates";
 import TitleComponent from "@/components/reusable/TitleComponent";
 export default {
   name: "TableList",
@@ -80,6 +91,24 @@ export default {
   methods: {
     imageAvatar(name) {
       return "http://localhost:3000/public/img/" + name;
+    },
+    convertBoolean(value) {
+      if (typeof value === "string") {
+        if (value === "true") {
+          return true;
+        } else {
+          return false;
+        }
+      }
+      return value;
+    },
+
+    transformDate(date) {
+      return onlyDate(date);
+    },
+
+    transformTime(date) {
+      return timeEcuador(date);
     },
   },
 };

@@ -10,6 +10,7 @@
           label="Password"
           hint="At least 4 characters"
           :counter="20"
+          autocomplete="on"
           @click:append="show1 = !show1"
         ></v-text-field>
       </v-col>
@@ -27,6 +28,7 @@
           label="Confirm Password"
           hint="At least 4 characters"
           :counter="20"
+          autocomplete="on"
           @click:append="show1 = !show1"
         ></v-text-field>
       </v-col>

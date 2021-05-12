@@ -1,5 +1,5 @@
 <template>
-  <div  @click.stop="change">
+  <div @click.stop="change">
     <!-- <div  @click.stop="change"> -->
     <v-navigation-drawer
       v-model="drawer"
@@ -32,7 +32,7 @@
           active-class="accent--text text--accent-4"
         >
           <v-list-item
-            v-for="(item, index) in items"
+            v-for="(item, index) in userLoggedOk.itemsNavigation"
             :key="index"
             :class="item.color"
             @click="setUrl(item.url)"
@@ -97,23 +97,23 @@ export default {
     };
   },
 
-  beforeMount() {
-    this.items = this.itemsNavigation;
-  },
-
   watch: {
-    userLoggedOk() {
-      if (this.userLoggedOk.role === "ADMIN") {
-        this.items = this.itemsNavigationAdmin;
-      } else if (this.userLoggedOk.role === "USER") {
-        this.items = this.itemsNavigationUser;
-      } else {
-        this.items = this.itemsNavigation;
-      }
+    userLoggedOk: {
+      deep: true,
+      handler: (newValue) => {
+        let evualueItems = "";
+        if (newValue.role === "ADMIN") {
+          evualueItems = navigationAdmin;
+        } else if (newValue.role === "USER") {
+          evualueItems = navigationUser;
+        } else {
+          evualueItems = navigationAnyUser;
+        }
+        newValue.itemsNavigation = evualueItems;
+      },
     },
     group() {
       this.changeValue(false);
-      console.log("---------------------------- ", this.drawer);
     },
   },
 
@@ -129,9 +129,9 @@ export default {
         this.changeValue(false);
       }
     },
+
     change() {
       this.changeValue(false);
-      console.log("Cambiando flag ", this.drawer);
     },
 
     showConfirm() {

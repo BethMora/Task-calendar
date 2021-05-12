@@ -18,6 +18,7 @@
           />
         </router-link>
       </template>
+
       <template v-else>
         <div id="divImagenProfile" class="d-flex">
           <v-row>
@@ -28,7 +29,7 @@
             />
           </v-row>
           <v-toolbar-title class="info--text ml-6">
-            {{ this.userLoggedOk.name }}
+            {{ this.userLoggedOk.userName }}
           </v-toolbar-title>
         </div>
       </template>
@@ -94,7 +95,7 @@
       </v-tooltip>
     </v-app-bar>
 
-    <Navigation :drawer="drawer" :changeValue="changeValue"/>
+    <Navigation :drawer="drawer" :changeValue="changeValue" />
   </div>
 </template>
 
@@ -116,7 +117,6 @@ export default {
     return {
       bandDrawer: false,
       drawers: false,
-     
 
       languages: [{ text: "English" }, { text: "Spanish" }],
     };
@@ -139,15 +139,10 @@ export default {
     userLoggedOk() {
       this.imageAvatar();
     },
-
-    
-    drawer(){
-      console.log("Drawer ",this.drawer)
-    }
   },
 
   methods: {
-    ...mapActions(["logoOutUser" ]),
+    ...mapActions(["logoOutUser"]),
 
     changeValue(value) {
       this.bandDrawer = value;
@@ -179,7 +174,7 @@ export default {
           this.editProfilePassword();
           break;
         case "logoOut":
-         this.showConfirm();
+          this.showConfirm();
           break;
         default:
         // code block

@@ -51,7 +51,6 @@ export default {
   },
 
   beforeMount() {
-    // this.usersAPI({ page: 1, sizePage: 10 });
     this.getPaginatedEvents({
       page: this.pageNum,
       sizePage: this.itemsPerPageNum,

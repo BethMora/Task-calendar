@@ -36,36 +36,14 @@ export default new Vuex.Store({
       if (response.flagMsg === "OK") {
         (message.msg = response.data.message), (message.color = "success");
       } else {
-        (message.msg = response.data.error.message), (message.color = "error");
+        try {
+          (message.msg = response.data.error.message), (message.color = "error");
+        } catch (error) {
+          (message.msg = response.data.message), (message.color = "error");
+        }
       }
       state.message = message;
     },
-
-    // setMesaggeOk(state, response) {
-    //   const message = {
-    //     // msg: response.data.message,
-    //     // color: "success",
-    //     status: response.status,
-    //   };
-
-    //   if(response.flagMsg === "OK"){
-    //     message.msg = response.data.message,
-    //     message.color = "success"
-    //   }else{
-    //     message.msg = response.data.error.message,
-    //     message.color = "error"
-    //   }
-    //   state.message = message;
-    // },
-
-    // setMesaggeError(state, response) {
-    //   const message = {
-    //     msg: response.data.error.message,
-    //     color: "error",
-    //     status: response.status,
-    //   };
-    //   state.message = message;
-    // },
 
     setMesaggeErrorCatch(state, error) {
       const message = {

@@ -35,7 +35,6 @@
 <script>
 import SignUp from "@/components/Login/SignUp";
 import AvatarSignUp from "@/components/reusable/AvatarSignUp";
-// import { EventBus } from "@/libs/event-bus";
 export default {
   name: "NewUserDialog",
   props: ["dialogAddUser", "emit"],
@@ -43,20 +42,10 @@ export default {
     SignUp,
     AvatarSignUp,
   },
-  data() {
-    return {
-      urlImagen: null,
-    };
-  },
 
   methods: {
     close() {
       this.emit(false);
-      // EventBus.$emit("resetSignUp", null);
-      // EventBus.$off();
-
-      // this.$forceUpdate();
-      // this.reset();
     },
   },
 };

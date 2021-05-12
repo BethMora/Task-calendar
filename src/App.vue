@@ -12,6 +12,7 @@
 import Nav from "@/components/Structure/Nav";
 import Footer from "@/components/Structure/Footer";
 import Alert from "@/components/Modals/Alert";
+import { mapGetters, mapMutations } from "vuex";
 export default {
   name: "App",
 
@@ -24,6 +25,14 @@ export default {
   data: () => ({
     //
   }),
+
+  computed: {
+    ...mapGetters(["message"]),
+  },
+
+  methods: {
+    ...mapMutations(["resetMessage"]),
+  },
 };
 </script>
 

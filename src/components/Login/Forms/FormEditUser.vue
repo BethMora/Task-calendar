@@ -34,9 +34,9 @@
 
       <v-col cols="12" sm="3" md="3">
         <v-select
-          :items='[true, false]'
+          :items="active"
           label="ESTADO"
-          v-model.lazy="formDataRegister.isActive"
+          v-model="formDataRegister.isActive"
         ></v-select>
       </v-col>
     </v-row>
@@ -59,7 +59,7 @@
         <v-select
           :items="rol"
           label="Rol"
-          v-model.lazy="formDataRegister.role"
+          v-model="formDataRegister.role"
           :rules="[rules.required]"
         ></v-select>
       </v-col>
@@ -74,6 +74,7 @@ export default {
   data() {
     return {
       rol: ["ADMIN", "USER"],
+      active: ["true", "false"],
       rules: {
         required: (v) => !!v || "Required.",
         min: (v) => (v && v.length >= 2) || "At least 2 characters",

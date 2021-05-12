@@ -38,8 +38,7 @@
 
 <script>
 import AvatarSignUp from "@/components/reusable/AvatarSignUp";
-import { mapGetters, mapMutations } from "vuex";
-// import { EventBus } from "@/libs/event-bus";
+
 export default {
   name: "Login",
   components: {
@@ -51,7 +50,6 @@ export default {
       widthConten: 374,
       loading: false,
       url: "",
-      // urlImagen: null,
     };
   },
 
@@ -73,21 +71,6 @@ export default {
         this.widthConten = 674;
       }
     },
-  },
-
-  computed: {
-    ...mapGetters(["message"]),
-
-    // setUrl() {
-    //   EventBus.$on("urlAvatar", (item) => {
-    //     this.urlImagen = item;
-    //   });
-    //   return this.urlImagen;
-    // },
-  },
-
-  methods: {
-    ...mapMutations(["resetMessage"]),
   },
 };
 </script>

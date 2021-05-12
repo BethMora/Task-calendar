@@ -59,7 +59,7 @@
 <script>
 export default {
   name: "FormUser",
-  props: ["valid",  "formDataRegister"],
+  props: ["valid", "formDataRegister"],
   data() {
     return {
       rol: ["ADMIN", "USER"],

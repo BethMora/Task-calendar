@@ -63,7 +63,7 @@ const routes = [
     path: "/dashboard/:id",
     component: Dashboard,
     meta: {
-      requiresAuth: true,
+      requiresAuth: false,
     },
     children: [
       {

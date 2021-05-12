@@ -14,7 +14,7 @@
 
 <script>
 // import { mapGetters } from "vuex";
-import { mapActions } from "vuex";
+// import { mapActions } from "vuex";
 
 export default {
   name: "Dashboard",
@@ -36,7 +36,7 @@ export default {
   
 
   methods: {
-    ...mapActions(["getPaginatedEvents"]),
+    // ...mapActions(["getPaginatedEvents"]),
 
    
   },

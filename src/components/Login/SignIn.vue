@@ -2,7 +2,6 @@
   <v-form ref="form" v-model="valid" lazy-validation @submit.prevent="login">
     <v-text-field
       v-model="userName"
-      :counter="4"
       :rules="[rules.required, rules.min]"
       label="User Name or Email"
       required
@@ -16,6 +15,7 @@
       name="input-10-1"
       label="Password"
       hint="At least 6 characters"
+      autocomplete="on"
       counter
       @click:append="show1 = !show1"
     ></v-text-field>
@@ -40,8 +40,8 @@ export default {
   },
   data() {
     return {
-      btnBlock: true,
       valid: true,
+      btnBlock: true,
       show1: false,
       userName: "",
       psw: "",
@@ -49,7 +49,6 @@ export default {
       rules: {
         required: (value) => !!value || "Required.",
         min: (v) => v.length >= 4 || "Min 4 characters",
-        valid: (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
       },
     };
   },

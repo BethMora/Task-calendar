@@ -52,12 +52,8 @@ export default {
         { text: "ACTIONS", sortable: false, value: "actions" },
       ],
 
-      // pageCount: 0,
-      // pageNum: 1,
-      // itemsPerPageNum: null,
       page: 1,
       itemsPerPage: 5,
-
       dataEditUser: null,
     };
   },
