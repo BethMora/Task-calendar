@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import TableList from "@/components/reusable/TableList";
+import TableList from "@/components/Reusable/TableList";
 import AddTaskDialog from "@/components/Modals/AddTaskDialog";
 import EditTaskDialog from "@/components/Modals/EditTaskDialog";
 import { mapActions, mapGetters } from "vuex";

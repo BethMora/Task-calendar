@@ -23,7 +23,12 @@
       <v-container>
         <v-card fill-height fluid class="text-center justify-center">
           <div>
-            <v-form ref="form" v-model="valid" lazy-validation @submit.prevent>
+            <v-form
+              ref="form"
+              v-model="valid"
+              lazy-validation
+              @submit.prevent="editTask"
+            >
               <FormCreateTask :task="task" />
 
               <v-row justify="center" class="mb-4">
@@ -44,11 +49,9 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
-// import { formatDateToLocal, getFormatDate, getFormatTime } from "@/libs/dates";
+import { mapActions } from "vuex";
 import { formatDateToLocal, getFormatDate, getFormatTime } from "@/libs/dates";
-// import { toMonthNumber } from "@/libs/dates";
-import BtnToolTipComponent from "@/components/reusable/BtnToolTipComponent";
+import BtnToolTipComponent from "@/components/Reusable/BtnToolTipComponent";
 import FormCreateTask from "@/components/Tasks/Forms/FormCreateTask";
 
 export default {
@@ -69,8 +72,6 @@ export default {
 
   watch: {
     eventEdit() {
-      console.log("Desde el watch")
-      console.log(this.task.lenght);
       this.task = {
         nameTask: this.eventEdit.name,
         descriptionTask: this.eventEdit.description,
@@ -84,41 +85,15 @@ export default {
     },
   },
 
-  // mounted() {
-  //   console.log("Desde el mounted")
-  //   console.log(this.task.lenght);
-  //   if (this.task.lenght != undefined) {
-  //     this.task = {
-  //       nameTask: this.eventEdit.name,
-  //       descriptionTask: this.eventEdit.description,
-  //       dateStart: getFormatDate(this.eventEdit.start),
-  //       dateEnd: getFormatDate(this.eventEdit.end),
-  //       timeStart: getFormatTime(this.eventEdit.start),
-  //       timeEnd: getFormatTime(this.eventEdit.end),
-  //       timed: this.eventEdit.done,
-  //       colorTask: this.eventEdit.color,
-  //     };
-  //   }
-  // },
-
-  computed: {
-    ...mapGetters(["userLoggedOk"]),
-  },
-
   methods: {
     ...mapActions(["editTaskAPI"]),
 
-    
-
     close() {
       this.emitEdit(false);
-   
     },
 
     editTask() {
       if (this.$refs.form.validate()) {
-        console.log("Editando task");
-        console.log(this.eventEdit);
         const localDateStart = formatDateToLocal(
           this.task.dateStart,
           this.task.timeStart
@@ -144,31 +119,8 @@ export default {
           idUser: this.eventEdit.idUser,
         };
         this.editTaskAPI(task);
-        this.$forceUpdate();
         this.close();
-        // this.reset();
       }
-
-      // if (this.validate()) {
-      //   const task = {
-      //     name: this.task.nameTask,
-      //     description: this.task.descriptionTask,
-      //     start: localDateStart,
-      //     end: localDateEnd,
-      //     color: this.task.colorTask,
-      //     timed: timed,
-      //     times: {
-      //       dateStart: this.task.dateStart,
-      //       timeStart: this.task.timeStart,
-      //       dateEnd: this.task.dateEnd,
-      //       timeEnd: this.task.timeEnd,
-      //     },
-      //   };
-      //   this.editTaskAPI(task);
-      //   this.$forceUpdate();
-      //   this.close();
-      //   this.reset();
-      // }
     },
   },
 };

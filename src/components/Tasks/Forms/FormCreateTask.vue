@@ -95,8 +95,8 @@
 </template>
 
 <script>
-import DatePickerModal from "@/components/reusable/DatePickerModal";
-import TimePickerModal from "@/components/reusable/TimePickerModal";
+import DatePickerModal from "@/components/Reusable/DatePickerModal";
+import TimePickerModal from "@/components/Reusable/TimePickerModal";
 export default {
   name: "FormCreateTask",
   props: ["task", "dateStartSent"],
@@ -106,6 +106,8 @@ export default {
   },
   data() {
     return {
+      type: "hex",
+      hex: "#FF00FF",
       rules: {
         required: (v) => !!v || "Required",
         min: (v) => (v && v.length >= 5) || "Must be at least 5 characters",
@@ -117,7 +119,37 @@ export default {
     };
   },
 
+  computed: {
+    color: {
+      get() {
+        return this[this.type];
+        // return this.generateColor();
+      },
+      set(v) {
+        this[this.type] = v;
+        this.task.colorTask = v;
+      },
+    },
+  },
+
+  // beforeMount() {
+  //   this.hex = this.generateColor();
+  //   this.task.colorTask = this.generateColor();
+  // },
+
   methods: {
+    // generateColor() {
+    //   var simbolos, color;
+    //   simbolos = "0123456789ABCDEF";
+    //   color = "#";
+
+    //   for (var i = 0; i < 6; i++) {
+    //     color = color + simbolos[Math.floor(Math.random() * 16)];
+    //   }
+    //   console.log(color)
+    //   return color;
+    // },
+
     setDateStart(value) {
       this.task.dateStart = value;
     },

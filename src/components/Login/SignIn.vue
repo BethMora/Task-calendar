@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import BtnToolTipComponent from "@/components/reusable/BtnToolTipComponent";
+import BtnToolTipComponent from "@/components/Reusable/BtnToolTipComponent";
 import { mapActions } from "vuex";
 export default {
   name: "SignIn",

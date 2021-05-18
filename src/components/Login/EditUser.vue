@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import TitleComponent from "@/components/reusable/TitleComponent";
+import TitleComponent from "@/components/Reusable/TitleComponent";
 import FormUser from "@/components/Login/Forms/FormUser";
 import { mapGetters, mapActions } from "vuex";
 export default {

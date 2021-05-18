@@ -24,7 +24,7 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-import TableList from "@/components/reusable/TableList";
+import TableList from "@/components/Reusable/TableList";
 import NewUserDialog from "@/components/Modals/NewUserDialog";
 import EditUserDialog from "@/components/Modals/EditUserDialog";
 

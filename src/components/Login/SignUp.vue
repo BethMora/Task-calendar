@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import BtnToolTipComponent from "@/components/reusable/BtnToolTipComponent";
+import BtnToolTipComponent from "@/components/Reusable/BtnToolTipComponent";
 
 import FormUser from "@/components/Login/Forms/FormUser";
 import FormPassword from "@/components/Login/Forms/FormPassword";
@@ -93,7 +93,6 @@ export default {
         });
         this.checkInAPI(formData);
         if (this.$route.path === "/users") {
-          this.$forceUpdate();
           this.close();
         } else {
           this.$router.push("/login");

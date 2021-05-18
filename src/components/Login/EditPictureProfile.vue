@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import TitleComponent from "@/components/reusable/TitleComponent";
+import TitleComponent from "@/components/Reusable/TitleComponent";
 import { mapGetters, mapActions } from "vuex";
 export default {
   name: "EditPictureProfile",

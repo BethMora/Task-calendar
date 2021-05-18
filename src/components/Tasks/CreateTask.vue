@@ -20,7 +20,6 @@
           @submit.prevent="sendTask"
         >
           <FormCreateTask :task="task" :dateStartSent="dateStartSent" />
-
           <v-row justify="center" class="mb-4">
             <BtnToolTipComponent
               title="Submit"
@@ -46,14 +45,14 @@
 </template>
 
 <script>
-import BtnToolTipComponent from "@/components/reusable/BtnToolTipComponent";
+import BtnToolTipComponent from "@/components/Reusable/BtnToolTipComponent";
 import FormCreateTask from "@/components/Tasks/Forms/FormCreateTask";
-import { mapGetters, mapActions } from "vuex";
+import { mapActions } from "vuex";
 import { formatDateToLocal } from "@/libs/dates";
 
 export default {
   name: "CreateTask",
-  props: ["dateStartSent", "emit"],
+  props: ["dateStartSent", "emit", "colorRamdon"],
   components: {
     FormCreateTask,
     BtnToolTipComponent,
@@ -69,24 +68,41 @@ export default {
         timeEnd: "",
         nameTask: "",
         descriptionTask: "",
-        colorTask: "",
+        colorTask: this.colorRamdon,
       },
     };
   },
-
-  computed: {
-    ...mapGetters(["userLoggedOk"]),
+  beforeMount() {
+    if(!this.colorRamdon){
+      this.task.colorTask = this.generateColor();
+    }
   },
-
+  watch: {
+    colorRamdon() {
+      this.task.colorTask = this.colorRamdon;
+    },
+  },
   methods: {
     ...mapActions(["addNewTask"]),
+     generateColor() {
+      var simbolos, color;
+      simbolos = "0123456789ABCDEF";
+      color = "#";
+
+      for (var i = 0; i < 6; i++) {
+        color = color + simbolos[Math.floor(Math.random() * 16)];
+      }
+      console.log(color);
+      return color;
+    },
+
     reset() {
-      this.task.dateStart = "";
-      this.task.timeStart = "";
-      this.task.dateEnd = "";
-      this.task.timeEnd = "";
-      this.task.nameTask = "";
-      this.task.descriptionTask = "";
+      // this.task.dateStart = "";
+      // this.task.timeStart = "";
+      // this.task.dateEnd = "";
+      // this.task.timeEnd = "";
+      // this.task.nameTask = "";
+      // this.task.descriptionTask = "";
       // this.task.colorTask = "";
       return this.$refs.form.reset();
     },
@@ -128,11 +144,6 @@ export default {
         if (this.$route.path === "/createTask") {
           this.$router.push("/dashboard/:id");
         }
-        // } else {
-        //   console.log("ejecuta el refresco");
-        //   this.$forceUpdate();
-        // }
-        // this.addNewTask(task);
         this.reset();
       }
     },

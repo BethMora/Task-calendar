@@ -1,11 +1,7 @@
 import EventService from "@/services/EventService";
-// registerEvent
-// updateEvent
-// deleteEvent
 
 export default {
   strict: true,
-  // namespaced: true,
   state: {
     allTasks: [],
     tasksUserId: [],
@@ -28,17 +24,13 @@ export default {
   mutations: {
     setEventsUserId(state, event) {
       state.tasksUserId = [];
-      if (event === null) {
-        state.tasksUserId = [];
-      } else {
-        if (event.length >= 1) {
-          for (const iterator of event) {
-            state.tasksUserId.push(iterator);
-          }
+      if (event.length >= 1) {
+        for (const iterator of event) {
+          state.tasksUserId.push(iterator);
         }
-        if (event.length === undefined) {
-          state.tasksUserId.push(event);
-        }
+      }
+      if (event.length === undefined) {
+        state.tasksUserId.push(event);
       }
     },
 
@@ -46,8 +38,17 @@ export default {
       state.tasksUserId.push(event);
     },
 
-    updateStateTask(state, index, event) {
-      state.tasksUserId[index] = event;
+    updateStateTask(state, data) {
+      for (const property in data) {
+        if (
+          Object.prototype.hasOwnProperty.call(
+            state.tasksUserId[data.index],
+            property
+          )
+        ) {
+          state.tasksUserId[data.index][property] = data[property];
+        }
+      }
     },
 
     deleteStateTask(state, index) {
@@ -63,17 +64,14 @@ export default {
     async tasksAPI({ commit }, obj) {
       try {
         const response = await EventService.getEventStartEnd(obj);
-        console.log(response);
         if (response.status === 200) {
-          response.flagMsg = "OK";
           const arrayUsers = response.data.data;
-          // commit("setAllUsers", arrayUsers);
           commit("setEventsUserId", arrayUsers);
         } else {
           response.flagMsg = "ERROR";
+          commit("setMesagge", response);
+          commit("changeSheet");
         }
-        commit("setMesagge", response);
-        commit("changeSheet");
       } catch (error) {
         commit("setMesaggeErrorCatch", error);
         commit("changeSheet");
@@ -128,32 +126,30 @@ export default {
       }
     },
 
-    async editTaskAPI({ commit }, task) {
-      const response = await EventService.updateEvent(task);
+    async editTaskAPI(context, task) {
       try {
+        const response = await EventService.updateEvent(task);
         if (response.status === 200) {
-          console.log("Vamos a editar la tarea ");
-          // commit("setTask", task);
-          // actions("getPaginatedEvents")
+          const indexIdTask = context.getters.indexTasks(task._id);
+          task.index = indexIdTask;
+          context.commit("updateStateTask", task);
         } else {
           response.flagMsg = "ERROR";
-          commit("setMesagge", response);
-          commit("changeSheet");
+          context.commit("setMesagge", response);
+          context.commit("changeSheet");
         }
       } catch (error) {
-        commit("setMesaggeErrorCatch", error);
-        commit("changeSheet");
+        context.commit("setMesaggeErrorCatch", error);
+        context.commit("changeSheet");
       }
     },
 
     async deleteTaskAPI(context, id) {
-      const idEventDelete = {
+      const response = await EventService.deleteEvent({
         _id: id,
-      };
-      const response = await EventService.deleteEvent(idEventDelete);
+      });
       try {
         if (response.status === 200) {
-          console.log("Task delete");
           const index = context.getters.indexTasks(id);
           context.commit("deleteStateTask", index);
         } else {

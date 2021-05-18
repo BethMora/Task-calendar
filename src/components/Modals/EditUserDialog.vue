@@ -79,8 +79,8 @@
 <script>
 import FormEditUser from "@/components/Login/Forms/FormEditUser";
 import { EventBus } from "@/libs/event-bus";
-import AvatarSignUp from "@/components/reusable/AvatarSignUp";
-import BtnToolTipComponent from "@/components/reusable/BtnToolTipComponent";
+import AvatarSignUp from "@/components/Reusable/AvatarSignUp";
+import BtnToolTipComponent from "@/components/Reusable/BtnToolTipComponent";
 import { mapActions } from "vuex";
 export default {
   name: "EditUserDialog",
@@ -145,7 +145,7 @@ export default {
           formData.append(key, val);
         });
         this.editUserAPI(formData);
-        (this.selectedAvatar = null), this.$forceUpdate();
+        (this.selectedAvatar = null),
         this.close();
         EventBus.$emit("urlAvatar", null);
         EventBus.$off();

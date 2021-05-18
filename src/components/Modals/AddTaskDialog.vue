@@ -27,19 +27,19 @@
         </v-toolbar-items>
       </v-toolbar>
 
-      <CreateTask :dateStartSent="dateStartSent" :emit="emit" />
+      <CreateTask :dateStartSent="dateStartSent" :emit="emit" :colorRamdon="colorRamdon" />
     </v-card>
   </v-dialog>
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+// import { mapGetters, mapActions } from "vuex";
 import { toMonthNumber } from "@/libs/dates";
 import CreateTask from "@/components/Tasks/CreateTask";
 
 export default {
   name: "AddTaskDialog",
-  props: ["dialogAddTask", "emit", "dateSelected"],
+  props: ["dialogAddTask", "emit", "dateSelected","colorRamdon"],
   components: {
     CreateTask,
   },
@@ -55,12 +55,12 @@ export default {
     },
   },
 
-  computed: {
-    ...mapGetters(["userLoggedOk"]),
-  },
+  // computed: {
+  //   ...mapGetters(["userLoggedOk"]),
+  // },
 
   methods: {
-    ...mapActions(["addNewTask"]),
+    // ...mapActions(["addNewTask"]),
 
     dateSent() {
       const date =
@@ -74,8 +74,6 @@ export default {
 
     close() {
       this.emit(false);
-      // this.$forceUpdate();
-      // this.reset();
     },
   },
 };

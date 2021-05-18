@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import TitleComponent from "@/components/reusable/TitleComponent";
+import TitleComponent from "@/components/Reusable/TitleComponent";
 import FormPassword from "@/components/Login/Forms/FormPassword";
 import { mapGetters } from "vuex";
 export default {

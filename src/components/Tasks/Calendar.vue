@@ -50,13 +50,13 @@
         <v-calendar
           ref="calendar"
           v-model="focus"
-          color="primary"
+          color="accent"
           :events="events"
           :event-color="getEventColor"
           :type="type"
           @click:event="showEvent"
           @click:more="viewDay"
-          @click:date="viewDay"
+          @click:date="createTask"
         ></v-calendar>
         <v-menu
           v-model="selectedOpen"
@@ -64,7 +64,7 @@
           :activator="selectedElement"
           offset-x
         >
-          <v-card color="grey lighten-4" min-width="350px" flat>
+          <v-card color="grey lighten-5" min-width="350px" flat>
             <v-toolbar :color="selectedEvent.color" dark>
               <v-btn icon>
                 <v-icon @click="editTask(selectedEvent)">mdi-pencil</v-icon>
@@ -99,13 +99,13 @@
         :dialogAddTask="dialogAddTask"
         :emit="emit"
         :dateSelected="dateSelected"
+        :colorRamdon="colorRamdon"
       />
       <EditTaskDialog
         :dialogEditTask="dialogEditTask"
         :emitEdit="emitEdit"
-        :eventEdit="eventEdit"
+        :eventEdit="selectedEvent"
       />
-
     </v-col>
   </v-row>
 </template>
@@ -114,7 +114,9 @@
 import AddTaskDialog from "@/components/Modals/AddTaskDialog";
 import EditTaskDialog from "@/components/Modals/EditTaskDialog";
 import { mapGetters, mapActions } from "vuex";
-
+import { numberToStringMonth, getFormatDate } from "@/libs/dates";
+let date = new Date();
+let month = date.getMonth();
 export default {
   name: "Calendar",
   components: {
@@ -134,35 +136,20 @@ export default {
     selectedEvent: {},
     selectedElement: null,
     selectedOpen: false,
-    eventEdit: {},
-    events: [],
 
     isTaskDialog: false, //flag open modal windows
     isEditTaskDialog: false, //flag open modal windows
     dateSelected: {}, //obj contains the task start date
-    idTaskDelete: 0,
+    colorRamdon: "",
   }),
-  // mounted() {
-  //   this.$refs.calendar.checkChange();
-  // },
-
-  async beforeMount() {
-    // this.events = null
-    await this.getPaginatedEvents({ page: 1, sizePage: 20 });
-    this.events = this.tasksUserId;
-    console.log(this.tasksUserId);
-  },
-
-  watch: {
-    tasksUserId() {
-      console.log("watch taskUserID")
-      this.events = this.tasksUserId;
-      console.log(this.events)
-    },
+  async mounted() {
+    this.$refs.calendar.checkChange();
+    const time = this.dateStartEndForQueryApi(month);
+    await this.tasksAPI(time);
   },
 
   computed: {
-    ...mapGetters(["tasksUserId"]),
+    ...mapGetters({ events: "tasksUserId" }),
 
     dialogAddTask: {
       get: function() {
@@ -186,71 +173,16 @@ export default {
   },
 
   methods: {
-    ...mapActions(["deleteTaskAPI", "editTaskAPI", "getPaginatedEvents"]),
-
-    //Metodo para cambiar el estado que maneja la ventana modal Confirmar accion
-
-    //Metodo para cambiar el estado que maneja la ventana modal Crear Tarea
-    emit(value) {
-      this.isTaskDialog = value;
+    ...mapActions(["deleteTaskAPI", "editTaskAPI", "tasksAPI"]),
+    dateStartEndForQueryApi(monthValue) {
+      const firstDays = new Date(date.getFullYear(), monthValue, 1);
+      const lastDays = new Date(date.getFullYear(), monthValue + 1, 0);
+      const startEnd = {
+        start: getFormatDate(firstDays),
+        end: getFormatDate(lastDays),
+      };
+      return startEnd;
     },
-
-    //Metodo para cambiar el estado que maneja la ventana modal Editar Tarea
-    emitEdit(value) {
-      this.isEditTaskDialog = value;
-    },
-
-    createTask(event) {
-      const selectedTag = event.target.className;
-      if (selectedTag.match("outside")) {
-        alert("The selected day does not correspond to the current month");
-      }
-
-      if (this.type === "month" && !selectedTag.match("outside")) {
-        let day = event.path[0].firstChild.children[0].outerText;
-        if (day.length > 2) {
-          day = day.split(" ")[1];
-        }
-        if (day.length < 2) {
-          day = "0" + day;
-        }
-
-        const monthYear = this.$refs.calendar.title;
-        const month = monthYear.split(" ")[0];
-        const year = monthYear.split(" ")[1];
-        this.dateSelected = {
-          day: day,
-          month: month,
-          year: year,
-        };
-
-        this.isTaskDialog = true;
-      }
-    },
-
-    editTask(task) {
-      this.eventEdit = task;
-      this.isEditTaskDialog = true;
-    },
-
-    // Metodo que captura la respuesta del usuario a la accion confirmar Eliminar tarea
-    confirmOff(value) {
-      if (value) {
-        this.deleteTaskAPI(this.idTaskDelete);
-      }
-    },
-
-    deleteTask(id) {
-      this.idTaskDelete = id;
-      this.selectedOpen = false;
-      console.log("Vamos a buscar en el arreglo de task")
-      console.log(this.tasksUserId)
-      const element = this.tasksUserId.find(e => e._id === id);
-      console.log(element)
-      const index = this.tasksUserId.findIndex(e => e._id === id);
-      console.log(index)
-    },
-
     // ***********************
     viewDay({ date }) {
       this.focus = date;
@@ -259,14 +191,21 @@ export default {
     getEventColor(event) {
       return event.color;
     },
+
     setToday() {
       this.focus = "";
     },
-    prev() {
+    async prev() {
       this.$refs.calendar.prev();
+      month -= 1;
+      const time = this.dateStartEndForQueryApi(month);
+      await this.tasksAPI(time);
     },
-    next() {
+    async next() {
       this.$refs.calendar.next();
+      month += 1;
+      const time = this.dateStartEndForQueryApi(month);
+      await this.tasksAPI(time);
     },
 
     showEvent({ nativeEvent, event }) {
@@ -285,7 +224,90 @@ export default {
         open();
       }
 
-      // nativeEvent.stopPropagation();
+      nativeEvent.stopPropagation();
+    },
+
+    //Metodo para cambiar el estado que maneja la ventana modal Crear Tarea
+    emit(value) {
+      this.isTaskDialog = value;
+    },
+
+    //Metodo para cambiar el estado que maneja la ventana modal Editar Tarea
+    emitEdit(value) {
+      this.isEditTaskDialog = value;
+    },
+
+    createTask(event) {
+      try {
+        const selectedTag = event.target.className;
+        if (selectedTag.match("outside")) {
+          alert("The selected day does not correspond to the current month");
+        }
+
+        if (this.type === "month" && !selectedTag.match("outside")) {
+          let day = event.path[0].firstChild.children[0].outerText;
+          if (day.length > 2) {
+            day = day.split(" ")[1];
+          }
+          if (day.length < 2) {
+            day = "0" + day;
+          }
+
+          const monthYear = this.$refs.calendar.title;
+          const month = monthYear.split(" ")[0];
+          const year = monthYear.split(" ")[1];
+          this.dateSelected = {
+            day: day,
+            month: month,
+            year: year,
+          };
+        }
+      } catch (error) {
+        this.dateSelected = {
+          day: event.day,
+          month: numberToStringMonth(event.month),
+          year: event.year,
+        };
+      }
+      this.colorRamdon = this.generateColor();
+      this.isTaskDialog = true;
+    },
+
+    editTask() {
+      this.isEditTaskDialog = true;
+    },
+
+    deleteTask() {
+      this.selectedOpen = false;
+      this.showConfirm();
+    },
+
+    showConfirm() {
+      this.$confirm({
+        title: "DELETE TASK",
+        message: `Are you sure to delete the task ? ${this.selectedEvent.name}`,
+        button: {
+          yes: "Yes",
+          no: "Cancel",
+        },
+        callback: (confirm) => {
+          if (confirm == true) {
+            this.deleteTaskAPI(this.selectedEvent._id);
+          }
+        },
+      });
+    },
+
+    generateColor() {
+      let symbols, color;
+      symbols = "0123456789ABCDEF";
+      color = "#";
+
+      for (var i = 0; i < 6; i++) {
+        color = color + symbols[Math.floor(Math.random() * 16)];
+      }
+      console.log(color);
+      return color;
     },
   },
 };

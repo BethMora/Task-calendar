@@ -63,7 +63,7 @@
 
 <script>
 import { timeEcuador, onlyDate } from "@/libs/dates";
-import TitleComponent from "@/components/reusable/TitleComponent";
+import TitleComponent from "@/components/Reusable/TitleComponent";
 export default {
   name: "TableList",
   props: [

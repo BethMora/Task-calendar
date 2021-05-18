@@ -34,7 +34,7 @@
 
 <script>
 import SignUp from "@/components/Login/SignUp";
-import AvatarSignUp from "@/components/reusable/AvatarSignUp";
+import AvatarSignUp from "@/components/Reusable/AvatarSignUp";
 export default {
   name: "NewUserDialog",
   props: ["dialogAddUser", "emit"],

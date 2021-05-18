@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import AvatarSignUp from "@/components/reusable/AvatarSignUp";
+import AvatarSignUp from "@/components/Reusable/AvatarSignUp";
 
 export default {
   name: "Login",
